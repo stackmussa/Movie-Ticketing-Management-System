@@ -1,0 +1,2 @@
+[17:29:29] [INFO] [api.py:55] - User with the same email hello@gmail.com already exists!
+[17:32:05] [ERROR] [api.py:156] - No Results
