@@ -1,2 +1,197 @@
 [17:29:29] [INFO] [api.py:55] - User with the same email hello@gmail.com already exists!
 [17:32:05] [ERROR] [api.py:156] - No Results
+[10:39:01] [INFO] [api.py:74] - User with abdul@gmail.com has been registered sucessfully
+[10:39:30] [INFO] [api.py:67] - User with the same email abdul@gmail.com already exists!
+[10:39:37] [INFO] [api.py:67] - User with the same email abdul@gmail.com already exists!
+[10:42:46] [ERROR] [api.py:93] - Invalid Email / Password
+[10:44:04] [INFO] [api.py:78] - User with lol@gmail.com has been registered sucessfully
+[10:47:05] [INFO] [api.py:71] - User with the same email mussa@gmail.com already exists!
+[10:47:06] [INFO] [api.py:71] - User with the same email mussa@gmail.com already exists!
+[10:47:07] [INFO] [api.py:71] - User with the same email mussa@gmail.com already exists!
+[10:47:08] [INFO] [api.py:71] - User with the same email mussa@gmail.com already exists!
+[10:47:39] [INFO] [api.py:71] - User with the same email mussa@gmail.com already exists!
+[10:47:55] [INFO] [api.py:71] - User with the same email mussa@gmail.com already exists!
+[10:48:18] [INFO] [api.py:78] - User with lmfao@gmail.com has been registered sucessfully
+[10:49:23] [INFO] [api.py:71] - User with the same email mussa@gmail.com already exists!
+[10:49:43] [INFO] [api.py:104] - User mussa@gmail.com has logged in!
+[10:50:21] [INFO] [api.py:78] - User with 1234@gmail.com has been registered sucessfully
+[10:51:07] [INFO] [api.py:72] - User with the same email 1234@gmail.com already exists!
+[10:55:56] [INFO] [api.py:79] - User with mussa@gmail.com has been registered sucessfully
+[11:14:53] [ERROR] [api.py:186] - No Results
+[11:37:31] [ERROR] [api.py:232] - Invalid User Input, Tickets Quantity can never be -ve
+[11:37:52] [ERROR] [api.py:232] - Invalid User Input, Tickets Quantity can never be -ve or 0
+[11:38:37] [INFO] [api.py:236] - hi
+[11:38:52] [INFO] [api.py:236] - hi
+[11:39:03] [INFO] [api.py:236] - hi
+[11:39:06] [INFO] [api.py:236] - hi
+[11:40:15] [INFO] [api.py:238] - hi
+[11:41:08] [INFO] [api.py:238] - hi
+[11:41:34] [INFO] [api.py:238] - hi
+[12:39:28] [ERROR] [api.py:203] - No Results
+[12:39:43] [ERROR] [api.py:203] - No Results
+[12:39:57] [ERROR] [api.py:203] - No Results
+[12:40:00] [ERROR] [api.py:203] - No Results
+[12:40:05] [ERROR] [api.py:203] - No Results
+[12:40:07] [ERROR] [api.py:203] - No Results
+[12:40:54] [ERROR] [api.py:203] - No Results
+[12:41:00] [ERROR] [api.py:203] - No Results
+[12:42:16] [ERROR] [api.py:203] - No Results
+[12:42:58] [ERROR] [api.py:203] - No Results
+[12:43:01] [ERROR] [api.py:203] - No Results
+[12:44:00] [ERROR] [api.py:203] - No Results
+[12:44:06] [ERROR] [api.py:203] - No Results
+[12:44:42] [ERROR] [api.py:203] - No Results
+[12:45:10] [ERROR] [api.py:203] - No Results
+[12:45:18] [ERROR] [api.py:203] - No Results
+[12:45:20] [ERROR] [api.py:203] - No Results
+[12:45:50] [INFO] [api.py:243] - hi
+[12:45:59] [ERROR] [api.py:203] - No Results
+[12:47:47] [ERROR] [api.py:203] - No Results
+[12:47:48] [ERROR] [api.py:203] - No Results
+[12:48:00] [ERROR] [api.py:203] - No Results
+[12:48:24] [ERROR] [api.py:203] - No Results
+[12:49:07] [ERROR] [api.py:203] - No Results
+[12:49:15] [ERROR] [api.py:203] - No Results
+[12:49:21] [ERROR] [api.py:203] - No Results
+[12:51:32] [ERROR] [api.py:203] - No Results
+[12:52:10] [ERROR] [api.py:203] - No Results
+[12:52:12] [ERROR] [api.py:203] - No Results
+[12:52:14] [ERROR] [api.py:203] - No Results
+[12:52:33] [ERROR] [api.py:204] - No Results
+[12:52:38] [ERROR] [api.py:204] - No Results
+[14:09:28] [ERROR] [api.py:246] - Invalid User Input, Tickets Quantity can never be -ve or 0
+[14:09:35] [ERROR] [api.py:187] - No Upcoming Shows!
+[14:09:35] [ERROR] [api.py:194] - No such record!
+[16:59:46] [ERROR] [api.py:268] - Booking failed: User with email aliyar@gmail.com not found.
+[16:59:53] [ERROR] [api.py:284] - Not enough Standard seats available for Show 7.
+[17:00:30] [ERROR] [api.py:284] - Not enough Gold seats available for Show 7.
+[17:00:32] [ERROR] [api.py:284] - Not enough Gold seats available for Show 7.
+[17:00:33] [ERROR] [api.py:284] - Not enough Gold seats available for Show 7.
+[17:09:50] [ERROR] [api.py:319] - DB Error!!! ('The SQL contains 3 parameter markers, but 4 parameters were supplied', 'HY000')
+[17:09:56] [ERROR] [api.py:319] - DB Error!!! ('The SQL contains 3 parameter markers, but 4 parameters were supplied', 'HY000')
+[17:10:30] [ERROR] [api.py:319] - DB Error!!! ('The SQL contains 3 parameter markers, but 4 parameters were supplied', 'HY000')
+[17:14:38] [ERROR] [api.py:284] - Not enough Standard seats available for Show 7.
+[17:14:42] [ERROR] [api.py:284] - Not enough Standard seats available for Show 7.
+[17:14:42] [ERROR] [api.py:284] - Not enough Standard seats available for Show 7.
+[17:14:44] [ERROR] [api.py:284] - Not enough Platinum seats available for Show 7.
+[17:17:08] [ERROR] [api.py:284] - Not enough Standard seats available for Show 7.
+[17:30:32] [ERROR] [api.py:321] - DB Error!!! ('The SQL contains 3 parameter markers, but 2 parameters were supplied', 'HY000')
+[17:38:42] [INFO] [api.py:301] - Booking 2 created successfully for mussa@gmail.com.
+[18:12:18] [INFO] [api.py:301] - Booking 3 created successfully for mussa@gmail.com.
+[18:16:50] [ERROR] [api.py:284] - Not enough Standard seats available for Show 7.
+[18:16:58] [INFO] [api.py:301] - Booking 4 created successfully for mussa@gmail.com.
+[11:38:45] [INFO] [api.py:120] - User with ali@gmail.com has been registered sucessfully
+[11:38:46] [INFO] [api.py:113] - User with the same email ali@gmail.com already exists!
+[11:38:46] [INFO] [api.py:113] - User with the same email ali@gmail.com already exists!
+[11:38:47] [INFO] [api.py:113] - User with the same email ali@gmail.com already exists!
+[11:39:42] [INFO] [api.py:113] - User with the same email mussa@gmail.com already exists!
+[11:40:28] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[11:41:58] [ERROR] [api.py:139] - Invalid Email / Password
+[11:44:08] [ERROR] [api.py:139] - Invalid Email / Password
+[11:47:12] [ERROR] [api.py:139] - Invalid Email / Password
+[11:47:28] [ERROR] [api.py:139] - Invalid Email / Password
+[11:48:53] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[11:49:32] [ERROR] [api.py:139] - Invalid Email / Password
+[11:49:36] [INFO] [api.py:120] - User with haider@gmail.com has been registered sucessfully
+[11:49:40] [INFO] [api.py:146] - User haider@gmail.com has logged in!
+[11:55:00] [ERROR] [api.py:139] - Invalid Email / Password
+[11:55:01] [ERROR] [api.py:139] - Invalid Email / Password
+[11:55:01] [ERROR] [api.py:139] - Invalid Email / Password
+[11:55:20] [ERROR] [api.py:107] - Invalid Email Format. Must be in the Format user@domain.com
+[12:15:37] [ERROR] [api.py:139] - Invalid Email / Password
+[12:15:39] [ERROR] [api.py:139] - Invalid Email / Password
+[12:15:46] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[12:17:19] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[12:21:43] [INFO] [api.py:113] - User with the same email mussa@gmail.com already exists!
+[12:21:45] [INFO] [api.py:113] - User with the same email mussa@gmail.com already exists!
+[12:21:45] [INFO] [api.py:113] - User with the same email mussa@gmail.com already exists!
+[12:21:46] [INFO] [api.py:113] - User with the same email mussa@gmail.com already exists!
+[12:22:39] [ERROR] [api.py:139] - Invalid Email / Password
+[12:23:31] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:32] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:33] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:34] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:41] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:43] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:46] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:46] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:46] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:46] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:23:53] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[12:30:09] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:09] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:24] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:25] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:26] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:26] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:57] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:59] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:59] [ERROR] [api.py:139] - Invalid Email / Password
+[12:30:59] [ERROR] [api.py:139] - Invalid Email / Password
+[12:31:01] [ERROR] [api.py:139] - Invalid Email / Password
+[12:31:08] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:31:14] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[12:31:31] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:31:31] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:31:32] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:31:33] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:31:33] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:32:14] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:32:15] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:32:16] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:32:16] [ERROR] [api.py:132] - Invalid Email Format. Must be in the Format user@domain.com
+[12:37:26] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[12:53:10] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[12:54:42] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[12:55:51] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[12:58:11] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[13:01:19] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[13:08:00] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[13:08:42] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[14:33:43] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[14:38:32] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[14:45:55] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[14:46:17] [INFO] [api.py:120] - User with shehryar@gmail.com has been registered sucessfully
+[14:46:40] [INFO] [api.py:146] - User shehryar@gmail.com has logged in!
+[14:47:28] [ERROR] [api.py:177] - No Upcoming Shows!
+[14:47:28] [ERROR] [api.py:184] - No such record!
+[14:47:30] [ERROR] [api.py:177] - No Upcoming Shows!
+[14:47:30] [ERROR] [api.py:184] - No such record!
+[14:47:41] [ERROR] [api.py:177] - No Upcoming Shows!
+[14:47:41] [ERROR] [api.py:184] - No such record!
+[14:47:42] [ERROR] [api.py:177] - No Upcoming Shows!
+[14:47:42] [ERROR] [api.py:184] - No such record!
+[14:55:03] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[14:56:10] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[15:41:05] [ERROR] [api.py:139] - Invalid Email / Password
+[15:41:07] [ERROR] [api.py:139] - Invalid Email / Password
+[15:41:08] [ERROR] [api.py:139] - Invalid Email / Password
+[15:41:10] [ERROR] [api.py:139] - Invalid Email / Password
+[15:41:11] [ERROR] [api.py:139] - Invalid Email / Password
+[15:41:11] [ERROR] [api.py:139] - Invalid Email / Password
+[15:41:11] [ERROR] [api.py:139] - Invalid Email / Password
+[15:41:11] [ERROR] [api.py:139] - Invalid Email / Password
+[15:41:22] [INFO] [api.py:120] - User with mussa@gmail.com has been registered sucessfully
+[15:41:24] [INFO] [api.py:113] - User with the same email mussa@gmail.com already exists!
+[15:41:41] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[15:43:13] [INFO] [api.py:120] - User with haider@gmail.com has been registered sucessfully
+[15:44:29] [INFO] [api.py:120] - User with i243022@isb.nu.edu.pk has been registered sucessfully
+[15:56:46] [INFO] [api.py:120] - User with zain@gmail.com has been registered sucessfully
+[15:56:47] [INFO] [api.py:113] - User with the same email zain@gmail.com already exists!
+[15:57:19] [INFO] [api.py:120] - User with shah@gmail.com has been registered sucessfully
+[15:57:34] [INFO] [api.py:146] - User i243022@isb.nu.edu.pk has logged in!
+[16:27:39] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[16:31:25] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[16:35:07] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[16:46:11] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[16:51:27] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[17:08:28] [INFO] [api.py:146] - User i243022@isb.nu.edu.pk has logged in!
+[17:29:27] [ERROR] [api.py:139] - Invalid Email / Password
+[17:29:33] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[17:38:41] [INFO] [api.py:120] - User with fireh4084@gmail.com has been registered sucessfully
+[17:44:32] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[17:47:07] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[17:49:53] [INFO] [api.py:146] - User i243022@isb.nu.edu.pk has logged in!
+[18:00:34] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[18:03:11] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[18:04:00] [INFO] [api.py:146] - User mussa@gmail.com has logged in!

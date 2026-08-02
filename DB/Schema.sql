@@ -241,8 +241,36 @@ INSERT INTO Show (MovieID, HallID, ShowDate, ShowTime, TicketPrice) VALUES
 SELECT *
 FROM [User]
 
+SELECT 
+    M.Title AS MovieTitle,
+    C.CinemaName,
+    C.BranchName,
+    H.HallName,
+    H.TotalSeats AS SeatingCapacity
+FROM Movie M
+INNER JOIN Show S ON M.MovieID = S.MovieID
+INNER JOIN Hall H ON S.HallID = H.HallID
+INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
+WHERE M.Title = 'Aag Lagay Basti Mein'; 
+-- You can replace 'Aag Lagay Basti Mein' with whichever specific movie you are looking for.
+
+SELECT COUNT(*) FROM Seat WHERE HallID = 6;
+
+
+
 SELECT *
-FROM Show AS S
-INNER JOIN Movie AS M ON S.MovieID = M.MovieID
-INNER JOIN HALL AS H ON S.HallID = H.HallID
-INNER JOIN Cinema AS C ON H.CinemaID = C.CinemaID
+FROM [User]
+
+SELECT *
+FROM Booking
+
+DROP TABLE City
+TRUNCATE TABLE City
+SELECT * 
+FROM City
+
+SELECT *
+FROM Seat
+
+SELECT * 
+FROM SHOW

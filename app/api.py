@@ -1,12 +1,15 @@
-from fastapi import FastAPI, HTTPException, status, Form, Depends
+from enum import Enum
+from fastapi import FastAPI, HTTPException, status, Form, Depends, Response
 from pydantic import BaseModel, field_validator
 from contextlib import asynccontextmanager
 from typing import Annotated
 from app.logger import logger
 import re
+import os
 import pyodbc
 import app.config as config
 import app.passHash as passHash
+import app.queries as queries
 
 
 @asynccontextmanager
@@ -33,19 +36,72 @@ class UserRegistery(BaseModel):
     email:str
     password:str
 
+class SeatCategoryEnum(str, Enum):
+    standard = "Standard"
+    gold = "Gold"
+    platinum = "Platinum"
+    recliner = "Recliner"
+class CityEnum(str, Enum):
+    karachi = "Karachi"
+    lahore = "Lahore"
+    islamabad  ="Islamabad"
+    rawalpindi = "Rawalpindi"
+    faisalabad = "Faisalabad"
+    hyderabad = "Hyderabad"
 def get_DB():
     conn = pyodbc.connect(config.CONNECTION_STRING)
     try:
         yield conn
     finally:
         conn.close()
+def get_DB_connection():
+    return config.CONNECTION_STRING
 
+@app.get("/")
+def read_root():
+    return {"Message" : "Welcome to Movie Ticket Purchase System."}
 
+@app.get("/health")
+def check_health(response : Response):
+    try:
+        conn = get_DB_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT 1")
+        cursor.fetchone()
+        cursor.close()
+        conn.close
+        return {"status": "healthy", "database": "connected"}
+    except pyodbc.Error as e: 
+        response.status_code=503
+        return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
+    except Exception as e:
+        response.status_code = 500
+        return {"status": "unhealthy", "error": "Internal Server Error"}
+
+@app.get("/version")
+def get_version():
+    return {"api_version": "v1.4.2", "environment": os.getenv("ENV", "development")}
+
+@app.get("/config")
+def get_config():
+    return {
+        "max_tickets_per_order": 10,
+        "convenience_fee": 15,
+        "currency": "PKR",
+        "supported_payments": ["debit-card", "credit-card", "easypaisa", "jazzcash"]
+    }
+    
 @app.post("/register")
 def Register_User(firstName: Annotated[str, Form()], lastName: Annotated[str, Form()],
                    email: Annotated[str, Form()], password: Annotated[str, Form()], 
                    conn: pyodbc.Connection = Depends(get_DB)):
     cursor = conn.cursor()
+
+    if not cursor:
+        logger.error("Server Down")
+        raise HTTPException(status_code= 400, detail="Server Down")
+
     email_regex = r"^[^@]+@[^@]+\.[a-zA-Z]{2,}$"
     if not re.match(email_regex, email):
         logger.error(f"Invalid Email Format. Must be in the Format user@domain.com")
@@ -74,7 +130,7 @@ def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()]
     email_regex = r"^[^@]+@[^@]+\.[a-zA-Z]{2,}$"
     if not re.match(email_regex, email):
         logger.error(f"Invalid Email Format. Must be in the Format user@domain.com")
-        raise ValueError("Invalid Email Format. Must be in the Format user@domain.com")
+        raise HTTPException(status_code=400, detail="Invalid Email Format. Must be in the Format user@domain.com")
     email =  email.lower()
     try:
         cursor.execute("SELECT PasswordHash FROM [User] WHERE Email = ?", (email,))
@@ -95,18 +151,9 @@ def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()]
 
 @app.get("/shows")
 def Get_Shows(conn: pyodbc.Connection = Depends(get_DB)):
-    User_query = '''SELECT DISTINCT M.Title, M.Genre, M.Language, M.DurationMinutes, M.Description,
-                M.CensorRating, S.ShowTime, S.ShowDate, S.TicketPrice, H.HallName, H.ScreenType, H.TotalSeats,
-                C.CinemaName, C.BranchName, C.Address, C.ContactNumber
-            FROM Show AS S
-            INNER JOIN Movie AS M ON S.MovieID = M.MovieID
-            INNER JOIN HALL AS H ON S.HallID = H.HallID
-            INNER JOIN Cinema AS C ON H.CinemaID = C.CinemaID
-            WHERE S.ShowDate >= CAST(GETDATE() AS DATE)
-            ORDER BY S.ShowDate ASC, S.ShowTime ASC'''
     cursor = conn.cursor()
     try:
-        cursor.execute(User_query)
+        cursor.execute(queries.get_shows_query)
         results = cursor.fetchall()
         if not results:
             logger.error(f"No Upcoming Shows!")
@@ -122,18 +169,9 @@ def Get_Shows(conn: pyodbc.Connection = Depends(get_DB)):
 
 @app.get("/show/{title}")
 def Get_Specific_Show(title :str, conn: pyodbc.Connection = Depends(get_DB)):
-    User_query = '''SELECT DISTINCT M.Title, M.Genre, M.Language, M.DurationMinutes, M.Description, 
-                M.CensorRating, S.ShowTime, S.ShowDate, S.TicketPrice, H.HallName, H.ScreenType, H.TotalSeats, 
-                C.CinemaName, C.BranchName, C.Address, C.ContactNumber
-            FROM Show AS S
-            INNER JOIN Movie AS M ON S.MovieID = M.MovieID
-            INNER JOIN HALL AS H ON S.HallID = H.HallID
-            INNER JOIN Cinema AS C ON H.CinemaID = C.CinemaID
-            WHERE M.Title = ? AND S.ShowDate >= CAST(GETDATE() AS DATE)
-            ORDER BY S.ShowDate ASC, S.ShowTime ASC'''
     cursor = conn.cursor()
     try:
-        cursor.execute(User_query, (title,))
+        cursor.execute(queries.get_specific_show, (title,))
         results = cursor.fetchall()
         if not results:
             logger.error(f"No Upcoming Shows!")
@@ -146,24 +184,47 @@ def Get_Specific_Show(title :str, conn: pyodbc.Connection = Depends(get_DB)):
         logger.error(f"No such record!")
         raise HTTPException(status_code=400, detail="No Such Record Found!.") 
 
-    
-@app.get("/categories")
-def get_seat_catergories(conn : pyodbc.Connection = Depends(get_DB)):
-    User_query='''SELECT DISTINCT SeatCategory
-                FROM Seat
-                ORDER BY SeatCategory ASC'''
-    cursor = conn.cursor()
+def get_cities_for_dropdown():
     try:
-        cursor.execute(User_query)
+        conn = pyodbc.connect(config.CONNECTION_STRING)
+        cursor = conn.cursor()
+        cursor.execute(queries.Cities_query)
         results = cursor.fetchall()
+        conn.close()
+        
         if not results:
-            logger.error("No Results")
-            raise HTTPException(status_code=400, detail="No Results")
-        categories = [row[0] for row in results]
-        return {"categories" : categories}
+            return {"Default": "Default"}
+
+        return {row[0]: row[0] for row in results}
+        
     except pyodbc.Error as e:
-        logger.error(f"Error in Fetching the Seat Categories")
-        raise HTTPException(status_code=500, detail="Failed to fetch seat categories.")
+        print(f"Failed to load categories for dropdown: {e}")
+        return {"Error": "Error"}
+ 
+Cities = get_cities_for_dropdown()
+DynamicCitiesDropdown = Enum("DynamicCitiesDropdown", Cities)
+
+
+def get_categories_for_dropdown():
+    try:
+        conn = pyodbc.connect(config.CONNECTION_STRING)
+        cursor = conn.cursor()
+                        
+        cursor.execute(queries.Categories_query)
+        results = cursor.fetchall()
+        conn.close()
+        
+        if not results:
+            return {"Default": "Default"}
+        
+        return {row[0]: row[0] for row in results}
+        
+    except pyodbc.Error as e:
+        print(f"Failed to load categories for dropdown: {e}")
+        return {"Error": "Error"}
+    
+Seat_Categories = get_categories_for_dropdown()
+DynamicSeatDropdown = Enum("DynamicSeatDropdown", Seat_Categories)
 
 
 def get_booking_seats(SeatID : int, conn : pyodbc.Connection = Depends(get_DB)):
@@ -183,20 +244,80 @@ def get_booking_seats(SeatID : int, conn : pyodbc.Connection = Depends(get_DB)):
 
 
 @app.post("/booking")
-def Book_Show(title : Annotated[str,Form()], ticketsNeeded : Annotated[int, Form()],
-              conn: pyodbc.Connection = Depends(get_DB)):
+def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], City : Annotated[CityEnum , Form()], TicketsNeeded : Annotated[int, Form()],
+              seatCategory : Annotated[SeatCategoryEnum, Form()],conn: pyodbc.Connection = Depends(get_DB)):
     
-    if ticketsNeeded<=0:
-        logger.error(f"Invalid User Input, Tickets Quantity can never be -ve")
-        raise HTTPException(status_code=400, detail="Negative Tickets Quantity")
+    if TicketsNeeded<=0:
+        logger.error(f"Invalid User Input, Tickets Quantity can never be -ve or 0")
+        raise HTTPException(status_code=400, detail="Negative Tickets Quantity or 0 Entered")
+    config_data = get_config()
+    max_tickets = config_data.get("max_tickets_per_order", 10)
+    if TicketsNeeded > max_tickets:
+        logger.error(f"User cannot request more than 10 Tickets at a time!")
+        raise HTTPException(status_code=400, detail="User cannot request more than 10 Tickets at a time!")
+
     cursor = conn.cursor()
+    selected_category = seatCategory.value
+    selected_city = City.value
+    user_email = email.lower()
     try:
+        cursor.execute("SELECT UserID FROM [User] WHERE Email = ?", (user_email,))
+        user_record = cursor.fetchone()
 
-        shows = Get_Specific_Show(title)
+        if not user_record:
+            logger.error(f"Booking failed: User with email {user_email} not found.")
+            raise HTTPException(status_code=404, detail="User not found. Please register first.")
+        user_id = user_record[0]
 
-        if not shows:
-            raise HTTPException(status_code=400, detail=f"The Movie with Title: {title} is not available")
+        cursor.execute(queries.Select_City_Title_Query, (title, selected_city,) )
+        show_record = cursor.fetchone()
+
+        if not show_record:
+            logger.error(f"The Movie with Title: {title} is not available in {selected_city}")
+            raise HTTPException(status_code=400, detail=f"The Movie with Title: {title} is not available in {selected_city}")
         
+        show_id, base_price, hall_id, cinema_name = show_record
+        cursor.execute(queries.seat_query, (hall_id, selected_category, show_id))
+        all_available_seats = cursor.fetchall()
+
+        if len(all_available_seats) < TicketsNeeded:
+            logger.error(f"Not enough {selected_category} seats available for Show {show_id}.")
+            raise HTTPException(status_code=400, detail=f"Only {len(all_available_seats)} {selected_category} seats left.")
+
+        available_seats = all_available_seats[:TicketsNeeded]
+        
+        final_ticket_price = float(base_price) * (config.get_Category_Multiplier(selected_category))
+        total_ammount = final_ticket_price * TicketsNeeded
+
+        cursor.execute(queries.insert_booking_query, (user_id, show_id, total_ammount, TicketsNeeded))
+        booking_id = cursor.fetchone()[0]
+
+        for seat in available_seats:
+            seat_id = seat[0]
+            cursor.execute(queries.insert_seat_query, (booking_id, seat_id))
+
+        conn.commit()
+        assigned_seats = [f"Row {s[1]} Seat {s[2]}" for s in available_seats]
+        logger.info(f"Booking {booking_id} created successfully for {user_email}.")
+        return {
+            "message": "Booking successful! Proceed to payment.",
+            "booking_details": {
+                "booking_id": booking_id,
+                "cinema": cinema_name,
+                "city": selected_city,
+                "category": selected_category,
+                "tickets_booked": TicketsNeeded,
+                "assigned_seats": assigned_seats,
+                "total_amount": round(total_ammount, 2),
+                "currency": config_data.get("currency")
+            }
+        }
+    
     except HTTPException as e:
+        conn.rollback()
         raise
-   
+    except pyodbc.Error as e:
+        conn.rollback()
+        logger.error(f"DB Error!!! {e}")
+        raise HTTPException(status_code=500, detail=f"DB Error Occured {e}")
+        
