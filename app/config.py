@@ -1,4 +1,7 @@
 import streamlit as st
+from enum import Enum
+import time
+import pyodbc 
 
 #DB connection String
 CONNECTION_STRING = (
@@ -7,14 +10,55 @@ CONNECTION_STRING = (
     r"Database=TicketSystem;" 
     r"Trusted_Connection=yes;"
 )
+# DB conncection helper function
+def get_DB():
+    conn = pyodbc.connect(CONNECTION_STRING)
+    try:
+        yield conn
+    finally:
+        conn.close()
+def get_DB_connection():
+    return CONNECTION_STRING
+# Helper Class for Dropdown
+class SeatCategoryEnum(str, Enum):
+    standard = "Standard"
+    gold = "Gold"
+    platinum = "Platinum"
+    recliner = "Recliner"
+
+# Helper Class for Dropdown
+class CityEnum(str, Enum):
+    karachi = "Karachi"
+    lahore = "Lahore"
+    islamabad  ="Islamabad"
+    rawalpindi = "Rawalpindi"
+    faisalabad = "Faisalabad"
+    hyderabad = "Hyderabad"
+    multan = "Multan"
+    peshawar = "Peshawar"
+    sialkot = "Sialkot"
+    gujranwala= "Gujranwala"
+    quetta = "Quetta"
+
+# Helper Class for Dropdown
+class PaymentMethodEnum(str, Enum):
+    debitcard = "Debit Card"
+    easypaisa = "Easypaisa"
+    jazzcash = "JazzCash"
+
 #FASTAPI Url
 API_URL = "http://127.0.0.1:8000"
 
-#pages for frontend
-register_page = st.Page("E:\BetaCode Work\Ticketing Management System\Frontend\Register.py", title="Register User")
-login_page = st.Page("E:\BetaCode Work\Ticketing Management System\Frontend\Login.py", title="Login User")
-dashboard_page = st.Page("E:\BetaCode Work\Ticketing Management System\Frontend\Dashboard.py", title="System Dashboard")
+cities_list = ["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Faisalabad", "Hyderabad", "Multan", "Peshawar", "Sialkot", "Gujranwala", "Quetta"]
+Seat_Categories = ["Platinum", "Gold", "Standard", "Recliners"]
 
+
+#pages for frontend
+register_page = st.Page("Frontend/Register.py", title="Register User")
+login_page = st.Page("Frontend/Login.py", title="Login User")
+dashboard_page = st.Page("Frontend/Dashboard.py", title="System Dashboard")
+booking_page = st.Page("Frontend/Booking.py", title="Booking Ticket")
+payment_page = st.Page("Frontend/Payment.py", title="Payment")
 
 # mulitplier for seating category wise.
 def get_Category_Multiplier(Category:str ):
@@ -26,3 +70,4 @@ def get_Category_Multiplier(Category:str ):
     elif Category == "Recliner":
         mulitplier = 1.100
     return mulitplier
+

@@ -195,3 +195,81 @@
 [18:00:34] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
 [18:03:11] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
 [18:04:00] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[01:48:30] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[01:48:30] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:48:30] [ERROR] [api.py:166] - DB Failure!
+[01:48:36] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:48:36] [ERROR] [api.py:166] - DB Failure!
+[01:48:38] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:48:38] [ERROR] [api.py:166] - DB Failure!
+[01:48:40] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:48:40] [ERROR] [api.py:166] - DB Failure!
+[01:48:45] [INFO] [api.py:146] - User fireh4084@gmail.com has logged in!
+[01:48:45] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:48:45] [ERROR] [api.py:166] - DB Failure!
+[01:57:11] [INFO] [api.py:146] - User fireh4084@gmail.com has logged in!
+[01:57:11] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:57:11] [ERROR] [api.py:166] - DB Failure!
+[01:57:13] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:57:13] [ERROR] [api.py:166] - DB Failure!
+[01:57:15] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:57:15] [ERROR] [api.py:166] - DB Failure!
+[01:58:53] [INFO] [api.py:146] - User fireh4084@gmail.com has logged in!
+[01:58:53] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:58:53] [ERROR] [api.py:166] - DB Failure!
+[01:58:55] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:58:55] [ERROR] [api.py:166] - DB Failure!
+[01:59:00] [INFO] [api.py:146] - User fireh4084@gmail.com has logged in!
+[01:59:00] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:59:00] [ERROR] [api.py:166] - DB Failure!
+[01:59:02] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:59:02] [ERROR] [api.py:166] - DB Failure!
+[01:59:04] [ERROR] [api.py:159] - No Upcoming Shows!
+[01:59:04] [ERROR] [api.py:166] - DB Failure!
+[10:30:54] [ERROR] [api.py:139] - Invalid Email / Password
+[10:30:56] [ERROR] [api.py:139] - Invalid Email / Password
+[10:31:05] [INFO] [api.py:120] - User with mussa@gmail.com has been registered sucessfully
+[10:31:15] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[10:46:16] [INFO] [api.py:120] - User with mussa@gmail.com has been registered sucessfully
+[10:46:25] [INFO] [api.py:146] - User mussa@gmail.com has logged in!
+[10:53:21] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[10:54:39] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[10:56:00] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[10:58:54] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:07:21] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:08:41] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:09:06] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:09:59] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:11:24] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:13:20] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:19:03] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:21:40] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:23:16] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:24:32] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:24:57] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:26:39] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:31:21] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:31:39] [INFO] [api.py:126] - User with i243022@isb.nu.edu.pk has been registered sucessfully
+[12:32:49] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[12:34:00] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[12:34:32] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[12:36:25] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:36:57] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:37:19] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[12:37:43] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[12:38:22] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[12:39:44] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[12:48:25] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[12:58:21] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[12:59:11] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[13:09:12] [ERROR] [api.py:138] - Invalid Email Format. Must be in the Format user@domain.com
+[13:09:17] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[13:09:55] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[13:10:17] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[13:12:01] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[13:12:55] [INFO] [api.py:152] - User i243022@isb.nu.edu.pk has logged in!
+[13:19:19] [INFO] [api.py:152] - User mussa@gmail.com has logged in!
+[13:25:34] [INFO] [api.py:330] - Booking 1 created successfully for mussa@gmail.com.
+[16:06:08] [ERROR] [api.py:362] - No Active Pending Orders Yet!!
+[16:29:39] [INFO] [api.py:391] - Payment 1 processed successfully for Booking 1.
+[16:34:23] [ERROR] [api.py:246] - No Pending Orders!

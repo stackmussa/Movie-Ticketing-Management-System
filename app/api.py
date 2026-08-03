@@ -1,16 +1,17 @@
 from enum import Enum
-from fastapi import FastAPI, HTTPException, status, Form, Depends, Response
+from fastapi import FastAPI, HTTPException, status, Form, Depends, Response, BackgroundTasks
 from pydantic import BaseModel, field_validator
 from contextlib import asynccontextmanager
-from typing import Annotated
+from typing import Annotated, List
 from app.logger import logger
 import re
 import os
+import asyncio
 import pyodbc
 import app.config as config
 import app.passHash as passHash
 import app.queries as queries
-
+import uuid
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,26 +37,13 @@ class UserRegistery(BaseModel):
     email:str
     password:str
 
-class SeatCategoryEnum(str, Enum):
-    standard = "Standard"
-    gold = "Gold"
-    platinum = "Platinum"
-    recliner = "Recliner"
-class CityEnum(str, Enum):
-    karachi = "Karachi"
-    lahore = "Lahore"
-    islamabad  ="Islamabad"
-    rawalpindi = "Rawalpindi"
-    faisalabad = "Faisalabad"
-    hyderabad = "Hyderabad"
-def get_DB():
-    conn = pyodbc.connect(config.CONNECTION_STRING)
-    try:
-        yield conn
-    finally:
-        conn.close()
-def get_DB_connection():
-    return config.CONNECTION_STRING
+
+
+class PaymentRequest(BaseModel):
+    booking_id: int
+    amount: float
+    payment_method: config.PaymentMethodEnum
+
 
 @app.get("/")
 def read_root():
@@ -64,7 +52,7 @@ def read_root():
 @app.get("/health")
 def check_health(response : Response):
     try:
-        conn = get_DB_connection()
+        conn = config.get_DB_connection()
         cursor = conn.cursor()
 
         cursor.execute("SELECT 1")
@@ -91,11 +79,12 @@ def get_config():
         "currency": "PKR",
         "supported_payments": ["debit-card", "credit-card", "easypaisa", "jazzcash"]
     }
-    
+
+# User Account Registry     
 @app.post("/register")
 def Register_User(firstName: Annotated[str, Form()], lastName: Annotated[str, Form()],
                    email: Annotated[str, Form()], password: Annotated[str, Form()], 
-                   conn: pyodbc.Connection = Depends(get_DB)):
+                   conn: pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
 
     if not cursor:
@@ -122,10 +111,10 @@ def Register_User(firstName: Annotated[str, Form()], lastName: Annotated[str, Fo
     except HTTPException:
         raise
 
-
+# User Account Login
 @app.post("/login")
 def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()],
-               conn: pyodbc.Connection = Depends(get_DB)):
+               conn: pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
     email_regex = r"^[^@]+@[^@]+\.[a-zA-Z]{2,}$"
     if not re.match(email_regex, email):
@@ -148,9 +137,9 @@ def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()]
     except HTTPException :
         raise HTTPException(status_code=400, detail="Invalid Email / Password")
     
-
+# Get the all the Upcoming Shows
 @app.get("/shows")
-def Get_Shows(conn: pyodbc.Connection = Depends(get_DB)):
+def Get_Shows(conn: pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
     try:
         cursor.execute(queries.get_shows_query)
@@ -166,9 +155,9 @@ def Get_Shows(conn: pyodbc.Connection = Depends(get_DB)):
         logger.error("DB Failure!")
         raise HTTPException(status_code=500, detail="Failed to fetch shows from database.") 
     
-
+# User to search a show 
 @app.get("/show/{title}")
-def Get_Specific_Show(title :str, conn: pyodbc.Connection = Depends(get_DB)):
+def Get_Specific_Show(title :str, conn: pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
     try:
         cursor.execute(queries.get_specific_show, (title,))
@@ -184,6 +173,7 @@ def Get_Specific_Show(title :str, conn: pyodbc.Connection = Depends(get_DB)):
         logger.error(f"No such record!")
         raise HTTPException(status_code=400, detail="No Such Record Found!.") 
 
+# Helper Function for Dropdown for Cities selection
 def get_cities_for_dropdown():
     try:
         conn = pyodbc.connect(config.CONNECTION_STRING)
@@ -204,7 +194,7 @@ def get_cities_for_dropdown():
 Cities = get_cities_for_dropdown()
 DynamicCitiesDropdown = Enum("DynamicCitiesDropdown", Cities)
 
-
+# Helper Function for Dropdown for Categories selection
 def get_categories_for_dropdown():
     try:
         conn = pyodbc.connect(config.CONNECTION_STRING)
@@ -226,8 +216,8 @@ def get_categories_for_dropdown():
 Seat_Categories = get_categories_for_dropdown()
 DynamicSeatDropdown = Enum("DynamicSeatDropdown", Seat_Categories)
 
-
-def get_booking_seats(SeatID : int, conn : pyodbc.Connection = Depends(get_DB)):
+#get booking seats 
+def get_booking_seats(SeatID : int, conn : pyodbc.Connection = Depends(config.get_DB)):
     User_Query = '''
             SELECT SUM(TicketsNeeded)
             FROM Seat
@@ -242,10 +232,36 @@ def get_booking_seats(SeatID : int, conn : pyodbc.Connection = Depends(get_DB)):
         print(f"Database error calculating booked seats: {e}")
         raise HTTPException(status_code=500, detail="Error validating seat availability.")
 
+ 
+# check the availability of movie city wise    
+@app.get("/availability")
+def Check_Availability(title: str, city: str, conn: pyodbc.Connection = Depends(config.get_DB)):
+    cursor = conn.cursor()
+    try:
+        # Find the ShowID and HallID using your existing query
+        cursor.execute(queries.Select_City_Title_Query, (title, city))
+        show_record = cursor.fetchone()
+        
+        if not show_record:
+            raise HTTPException(status_code=400, detail="Show not found")
+        
+        show_id, base_price, hall_id, cinema_name = show_record
+        
+        # Loop through categories and count unbooked seats using your existing seat_query
+        availability = {}
+        for cat in ["Platinum", "Gold", "Standard", "Recliner"]:
+            cursor.execute(queries.seat_query, (hall_id, cat, show_id))
+            availability[cat] = len(cursor.fetchall())
+            
+        return availability
+    except pyodbc.Error as e:
+        logger.error(f"DB Error: {e}")
+        raise HTTPException(status_code=500, detail="Database Error")
 
+# for booking tickets of selected Show
 @app.post("/booking")
-def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], City : Annotated[CityEnum , Form()], TicketsNeeded : Annotated[int, Form()],
-              seatCategory : Annotated[SeatCategoryEnum, Form()],conn: pyodbc.Connection = Depends(get_DB)):
+def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], City : Annotated[config.CityEnum , Form()], TicketsNeeded : Annotated[int, Form()],
+              seatCategory : Annotated[config.SeatCategoryEnum, Form()],conn: pyodbc.Connection = Depends(config.get_DB)):
     
     if TicketsNeeded<=0:
         logger.error(f"Invalid User Input, Tickets Quantity can never be -ve or 0")
@@ -320,4 +336,95 @@ def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], Cit
         conn.rollback()
         logger.error(f"DB Error!!! {e}")
         raise HTTPException(status_code=500, detail=f"DB Error Occured {e}")
+
+#get the booking history of the User
+@app.get("/booking/{booking_id}")
+def Get_User_Booking_Details(booking_id: int, conn: pyodbc.Connection = Depends(config.get_DB)):
+    cursor = conn.cursor()
+    try:
+        cursor.execute(queries.get_booking_details_query, (booking_id,))
+        record = cursor.fetchone()
         
+        if not record:
+            raise HTTPException(status_code=404, detail="Booking ID not found.")
+            
+        return {
+            "total_amount": float(record.TotalAmount),
+            "status": record.BookingStatus,
+            "title": record.Title,
+            "date": record.ShowDate,
+            "time": str(record.ShowTime),
+            "cinema": record.CinemaName
+        }
+    except pyodbc.Error as e:
+        logger.error(f"DB Error: {e}")
+        raise HTTPException(status_code=500, detail="Database Error")
+
+# get pending orders of the User 
+@app.get("/pendingorders")
+def get_Pending_bookings(conn : pyodbc.Connection = Depends(config.get_DB)):
+    
+    cursor = conn.cursor()
+    try:
+        cursor.execute(queries.get_user_order)
+        results = cursor.fetchall()
+        if not results:
+            logger.error(f"No Pending Orders!")
+            raise HTTPException(status_code=400, detail="No Pending Orders")
+        column_names = [column[0] for column in cursor.description]
+        formatted_results = [dict(zip(column_names, row)) for row in results]
+        return formatted_results
+    except:
+        logger.error(f"Database error in fetching Pending Orders: {e}")
+        raise HTTPException(status_code=500, detail="Error validating seat availability.")
+
+#processing payment for the User's Booking
+@app.post("/checkout")
+def process_payment(BookingID : Annotated[int , Form()], method : Annotated[config.PaymentMethodEnum , Form()], conn : pyodbc.Connection = Depends(config.get_DB)):
+    cursor = conn.cursor()
+    try:
+        cursor.execute(queries.get_booking_amount, (BookingID,))
+        booking_record = cursor.fetchone()
+        if not booking_record:
+            logger.error("No Active Pending Orders Yet!!")
+            raise HTTPException(status_code=400, detail="No Active Pending Orders Yet!!")
+        expected_amount, current_status = booking_record
+
+        if current_status == 'Confirmed':
+            logger.info("User Already Checked out!")
+            raise HTTPException(status_code=400, detail="User Already Checked out!")
+        if current_status == 'Cancelled':
+            logger.error("User Cancelled the Order, No Such Order Exists now")
+            raise HTTPException(status_code=400, detail="User Cancelled the Order, No Such Order Exists now")
+
+        transaction_ref = f"TXN-{str(uuid.uuid4())[:8].upper()}"
+
+        #inserting into payment made into the Payment Table
+        cursor.execute(queries.insert_payment_query, (
+            BookingID, 
+            expected_amount, 
+            method.value, 
+            transaction_ref
+        ))
+        payment_id = cursor.fetchone()[0]
+
+        #updating booking status from pending to 
+        cursor.execute(queries.update_booking_status_query, (BookingID,))
+
+        conn.commit()
+
+        logger.info(f"Payment {payment_id} processed successfully for Booking {BookingID}.")
+        return {
+            "message": "Payment successful! Your tickets are confirmed.",
+            "transaction_reference": transaction_ref,
+            "payment_id": payment_id
+        }
+
+    except HTTPException:
+        logger.info(f"Transaction ID {transaction_ref}, has been rolled back!")
+        conn.rollback()
+        raise
+    except pyodbc.Error as e:
+        conn.rollback()
+        logger.error(f"Database error during payment processing: {e}")
+        raise HTTPException(status_code=500, detail="An internal error occurred while processing the payment.")

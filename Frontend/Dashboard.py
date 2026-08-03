@@ -6,7 +6,6 @@ import app.queries as queries
 
 api_url = config.API_URL
 
-CITIES = ["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Faisalabad", "Hyderabad"]
 
 if 'flash_message' in st.session_state:
     st.toast(st.session_state['flash_message'], icon="🎉")
@@ -31,6 +30,7 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
             with st.container(border=True, height=420):
 
                 # Fetching Movie Tiles Content
+                date = show.get("ShowDate", "TBD")
                 title = show.get("Title", "Unknown Title")
                 time = show.get("ShowTime", "TBD")
                 cinema = show.get("CinemaName", "Unknown Show")
@@ -39,6 +39,7 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
 
                 #Movie Tiles Content
                 st.subheader(f"{title}")
+                st.write(f"**Date: {date}**")
                 st.write(f"**Time:  {time}**")
                 st.write(f"**Cinema Name:  {cinema}**")
                 st.write(f"**Cinema Address:  {address}**")
@@ -56,7 +57,7 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
 
                     st.toast(f"Navigating to Booking Page for {title}")
 
-                    #st.switch_page("E:\BetaCode Work\Ticketing Management System\Frontend\Booking.py")
+                    st.switch_page(config.booking_page)
 
 #Dashboard
 st.title("Movie Ticket Purchase System")
@@ -65,7 +66,7 @@ st.divider()
 
 #City Selection
 st.subheader("Where are you watching?")
-selected_city = st.selectbox("Select your city to view available movies:", CITIES, label_visibility="collapsed")
+selected_city = st.selectbox("Select your city to view available movies:", config.cities_list, label_visibility="collapsed")
 st.divider()
 
 
