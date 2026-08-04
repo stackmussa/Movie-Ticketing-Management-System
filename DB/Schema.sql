@@ -386,4 +386,6 @@ FROM Booking
 
 SELECT *
 FROM Booking
-WHERE BookingStatus = 'Pending'
+WHERE BookingStatus = 'Confirmed'
+
+SELECT * FROM Booking WHERE BookingID = 1

@@ -1,5 +1,7 @@
 import streamlit as st
 from enum import Enum
+from dotenv import load_dotenv
+import os
 import time
 import pyodbc 
 
@@ -42,15 +44,23 @@ class CityEnum(str, Enum):
 
 # Helper Class for Dropdown
 class PaymentMethodEnum(str, Enum):
-    debitcard = "Debit Card"
+    cards = "Debit/Credit Card"
     easypaisa = "Easypaisa"
     jazzcash = "JazzCash"
 
+load_dotenv()
 #FASTAPI Url
 API_URL = "http://127.0.0.1:8000"
 
 cities_list = ["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Faisalabad", "Hyderabad", "Multan", "Peshawar", "Sialkot", "Gujranwala", "Quetta"]
 Seat_Categories = ["Platinum", "Gold", "Standard", "Recliners"]
+PaymentMethods = ["Debit/Credit Card", "easypaisa", "jazzcash"]
+#JWT Configuration
+Secret_Key = os.getenv("JSON_SK")
+if not Secret_Key:
+    raise ValueError("Fatal Error in loading Secret Key!") 
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 
 #pages for frontend
@@ -58,6 +68,7 @@ register_page = st.Page("Frontend/Register.py", title="Register User")
 login_page = st.Page("Frontend/Login.py", title="Login User")
 dashboard_page = st.Page("Frontend/Dashboard.py", title="System Dashboard")
 booking_page = st.Page("Frontend/Booking.py", title="Booking Ticket")
+My_Orders = st.Page("Frontend/MyOrders.py", title="My Orders")
 payment_page = st.Page("Frontend/Payment.py", title="Payment")
 
 # mulitplier for seating category wise.

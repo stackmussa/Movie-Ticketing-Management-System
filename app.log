@@ -273,3 +273,242 @@
 [16:06:08] [ERROR] [api.py:362] - No Active Pending Orders Yet!!
 [16:29:39] [INFO] [api.py:391] - Payment 1 processed successfully for Booking 1.
 [16:34:23] [ERROR] [api.py:246] - No Pending Orders!
+[23:17:04] [ERROR] [api.py:128] - Invalid Email / Password
+[23:17:25] [INFO] [api.py:109] - User with heim@gmail.com has been registered sucessfully
+[23:30:25] [INFO] [api.py:135] - User heim@gmail.com has logged in!
+[23:31:20] [INFO] [api.py:317] - Booking 2 created successfully for heim@gmail.com.
+[13:07:10] [ERROR] [api.py:115] - Invalid Email / Password
+[13:18:33] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:18:35] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:19:21] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:25:02] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:25:38] [INFO] [api.py:96] - User with john@gmail.com has been registered sucessfully
+[13:29:19] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:29:19] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[13:39:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:39:39] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[13:40:13] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:40:13] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[13:43:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:43:47] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[14:12:36] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[14:12:36] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[14:12:47] [INFO] [api.py:311] - Booking 3 created successfully for i243022@isb.nu.edu.pk.
+[14:19:19] [ERROR] [Payment.py:9] - Please Login First to Make Payment!
+[14:19:26] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[14:19:26] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[14:19:35] [ERROR] [Payment.py:9] - Please Login First to Make Payment!
+[14:19:37] [INFO] [api.py:311] - Booking 4 created successfully for i243022@isb.nu.edu.pk.
+[14:19:43] [ERROR] [Payment.py:9] - Please Login First to Make Payment!
+[14:23:16] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[14:23:16] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[14:25:04] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[14:25:04] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[14:35:45] [INFO] [api.py:311] - Booking 5 created successfully for i243022@isb.nu.edu.pk.
+[14:38:59] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[14:38:59] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[14:39:20] [INFO] [api.py:311] - Booking 6 created successfully for mussa@gmail.com.
+[14:39:32] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[14:39:35] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[14:39:37] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 122
+[14:43:50] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 122
+[14:43:53] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 11
+[14:43:56] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[14:43:57] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[15:07:47] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[15:07:48] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[15:07:51] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[15:07:52] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[15:07:52] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[15:07:52] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 1
+[15:07:55] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 2
+[15:07:55] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 2
+[15:07:57] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 3
+[15:07:57] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 3
+[15:08:00] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 4
+[15:08:00] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 4
+[15:09:20] [ERROR] [api.py:118] - Invalid Email / Password
+[15:09:22] [ERROR] [api.py:118] - Invalid Email / Password
+[15:09:32] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:09:32] [INFO] [api.py:128] - User heim@gmail.com has logged in & recieved a token!
+[15:09:37] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 1
+[15:09:37] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 1
+[15:09:40] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 2
+[15:10:10] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:10:10] [INFO] [api.py:128] - User heim@gmail.com has logged in & recieved a token!
+[15:10:15] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 3
+[15:10:15] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 3
+[15:10:17] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 2
+[15:11:53] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[15:11:54] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[15:11:55] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[15:12:10] [INFO] [api.py:311] - Booking 7 created successfully for heim@gmail.com.
+[15:12:20] [INFO] [api.py:311] - Booking 8 created successfully for heim@gmail.com.
+[15:13:09] [INFO] [api.py:311] - Booking 9 created successfully for heim@gmail.com.
+[15:13:56] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:13:56] [INFO] [api.py:128] - User heim@gmail.com has logged in & recieved a token!
+[15:13:57] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[15:15:13] [INFO] [api.py:311] - Booking 10 created successfully for heim@gmail.com.
+[15:18:03] [INFO] [api.py:311] - Booking 11 created successfully for heim@gmail.com.
+[15:18:04] [INFO] [api.py:311] - Booking 12 created successfully for heim@gmail.com.
+[15:18:04] [INFO] [api.py:311] - Booking 13 created successfully for heim@gmail.com.
+[15:18:04] [INFO] [api.py:311] - Booking 14 created successfully for heim@gmail.com.
+[15:18:04] [INFO] [api.py:311] - Booking 15 created successfully for heim@gmail.com.
+[15:18:05] [INFO] [api.py:311] - Booking 16 created successfully for heim@gmail.com.
+[15:18:05] [INFO] [api.py:311] - Booking 17 created successfully for heim@gmail.com.
+[15:18:05] [INFO] [api.py:311] - Booking 18 created successfully for heim@gmail.com.
+[15:18:05] [INFO] [api.py:311] - Booking 19 created successfully for heim@gmail.com.
+[15:18:05] [INFO] [api.py:311] - Booking 20 created successfully for heim@gmail.com.
+[15:18:06] [INFO] [api.py:311] - Booking 21 created successfully for heim@gmail.com.
+[15:18:06] [INFO] [api.py:311] - Booking 22 created successfully for heim@gmail.com.
+[15:18:06] [INFO] [api.py:311] - Booking 23 created successfully for heim@gmail.com.
+[15:18:07] [INFO] [api.py:311] - Booking 24 created successfully for heim@gmail.com.
+[15:19:16] [INFO] [api.py:311] - Booking 25 created successfully for heim@gmail.com.
+[15:19:16] [INFO] [api.py:311] - Booking 26 created successfully for heim@gmail.com.
+[15:19:25] [INFO] [api.py:311] - Booking 27 created successfully for heim@gmail.com.
+[15:19:25] [INFO] [api.py:311] - Booking 28 created successfully for heim@gmail.com.
+[15:19:35] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:19:35] [INFO] [api.py:128] - User heim@gmail.com has logged in & recieved a token!
+[15:19:38] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 12
+[15:19:58] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[15:20:04] [INFO] [api.py:311] - Booking 29 created successfully for heim@gmail.com.
+[15:20:08] [INFO] [api.py:311] - Booking 30 created successfully for heim@gmail.com.
+[15:22:04] [INFO] [api.py:311] - Booking 31 created successfully for heim@gmail.com.
+[15:22:06] [INFO] [api.py:311] - Booking 32 created successfully for heim@gmail.com.
+[15:22:37] [INFO] [api.py:311] - Booking 33 created successfully for heim@gmail.com.
+[15:22:38] [INFO] [api.py:311] - Booking 34 created successfully for heim@gmail.com.
+[15:22:41] [INFO] [api.py:311] - Booking 35 created successfully for heim@gmail.com.
+[15:22:42] [INFO] [api.py:311] - Booking 36 created successfully for heim@gmail.com.
+[15:22:42] [INFO] [api.py:311] - Booking 37 created successfully for heim@gmail.com.
+[15:22:43] [INFO] [api.py:311] - Booking 38 created successfully for heim@gmail.com.
+[15:22:43] [INFO] [api.py:311] - Booking 39 created successfully for heim@gmail.com.
+[15:22:43] [ERROR] [Booking.py:55] - Oops no seats left for the Platinum
+[15:22:54] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:22:54] [INFO] [api.py:128] - User heim@gmail.com has logged in & recieved a token!
+[15:22:55] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[15:22:57] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 1
+[15:22:57] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 1
+[15:22:59] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 12
+[15:23:03] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[15:23:19] [INFO] [api.py:311] - Booking 40 created successfully for heim@gmail.com.
+[15:23:23] [INFO] [api.py:311] - Booking 41 created successfully for heim@gmail.com.
+[15:23:23] [INFO] [api.py:311] - Booking 42 created successfully for heim@gmail.com.
+[15:23:23] [INFO] [api.py:311] - Booking 43 created successfully for heim@gmail.com.
+[15:23:23] [INFO] [api.py:311] - Booking 44 created successfully for heim@gmail.com.
+[15:23:23] [INFO] [api.py:311] - Booking 45 created successfully for heim@gmail.com.
+[15:23:23] [INFO] [api.py:311] - Booking 46 created successfully for heim@gmail.com.
+[15:23:24] [INFO] [api.py:311] - Booking 47 created successfully for heim@gmail.com.
+[15:23:24] [INFO] [api.py:311] - Booking 48 created successfully for heim@gmail.com.
+[15:23:28] [INFO] [api.py:311] - Booking 49 created successfully for heim@gmail.com.
+[15:23:28] [INFO] [api.py:311] - Booking 50 created successfully for heim@gmail.com.
+[15:23:28] [INFO] [api.py:311] - Booking 51 created successfully for heim@gmail.com.
+[15:23:29] [INFO] [api.py:311] - Booking 52 created successfully for heim@gmail.com.
+[15:23:29] [INFO] [api.py:311] - Booking 53 created successfully for heim@gmail.com.
+[15:23:29] [INFO] [api.py:311] - Booking 54 created successfully for heim@gmail.com.
+[15:23:29] [INFO] [api.py:311] - Booking 55 created successfully for heim@gmail.com.
+[15:23:30] [INFO] [api.py:311] - Booking 56 created successfully for heim@gmail.com.
+[15:23:30] [INFO] [api.py:311] - Booking 57 created successfully for heim@gmail.com.
+[15:23:30] [INFO] [api.py:311] - Booking 58 created successfully for heim@gmail.com.
+[15:23:30] [INFO] [api.py:311] - Booking 59 created successfully for heim@gmail.com.
+[15:23:31] [ERROR] [Booking.py:55] - Oops no seats left for the Platinum
+[15:24:13] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:24:13] [INFO] [api.py:128] - User heim@gmail.com has logged in & recieved a token!
+[15:24:22] [INFO] [api.py:311] - Booking 60 created successfully for heim@gmail.com.
+[15:24:24] [INFO] [api.py:311] - Booking 61 created successfully for heim@gmail.com.
+[16:01:32] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:01:32] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[16:03:24] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:03:31] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:03:31] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[16:05:03] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:05:03] [INFO] [api.py:128] - User heim@gmail.com has logged in & recieved a token!
+[16:05:12] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 1
+[16:05:12] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 1
+[16:05:15] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 2
+[16:06:16] [INFO] [Payment.py:108] - Tansaction Details Sent!
+[16:06:17] [INFO] [Payment.py:108] - Tansaction Details Sent!
+[16:06:17] [INFO] [Payment.py:108] - Tansaction Details Sent!
+[16:06:17] [INFO] [Payment.py:108] - Tansaction Details Sent!
+[16:06:18] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:06:19] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:06:19] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:07:53] [ERROR] [api.py:118] - Invalid Email / Password
+[16:07:57] [ERROR] [api.py:118] - Invalid Email / Password
+[16:08:04] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:08:04] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[16:10:24] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 1
+[16:10:24] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 1
+[16:10:27] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 2
+[16:10:27] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 2
+[16:10:29] [INFO] [Payment.py:34] - Fetched Order Details against Booking ID: 3
+[16:12:14] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 21
+[16:12:14] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 21
+[16:15:37] [WARNING] [api.py:347] - Unauthorized access attempt on Booking 21
+[16:15:37] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 21
+[16:15:40] [ERROR] [Payment.py:36] - Unable to Fetch Details againts Booking ID: 211
+[16:20:37] [ERROR] [api.py:345] - Booking ID 21212 not found
+[16:20:37] [ERROR] [Payment.py:36] - Unable to Fetch Details against Booking ID: 21212
+[16:20:49] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:20:49] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[16:20:50] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:20:56] [ERROR] [api.py:345] - Booking ID 122 not found
+[16:20:56] [ERROR] [Payment.py:36] - Unable to Fetch Details against Booking ID: 122
+[16:23:01] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:26:26] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:26:26] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[16:26:48] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:26:55] [INFO] [Payment.py:44] - Fetched Order Details against Booking ID: 1
+[16:31:13] [WARNING] [api.py:348] - Unauthorized access attempt on Booking 34
+[16:31:13] [ERROR] [Payment.py:46] - Unable to Fetch Details against Booking ID: 34
+[16:31:17] [WARNING] [api.py:348] - Unauthorized access attempt on Booking 35
+[16:31:17] [ERROR] [Payment.py:46] - Unable to Fetch Details against Booking ID: 35
+[16:31:35] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:31:50] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:31:53] [ERROR] [Booking.py:55] - Oops no seats left for the Platinum
+[16:32:01] [ERROR] [Booking.py:55] - Oops no seats left for the Platinum
+[16:32:02] [ERROR] [Booking.py:55] - Oops no seats left for the Platinum
+[16:32:14] [INFO] [api.py:311] - Booking 62 created successfully for mussa@gmail.com.
+[16:32:21] [INFO] [api.py:311] - Booking 63 created successfully for mussa@gmail.com.
+[16:32:34] [INFO] [Payment.py:44] - Fetched Order Details against Booking ID: 62
+[16:32:42] [INFO] [Payment.py:117] - Tansaction Details Sent!
+[16:39:45] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:39:45] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[16:40:42] [INFO] [api.py:452] - Payment 2 processed successfully for Booking 6.
+[16:40:42] [INFO] [Payment.py:117] - Tansaction Details Sent!
+[16:40:49] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:40:53] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:46:11] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:46:12] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[16:46:19] [INFO] [api.py:452] - Payment 3 processed successfully for Booking 3.
+[16:46:19] [INFO] [Payment.py:117] - Tansaction Details Sent!
+[16:46:33] [INFO] [api.py:311] - Booking 64 created successfully for i243022@isb.nu.edu.pk.
+[17:06:48] [INFO] [api.py:96] - User with babar@gmail.com has been registered sucessfully
+[17:06:57] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[17:06:57] [INFO] [api.py:128] - User babar@gmail.com has logged in & recieved a token!
+[17:06:59] [ERROR] [Booking.py:16] - Please Select a Movie, return to Dashboard!
+[17:06:59] [ERROR] [api.py:379] - No Pending Orders!
+[17:06:59] [ERROR] [api.py:385] - Database error in fetching Pending Orders
+[17:07:01] [ERROR] [api.py:379] - No Pending Orders!
+[17:07:01] [ERROR] [api.py:385] - Database error in fetching Pending Orders
+[17:10:40] [INFO] [api.py:311] - Booking 65 created successfully for babar@gmail.com.
+[17:13:49] [INFO] [api.py:311] - Booking 66 created successfully for babar@gmail.com.
+[17:14:03] [INFO] [api.py:452] - Payment 4 processed successfully for Booking 66.
+[17:14:03] [INFO] [Payment.py:117] - Tansaction Details Sent!
+[17:18:10] [INFO] [api.py:311] - Booking 67 created successfully for babar@gmail.com.
+[17:20:50] [ERROR] [Booking.py:56] - Oops no seats left for the Platinum
+[17:21:00] [INFO] [api.py:311] - Booking 68 created successfully for babar@gmail.com.
+[17:24:54] [INFO] [api.py:311] - Booking 69 created successfully for mussa@gmail.com.
+[17:29:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[17:29:47] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[17:30:17] [INFO] [api.py:311] - Booking 70 created successfully for mussa@gmail.com.
+[17:31:31] [INFO] [api.py:452] - Payment 5 processed successfully for Booking 70.
+[17:31:31] [INFO] [Payment.py:117] - Tansaction Details Sent!
+[18:16:29] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:16:29] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[18:24:11] [ERROR] [Booking.py:56] - Oops no seats left for the Platinum
+[18:24:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:24:47] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[18:32:30] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:32:30] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[18:35:15] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:36:53] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!

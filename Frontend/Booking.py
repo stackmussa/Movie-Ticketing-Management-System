@@ -1,8 +1,9 @@
 import streamlit as st
 import requests 
 import app.config as config
-import app.logger as logger 
 import app.queries as queries
+import time
+from app.logger import logger 
 from Frontend import components 
 
 api_url = config.API_URL
@@ -55,8 +56,14 @@ with col2:
         logger.error(f"Oops no seats left for the {selected_category}")
         tickets_needed = 0
     else:
+        # Cap the maximum tickets to either 10 or the actual remaining seats
         max_limit = min(10, max_available)
-        tickets_needed = st.number_input("Number of Tickets", min_value=1, max_value=10)
+        
+        # Create a list of numbers from 1 up to the max_limit (e.g., [1, 2, 3, 4, 5])
+        ticket_options = list(range(1, max_limit + 1))
+        
+        # Render a simple, foolproof dropdown menu
+        tickets_needed = st.selectbox("Number of Tickets", options=ticket_options)
 
 st.subheader("Hall Layout!")
 st.write("Seats are automatically assigned best-available within your chosen category.")
@@ -73,19 +80,24 @@ st.divider()
 # --- 3. Checkout ---
 st.subheader("Checkout!")
 
-if tickets_needed >0:
+if tickets_needed >0 and tickets_needed <= 10:
     if st.button("Check Out", type="primary", use_container_width=True):
         with st.spinner("Processing your booking..."):
+
+            # Prepare the Authorization header
+            headers = {
+                "Authorization": f"Bearer {st.session_state.get('token')}"
+            }
+
             # Match the Form() data expected by api.py
             payload = {
-                "email": user_email,
                 "title": movie_title,
                 "City": city,
                 "TicketsNeeded": tickets_needed,
                 "seatCategory": selected_category
             }
             
-            response = requests.post(f"{api_url}/booking", data=payload)
+            response = requests.post(f"{api_url}/booking", data=payload, headers=headers)
             
             if response.status_code == 200:
                 booking_info = response.json().get("booking_details", {})
@@ -99,12 +111,18 @@ if tickets_needed >0:
                 **Assigned Seats:** {assigned_seats_str}  
                 **Total Amount:** {booking_info.get("currency")} {booking_info.get("total_amount")}
                 """)
+
+                time.sleep(5)
+                # WIPE the cache and push the new booking ID
+                st.session_state['current_booking_id'] = booking_info.get("booking_id")
+                st.session_state.pop('current_order', None)
                 
-                # Future Navigation to Payment
-                # st.switch_page("frontend/payment.py")
+                # Navigate the user towards checkout
+                st.switch_page(config.payment_page)
                 
             else:
                 error_detail = response.json().get("detail", "Booking failed.")
                 st.error(error_detail)
 else:
+    st.error("Unable to CheckOUT")
     st.button("Check Out", type="primary", use_container_width=True, disabled=True)    

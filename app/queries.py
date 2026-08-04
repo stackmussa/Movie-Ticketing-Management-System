@@ -1,3 +1,18 @@
+verify_email = '''
+        SELECT UserID
+        FROM [User]
+        WHERE Email = ?
+'''
+verify_password = '''
+        SELECT PasswordHash 
+        FROM [User] 
+        WHERE Email = ?
+'''
+authorize_owner = '''
+        SELECT UserID, BookingStatus
+        FROM Booking 
+        WHERE BookingID = ?
+'''
 get_shows_query = '''SELECT DISTINCT M.Title, M.Genre, M.Language, M.DurationMinutes, M.Description,
                 M.CensorRating, S.ShowTime, S.ShowDate, S.TicketPrice, H.HallName, H.ScreenType, H.TotalSeats,
                 C.CinemaName, C.BranchName, C.Address, C.ContactNumber, Ct.CityName AS City
@@ -62,10 +77,23 @@ insert_booking_query = '''
 insert_seat_query = "INSERT INTO BookingSeat (BookingID, SeatID) VALUES (?, ?)"
 
 get_user_order = '''
-    SELECT *
-    FROM Booking
-    WHERE BookingStatus = 'Pending' and UserID = ?
-''' 
+    SELECT 
+        B.BookingID, 
+        B.TotalAmount, 
+        B.BookingStatus, 
+        M.Title, 
+        C.CinemaName, 
+        C.Address, 
+        P.PaymentMethod
+    FROM Booking B
+    INNER JOIN Show S ON B.ShowID = S.ShowID
+    INNER JOIN Movie M ON S.MovieID = M.MovieID
+    INNER JOIN Hall H ON S.HallID = H.HallID
+    INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
+    LEFT JOIN Payment P ON B.BookingID = P.BookingID
+    WHERE B.UserID = ?
+    ORDER BY B.BookingDate DESC
+'''
 # Fetch all seats and their booking status for a specific Show and Hall
 get_interactive_seats_query = '''
     SELECT 
@@ -110,5 +138,12 @@ insert_payment_query = '''
 update_booking_status_query = '''
     UPDATE Booking 
     SET BookingStatus = 'Confirmed' 
+    WHERE BookingID = ?
+'''
+
+#cancellation of booking
+cancel_booking = '''
+    UPDATE Booking
+    SET BookingStatus = 'Cancelled'
     WHERE BookingID = ?
 '''

@@ -6,29 +6,25 @@ from typing import Annotated, List
 from app.logger import logger
 import re
 import os
+import uuid
 import asyncio
 import pyodbc
 import app.config as config
 import app.passHash as passHash
 import app.queries as queries
-import uuid
+import app.jwt_Security as jwt_Security
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
         conn = pyodbc.connect(config.CONNECTION_STRING, autocommit=True)
         cursor = conn.cursor()
-        with open("E:\BetaCode Work\Ticketing Management System\DB\Schema.sql", "r") as file:
+        with open("DB/Schema.sql", "r") as file:
             sql_script = file.read()
         conn.commit()
         conn.close()
-        yield
     except Exception as e:
-        print(f"DB Initialization Failed: {e}")
-        raise HTTPException(status_code=400, detail="Error Loading DB")
-    finally:
-        if 'conn' in locals():
-            conn.commit()
+        logger.error(f"DB Initialization Failed")
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -36,8 +32,6 @@ app = FastAPI(lifespan=lifespan)
 class UserRegistery(BaseModel):
     email:str
     password:str
-
-
 
 class PaymentRequest(BaseModel):
     booking_id: int
@@ -50,23 +44,16 @@ def read_root():
     return {"Message" : "Welcome to Movie Ticket Purchase System."}
 
 @app.get("/health")
-def check_health(response : Response):
+def check_health(response: Response, conn : pyodbc.Connection = Depends(config.get_DB)):
     try:
-        conn = config.get_DB_connection()
         cursor = conn.cursor()
-
         cursor.execute("SELECT 1")
         cursor.fetchone()
-        cursor.close()
-        conn.close
         return {"status": "healthy", "database": "connected"}
-    except pyodbc.Error as e: 
-        response.status_code=503
-        return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
-    except Exception as e:
-        response.status_code = 500
-        return {"status": "unhealthy", "error": "Internal Server Error"}
-
+    except pyodbc.Error: 
+        response.status_code = 503
+        return {"status": "unhealthy", "database": "disconnected", "error": "Database connection failed."}
+    
 @app.get("/version")
 def get_version():
     return {"api_version": "v1.4.2", "environment": os.getenv("ENV", "development")}
@@ -97,7 +84,7 @@ def Register_User(firstName: Annotated[str, Form()], lastName: Annotated[str, Fo
         raise ValueError("Invalid Email Format. Must be in the Format user@domain.com")
     email =  email.lower()
     try:
-        cursor.execute("SELECT UserID FROM [User] WHERE Email = ?", (email,))
+        cursor.execute(queries.verify_email, (email,))
         if cursor.fetchone():
             logger.info(f"User with the same email {email} already exists!")
             raise HTTPException(status_code=400, detail=f"User with Email {email} already exists!")
@@ -115,14 +102,17 @@ def Register_User(firstName: Annotated[str, Form()], lastName: Annotated[str, Fo
 @app.post("/login")
 def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()],
                conn: pyodbc.Connection = Depends(config.get_DB)):
+
     cursor = conn.cursor()
     email_regex = r"^[^@]+@[^@]+\.[a-zA-Z]{2,}$"
+
     if not re.match(email_regex, email):
         logger.error(f"Invalid Email Format. Must be in the Format user@domain.com")
         raise HTTPException(status_code=400, detail="Invalid Email Format. Must be in the Format user@domain.com")
     email =  email.lower()
+
     try:
-        cursor.execute("SELECT PasswordHash FROM [User] WHERE Email = ?", (email,))
+        cursor.execute(queries.verify_password, (email,))
         result = cursor.fetchone()
         if not result:
             logger.error(f"Invalid Email / Password")
@@ -132,8 +122,11 @@ def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()]
 
         if not is_valid:
             raise HTTPException(status_code=400, detail="Invalid Email / Password")
-        logger.info(f"User {email} has logged in!")
-        return {"message" : "Welcome To Ticketing System"}
+
+        #access tokens for Security
+        access_token = jwt_Security.create_access_tokens(data={"sub": email})
+        logger.info(f"User {email} has logged in & recieved a token!")
+        return {"access_token": access_token, "token_type": "bearer"}
     except HTTPException :
         raise HTTPException(status_code=400, detail="Invalid Email / Password")
     
@@ -260,14 +253,18 @@ def Check_Availability(title: str, city: str, conn: pyodbc.Connection = Depends(
 
 # for booking tickets of selected Show
 @app.post("/booking")
-def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], City : Annotated[config.CityEnum , Form()], TicketsNeeded : Annotated[int, Form()],
-              seatCategory : Annotated[config.SeatCategoryEnum, Form()],conn: pyodbc.Connection = Depends(config.get_DB)):
+def Book_Show(title : Annotated[str,Form()], City : Annotated[config.CityEnum , Form()],
+               TicketsNeeded : Annotated[int, Form()], seatCategory : Annotated[config.SeatCategoryEnum, Form()],
+                current_user : dict = Depends(jwt_Security.get_current_user), 
+                conn: pyodbc.Connection = Depends(config.get_DB)):
     
     if TicketsNeeded<=0:
         logger.error(f"Invalid User Input, Tickets Quantity can never be -ve or 0")
         raise HTTPException(status_code=400, detail="Negative Tickets Quantity or 0 Entered")
+    
     config_data = get_config()
     max_tickets = config_data.get("max_tickets_per_order", 10)
+
     if TicketsNeeded > max_tickets:
         logger.error(f"User cannot request more than 10 Tickets at a time!")
         raise HTTPException(status_code=400, detail="User cannot request more than 10 Tickets at a time!")
@@ -275,16 +272,11 @@ def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], Cit
     cursor = conn.cursor()
     selected_category = seatCategory.value
     selected_city = City.value
-    user_email = email.lower()
+    user_id = current_user['user_id']
+    user_email = current_user['email']
+
     try:
-        cursor.execute("SELECT UserID FROM [User] WHERE Email = ?", (user_email,))
-        user_record = cursor.fetchone()
-
-        if not user_record:
-            logger.error(f"Booking failed: User with email {user_email} not found.")
-            raise HTTPException(status_code=404, detail="User not found. Please register first.")
-        user_id = user_record[0]
-
+        #selection based on Movie's Title & in the respective city
         cursor.execute(queries.Select_City_Title_Query, (title, selected_city,) )
         show_record = cursor.fetchone()
 
@@ -296,6 +288,7 @@ def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], Cit
         cursor.execute(queries.seat_query, (hall_id, selected_category, show_id))
         all_available_seats = cursor.fetchall()
 
+        #validation for Total Seats
         if len(all_available_seats) < TicketsNeeded:
             logger.error(f"Not enough {selected_category} seats available for Show {show_id}.")
             raise HTTPException(status_code=400, detail=f"Only {len(all_available_seats)} {selected_category} seats left.")
@@ -308,6 +301,7 @@ def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], Cit
         cursor.execute(queries.insert_booking_query, (user_id, show_id, total_ammount, TicketsNeeded))
         booking_id = cursor.fetchone()[0]
 
+        #seat validations & equipment
         for seat in available_seats:
             seat_id = seat[0]
             cursor.execute(queries.insert_seat_query, (booking_id, seat_id))
@@ -334,14 +328,26 @@ def Book_Show(email : Annotated[str , Form()],title : Annotated[str,Form()], Cit
         raise
     except pyodbc.Error as e:
         conn.rollback()
-        logger.error(f"DB Error!!! {e}")
-        raise HTTPException(status_code=500, detail=f"DB Error Occured {e}")
+        logger.error(f"DB Error Occurred during booking.")
+        raise HTTPException(status_code=500, detail=f"DB Error Occured ")
 
 #get the booking history of the User
 @app.get("/booking/{booking_id}")
-def Get_User_Booking_Details(booking_id: int, conn: pyodbc.Connection = Depends(config.get_DB)):
+def Get_User_Booking_Details(booking_id: int, current_user : dict = Depends(jwt_Security.get_current_user),
+                                conn: pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
     try:
+        # Authorization verification 
+        cursor.execute(queries.authorize_owner, (booking_id,))
+        booking_owner = cursor.fetchone()
+        
+        if not booking_owner:
+            logger.error(f"Booking ID {booking_id} not found")
+            raise HTTPException(status_code=404, detail="Booking ID not found.")
+        if booking_owner[0] != current_user["user_id"]:
+            logger.warning(f"Unauthorized access attempt on Booking {booking_id}")
+            raise HTTPException(status_code=403, detail="You are not authorized to view this booking.")
+
         cursor.execute(queries.get_booking_details_query, (booking_id,))
         record = cursor.fetchone()
         
@@ -362,11 +368,12 @@ def Get_User_Booking_Details(booking_id: int, conn: pyodbc.Connection = Depends(
 
 # get pending orders of the User 
 @app.get("/pendingorders")
-def get_Pending_bookings(conn : pyodbc.Connection = Depends(config.get_DB)):
+def get_Pending_bookings(current_user : dict = Depends(jwt_Security.get_current_user),
+                         conn : pyodbc.Connection = Depends(config.get_DB)):
     
     cursor = conn.cursor()
     try:
-        cursor.execute(queries.get_user_order)
+        cursor.execute(queries.get_user_order, (current_user["user_id"]))
         results = cursor.fetchall()
         if not results:
             logger.error(f"No Pending Orders!")
@@ -375,31 +382,62 @@ def get_Pending_bookings(conn : pyodbc.Connection = Depends(config.get_DB)):
         formatted_results = [dict(zip(column_names, row)) for row in results]
         return formatted_results
     except:
-        logger.error(f"Database error in fetching Pending Orders: {e}")
+        logger.error(f"Database error in fetching Pending Orders")
         raise HTTPException(status_code=500, detail="Error validating seat availability.")
+
 
 #processing payment for the User's Booking
 @app.post("/checkout")
-def process_payment(BookingID : Annotated[int , Form()], method : Annotated[config.PaymentMethodEnum , Form()], conn : pyodbc.Connection = Depends(config.get_DB)):
+def process_payment(
+    BookingID: Annotated[int, Form()], 
+    method: Annotated[config.PaymentMethodEnum, Form()], 
+    mobile_number: Annotated[str | None, Form()] = None,
+    card_number: Annotated[str | None, Form()] = None,
+    expiry_date: Annotated[str | None, Form()] = None,
+    cvv: Annotated[str | None, Form()] = None,
+    current_user: dict = Depends(jwt_Security.get_current_user), 
+    conn: pyodbc.Connection = Depends(config.get_DB)
+):
+    # --- 1. Dynamic Payment Validation ---
+    if method.value in ["JazzCash", "EasyPaisa"]:
+        if not mobile_number or not re.match(r"^03\d{9}$", mobile_number):
+            logger.error("Checkout Failed: Invalid Mobile Number.")
+            raise HTTPException(status_code=400, detail="Mobile number must be exactly 11 digits and start with '03'.")
+            
+    elif method.value == "Debit/Credit Card":
+        # Remove spaces from card number for validation
+        clean_card = card_number.replace(" ", "") if card_number else ""
+        if not clean_card or not re.match(r"^\d{16}$", clean_card):
+            raise HTTPException(status_code=400, detail="Invalid Card Number. Must be 16 digits.")
+        if not expiry_date or not re.match(r"^(0[1-9]|1[0-2])\/?([0-9]{2})$", expiry_date):
+            raise HTTPException(status_code=400, detail="Invalid Expiry Date. Use MM/YY format.")
+        if not cvv or not re.match(r"^\d{3,4}$", cvv):
+            raise HTTPException(status_code=400, detail="Invalid CVV.")
+
+    # --- 2. Database Processing ---
     cursor = conn.cursor()
     try:
+        # Verify ownership to block illicit payments (IDOR Protection)
+        cursor.execute("SELECT UserID FROM Booking WHERE BookingID = ?", (BookingID,))
+        owner = cursor.fetchone()
+        if not owner or owner[0] != current_user["user_id"]:
+            raise HTTPException(status_code=403, detail="Unauthorized payment attempt.")
+
         cursor.execute(queries.get_booking_amount, (BookingID,))
         booking_record = cursor.fetchone()
+        
         if not booking_record:
-            logger.error("No Active Pending Orders Yet!!")
-            raise HTTPException(status_code=400, detail="No Active Pending Orders Yet!!")
+            raise HTTPException(status_code=400, detail="No Active Pending Orders Found!")
+            
         expected_amount, current_status = booking_record
 
         if current_status == 'Confirmed':
-            logger.info("User Already Checked out!")
             raise HTTPException(status_code=400, detail="User Already Checked out!")
         if current_status == 'Cancelled':
-            logger.error("User Cancelled the Order, No Such Order Exists now")
             raise HTTPException(status_code=400, detail="User Cancelled the Order, No Such Order Exists now")
 
         transaction_ref = f"TXN-{str(uuid.uuid4())[:8].upper()}"
 
-        #inserting into payment made into the Payment Table
         cursor.execute(queries.insert_payment_query, (
             BookingID, 
             expected_amount, 
@@ -408,9 +446,7 @@ def process_payment(BookingID : Annotated[int , Form()], method : Annotated[conf
         ))
         payment_id = cursor.fetchone()[0]
 
-        #updating booking status from pending to 
         cursor.execute(queries.update_booking_status_query, (BookingID,))
-
         conn.commit()
 
         logger.info(f"Payment {payment_id} processed successfully for Booking {BookingID}.")
@@ -421,10 +457,50 @@ def process_payment(BookingID : Annotated[int , Form()], method : Annotated[conf
         }
 
     except HTTPException:
-        logger.info(f"Transaction ID {transaction_ref}, has been rolled back!")
         conn.rollback()
         raise
     except pyodbc.Error as e:
         conn.rollback()
         logger.error(f"Database error during payment processing: {e}")
         raise HTTPException(status_code=500, detail="An internal error occurred while processing the payment.")
+
+@app.put("/cancelBooking/{Booking_ID}")
+def cancel_Booking(booking_ID : int, current_user : dict = Depends(jwt_Security.get_current_user),
+                   conn : pyodbc.Connection = Depends(config.get_DB)):
+    cursor = conn.cursor()
+    try:
+        # validate owner
+        cursor.execute(queries.authorize_owner, (booking_ID,))
+        record = cursor.fetchone()
+
+        if not record:
+            logger.info(f"The User {current_user['email']} has no active Booking!")
+            raise HTTPException(status_code=400, detail="The User  has no active Booking!")
+        else:
+            # checks for authetication
+            if record[0] != current_user['user_id']:
+                logger.info(f"Unauthorized cancellation attempt on Booking No. {booking_ID}")
+                raise HTTPException(status_code=400, detail="Unauthorized cancellation attempt!")
+
+            if record[1] == 'Cancelled':
+                logger.info(f"The Booking is already Cancelled!")
+                raise HTTPException(status_code=400, detail="This booking is already cancelled.")
+
+            #query for cancelling the 
+            cursor.execute(queries.cancel_booking, (booking_ID,))
+
+            if record[1] == 'Confirmed':
+                cursor.execute("UPDATE Payment SET PaymentStatus = 'Refunded' WHERE BookingID = ?", (booking_ID,))
+            
+            conn.commit()
+            logger.info(f"Booking {booking_ID} successfully cancelled by User {current_user['user_id']}.")
+        
+        return {"message": "Booking has been successfully cancelled."}
+
+    except HTTPException:
+            conn.rollback()
+            raise
+    except pyodbc.Error:
+        conn.rollback()
+        logger.error(f"Database error during cancellation")
+        raise HTTPException(status_code=500, detail="An internal database error occurred.")
