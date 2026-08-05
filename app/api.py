@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from typing import Annotated, List
 from fastapi.security import OAuth2PasswordRequestForm
 from app.logger import logger
+import asyncio
 import re
 import os
 import uuid
@@ -101,10 +102,15 @@ def Register_User(firstName: Annotated[str, Form()], lastName: Annotated[str, Fo
 
 # User Account Login
 @app.post("/login")
-def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()],
+def Login_User(form_data : Annotated[OAuth2PasswordRequestForm, Depends()],
                conn: pyodbc.Connection = Depends(config.get_DB)):
 
     cursor = conn.cursor()
+
+    # Extract email from the standard OAuth2 'username' field
+    email = form_data.username.lower()
+    password = form_data.password
+
     email_regex = r"^[^@]+@[^@]+\.[a-zA-Z]{2,}$"
 
     if not re.match(email_regex, email):
@@ -128,6 +134,7 @@ def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()]
         access_token = jwt_Security.create_access_tokens(data={"sub": email})
         logger.info(f"User {email} has logged in & recieved a token!")
         return {"access_token": access_token, "token_type": "bearer"}
+    
     except HTTPException :
         raise HTTPException(status_code=400, detail="Invalid Email / Password")
        
@@ -252,12 +259,40 @@ def Check_Availability(title: str, city: str, conn: pyodbc.Connection = Depends(
         logger.error(f"DB Error: {e}")
         raise HTTPException(status_code=500, detail="Database Error")
 
+#5 minutes timer helper function
+async def auto_cancel_booking(booking_id: int):
+    # Start the 5-minute countdown (300 seconds)
+    await asyncio.sleep(config.booking_hold_timer)
+    
+    try:
+        # Open a new connection specifically for this background task
+        conn = pyodbc.connect(config.CONNECTION_STRING, autocommit=True)
+        cursor = conn.cursor()
+        
+        # Check if the booking is still 'Pending'
+        cursor.execute(queries.get_booking_status, (booking_id,))
+        record = cursor.fetchone()
+        
+        if record and record[0] == 'Pending':
+            # Expire the booking, which instantly releases the seats for other users
+            cursor.execute("UPDATE Booking SET BookingStatus = 'Cancelled' WHERE BookingID = ?", (booking_id,))
+            logger.info(f"Timeout: Booking {booking_id} automatically cancelled after 5 minutes.")
+            
+        conn.close()
+    except pyodbc.Error as e:
+        logger.error(f"Background task DB error for Booking {booking_id}")
+
 # for booking tickets of selected Show
 @app.post("/booking")
-def Book_Show(title : Annotated[str,Form()], City : Annotated[config.CityEnum , Form()],
-               TicketsNeeded : Annotated[int, Form()], seatCategory : Annotated[config.SeatCategoryEnum, Form()],
-                current_user : dict = Depends(jwt_Security.get_current_user), 
-                conn: pyodbc.Connection = Depends(config.get_DB)):
+def Book_Show(
+    title: Annotated[str, Form()], 
+    City: Annotated[config.CityEnum, Form()],
+    TicketsNeeded: Annotated[int, Form()], 
+    seatCategory: Annotated[config.SeatCategoryEnum, Form()],
+    background_tasks: BackgroundTasks, 
+    current_user: dict = Depends(jwt_Security.get_current_user), 
+    conn: pyodbc.Connection = Depends(config.get_DB)
+):
     
     if TicketsNeeded<=0:
         logger.error(f"Invalid User Input, Tickets Quantity can never be -ve or 0")
@@ -310,6 +345,10 @@ def Book_Show(title : Annotated[str,Form()], City : Annotated[config.CityEnum , 
         conn.commit()
         assigned_seats = [f"Row {s[1]} Seat {s[2]}" for s in available_seats]
         logger.info(f"Booking {booking_id} created successfully for {user_email}.")
+
+        #Starting timer of 5 Minutes for the seat to be booked 
+        background_tasks.add_task(auto_cancel_booking, booking_id)
+
         return {
             "message": "Booking successful! Proceed to payment.",
             "booking_details": {
@@ -467,42 +506,50 @@ def process_payment(
         raise HTTPException(status_code=500, detail="An internal error occurred while processing the payment.")
 
 @app.put("/cancelBooking/{booking_ID}")
-def cancel_Booking(booking_ID : int, current_user : dict = Depends(jwt_Security.get_current_user),
-                   conn : pyodbc.Connection = Depends(config.get_DB)):
+def cancel_Booking(booking_ID: int, current_user: dict = Depends(jwt_Security.get_current_user),
+    conn: pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
     try:
-        # validate owner
-        cursor.execute(queries.authorize_owner, (booking_ID,))
+        # Fetch the TotalAmount along with the status
+        cursor.execute("SELECT UserID, BookingStatus, TotalAmount FROM Booking WHERE BookingID = ?", (booking_ID,))
         record = cursor.fetchone()
 
         if not record:
-            logger.info(f"The User {current_user['email']} has no active Booking!")
-            raise HTTPException(status_code=400, detail="The User  has no active Booking!")
-        else:
-            # checks for authetication
-            if record[0] != current_user['user_id']:
-                logger.info(f"Unauthorized cancellation attempt on Booking No. {booking_ID}")
-                raise HTTPException(status_code=400, detail="Unauthorized cancellation attempt!")
-
-            if record[1] == 'Cancelled':
-                logger.info(f"The Booking is already Cancelled!")
-                raise HTTPException(status_code=400, detail="This booking is already cancelled.")
-
-            #query for cancelling the 
-            cursor.execute(queries.cancel_booking, (booking_ID,))
-
-            if record[1] == 'Confirmed':
-                cursor.execute("UPDATE Payment SET PaymentStatus = 'Refunded' WHERE BookingID = ?", (booking_ID,))
+            logger.info(f"Booking {booking_ID} not found.")
+            raise HTTPException(status_code=404, detail="Booking not found.")
             
-            conn.commit()
-            logger.info(f"Booking {booking_ID} successfully cancelled by User {current_user['user_id']}.")
+        user_id, status, total_amount = record
         
-        return {"message": "Booking has been successfully cancelled."}
+        if user_id != current_user['user_id']:
+            logger.warning(f"Unauthorized cancellation attempt on Booking No. {booking_ID}")
+            raise HTTPException(status_code=403, detail="Unauthorized cancellation attempt!")
+
+        if status == 'Cancelled':
+            raise HTTPException(status_code=400, detail="This booking is already cancelled.")
+
+        # 1. Free the seats by updating the status
+        cursor.execute("UPDATE Booking SET BookingStatus = 'Cancelled' WHERE BookingID = ?", (booking_ID,))
+
+        # 2. Process Refund & Penalty Logic
+        message = "Booking has been successfully cancelled."
+        
+        if status == 'Confirmed':
+            cursor.execute("UPDATE Payment SET PaymentStatus = 'Refunded' WHERE BookingID = ?", (booking_ID,))
+            
+            # Calculate the 10% deduction
+            deduction = float(total_amount) * 0.10
+            refund_amount = float(total_amount) - deduction
+            message = f"Booking cancelled. Rs. {refund_amount:.2f} refunded (10% cancellation fee applied)."
+        
+        conn.commit()
+        logger.info(f"Booking {booking_ID} cancelled by User {current_user['user_id']}.")
+    
+        return {"message": message}
 
     except HTTPException:
-            conn.rollback()
-            raise
-    except pyodbc.Error:
+        conn.rollback()
+        raise
+    except pyodbc.Error as e:
         conn.rollback()
         logger.error(f"Database error during cancellation")
         raise HTTPException(status_code=500, detail="An internal database error occurred.")

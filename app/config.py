@@ -5,6 +5,9 @@ import os
 import time
 import pyodbc 
 
+
+booking_hold_timer= 300
+
 #DB connection String
 CONNECTION_STRING = (
     r"Driver={ODBC Driver 17 for SQL Server};"
@@ -55,13 +58,13 @@ API_URL = "http://127.0.0.1:8000"
 cities_list = ["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Faisalabad", "Hyderabad", "Multan", "Peshawar", "Sialkot", "Gujranwala", "Quetta"]
 Seat_Categories = ["Platinum", "Gold", "Standard", "Recliners"]
 PaymentMethods = ["Debit/Credit Card", "easypaisa", "jazzcash"]
+
 #JWT Configuration
 Secret_Key = os.getenv("JSON_SK")
 if not Secret_Key:
     raise ValueError("Fatal Error in loading Secret Key!") 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
-
 
 #pages for frontend
 register_page = st.Page("Frontend/Register.py", title="Register User")

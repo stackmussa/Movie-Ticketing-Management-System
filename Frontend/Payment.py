@@ -1,8 +1,11 @@
 import streamlit as st
 import time
 import requests
+import streamlit.components.v1 as st_components
 import app.config as config
 from app.logger import logger
+from Frontend import components
+
 
 api_url = config.API_URL
 
@@ -66,6 +69,23 @@ if 'current_order' in st.session_state:
 
     if order.get('status') == 'Pending':
 
+        # 5 minuts time counter 
+        timer_key = f"timer_{booking_id}"
+        if timer_key not in st.session_state:
+            st.session_state[timer_key] = time.time()
+
+        # Calculate exactly how many seconds are left (300 seconds = 5 minutes)
+        elapsed_time = time.time() - st.session_state[timer_key]
+        remaining_seconds = max(0, 300 - int(elapsed_time))
+
+        timer_html = components.get_timer_html(remaining_seconds)
+        st_components.html(timer_html, height=70)
+
+        if remaining_seconds <=0:
+            logger.error("The Booking time has passed, Please return to the dashboard to book again.")
+            st.error("The Booking has expired. Please return to the dashboard to book again.")
+            st.stop()
+
         #load payment Methods
         payment_methods = [method.value for method in config.PaymentMethodEnum]
         selected_method = st.selectbox("Select Payment Method", payment_methods)
@@ -126,6 +146,7 @@ if 'current_order' in st.session_state:
 
                             # Wipe the order from memory to prevent double-charging
                             del st.session_state['current_order']
+                            st.session_state.pop(f"timer_{booking_id}", None)
                         except ValueError:
                             st.error(f"Server Error ({pay_resp.status_code}): {pay_resp.text}")
                     else:

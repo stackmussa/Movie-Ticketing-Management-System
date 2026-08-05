@@ -84,7 +84,9 @@ get_user_order = '''
         M.Title, 
         C.CinemaName, 
         C.Address, 
-        P.PaymentMethod
+        P.PaymentMethod,
+        S.ShowDate,
+        S.ShowTime
     FROM Booking B
     INNER JOIN Show S ON B.ShowID = S.ShowID
     INNER JOIN Movie M ON S.MovieID = M.MovieID
@@ -145,5 +147,11 @@ update_booking_status_query = '''
 cancel_booking = '''
     UPDATE Booking
     SET BookingStatus = 'Cancelled'
+    WHERE BookingID = ?
+'''
+
+get_booking_status = '''
+    SELECT BookingStatus 
+    FROM Booking 
     WHERE BookingID = ?
 '''

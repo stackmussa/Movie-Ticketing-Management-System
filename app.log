@@ -547,3 +547,47 @@
 [16:08:34] [INFO] [api.py:129] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
 [16:12:42] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
 [16:12:42] [INFO] [api.py:129] - User mussa@gmail.com has logged in & recieved a token!
+[16:27:12] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:27:12] [INFO] [api.py:134] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[16:27:42] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:27:42] [INFO] [api.py:134] - User mussa@gmail.com has logged in & recieved a token!
+[16:32:44] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:32:44] [INFO] [api.py:134] - User mussa@gmail.com has logged in & recieved a token!
+[16:36:47] [INFO] [api.py:504] - Booking 1 successfully cancelled by User 1.
+[16:36:57] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:36:57] [INFO] [api.py:134] - User mussa@gmail.com has logged in & recieved a token!
+[16:37:08] [INFO] [api.py:504] - Booking 6 successfully cancelled by User 1.
+[16:37:13] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[17:02:53] [ERROR] [api.py:116] - Invalid Email Format. Must be in the Format user@domain.com
+[17:02:55] [ERROR] [api.py:116] - Invalid Email Format. Must be in the Format user@domain.com
+[17:03:04] [ERROR] [api.py:124] - Invalid Email / Password
+[17:03:05] [ERROR] [api.py:124] - Invalid Email / Password
+[17:03:58] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[17:03:58] [INFO] [api.py:134] - User heim@gmail.com has logged in & recieved a token!
+[17:10:33] [ERROR] [Booking.py:56] - Oops no seats left for the Platinum
+[17:11:07] [INFO] [api.py:318] - Booking 73 created successfully for mussa@gmail.com.
+[17:11:53] [INFO] [api.py:460] - Payment 7 processed successfully for Booking 73.
+[17:11:53] [INFO] [Payment.py:118] - Tansaction Details Sent!
+[17:12:04] [INFO] [Payment.py:45] - Fetched Order Details against Booking ID: 1
+[17:12:08] [WARNING] [api.py:355] - Unauthorized access attempt on Booking 2
+[17:12:08] [ERROR] [Payment.py:47] - Unable to Fetch Details against Booking ID: 2
+[17:12:16] [WARNING] [api.py:355] - Unauthorized access attempt on Booking 3
+[17:12:16] [ERROR] [Payment.py:47] - Unable to Fetch Details against Booking ID: 3
+[17:13:18] [INFO] [api.py:460] - Payment 8 processed successfully for Booking 2.
+[18:03:29] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:03:29] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[18:03:46] [INFO] [MyOrders.py:88] - Cancelling Ticket!!
+[18:03:46] [INFO] [api.py:537] - Booking 69 successfully cancelled by User 1.
+[18:03:48] [INFO] [MyOrders.py:88] - Cancelling Ticket!!
+[18:03:48] [INFO] [api.py:537] - Booking 63 successfully cancelled by User 1.
+[18:03:48] [INFO] [MyOrders.py:88] - Cancelling Ticket!!
+[18:03:48] [INFO] [api.py:537] - Booking 62 successfully cancelled by User 1.
+[18:03:54] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:04:08] [INFO] [api.py:347] - Booking 74 created successfully for mussa@gmail.com.
+[18:09:09] [INFO] [api.py:279] - Timeout: Booking 74 automatically cancelled after 5 minutes.
+[18:21:26] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:21:26] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[18:21:37] [ERROR] [Booking.py:56] - Oops no seats left for the Recliners
+[18:21:44] [INFO] [api.py:347] - Booking 75 created successfully for mussa@gmail.com.
+[18:22:05] [INFO] [api.py:493] - Payment 9 processed successfully for Booking 75.
+[18:22:05] [INFO] [Payment.py:138] - Tansaction Details Sent!

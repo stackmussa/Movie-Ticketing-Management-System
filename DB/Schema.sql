@@ -388,4 +388,6 @@ SELECT *
 FROM Booking
 WHERE BookingStatus = 'Confirmed'
 
-SELECT * FROM Booking WHERE BookingID = 1
+SELECT * FROM Booking WHERE BookingID = 75
+
+SELECT * FROM Show Where ShowID = 54

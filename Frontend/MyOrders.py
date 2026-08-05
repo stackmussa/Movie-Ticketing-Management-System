@@ -1,5 +1,7 @@
+import time
 import streamlit as st
 import requests
+from datetime import datetime
 import app.config as config
 from app.logger import logger
 
@@ -29,7 +31,6 @@ with st.spinner("Fetching your orders..."):
         if resp.status_code == 200:
             all_orders = resp.json()
         elif resp.status_code == 400 and "No Pending Orders" in resp.text:
-            # Safely handle the specific 400 exception raised by your backend when empty
             all_orders = []
         else:
             try:
@@ -42,18 +43,41 @@ with st.spinner("Fetching your orders..."):
         st.error("Failed to connect to the server. Please ensure the backend is running.")
 
 # --- 3. Process and Divide Orders ---
+pending_orders = []
+history_orders = []
+
 if not all_orders:
     st.info("You don't have any orders yet! Head to the dashboard to book a movie.")
 else:
-    # Filter the arrays based on the BookingStatus column returned from your database
-    pending_orders = [o for o in all_orders if o.get('BookingStatus', o.get('status')) == 'Pending']
-    history_orders = [o for o in all_orders if o.get('BookingStatus', o.get('status')) in ['Confirmed', 'Cancelled']]
+    current_time = datetime.now()
+
+    # Filter the arrays based on the BookingStatus and Expiration Date
+    for order in all_orders:
+        status = order.get('BookingStatus', order.get('status'))
+        
+        is_expired = False
+        try:
+            show_date = str(order.get('ShowDate', ''))
+            show_time = str(order.get('ShowTime', '')).split('.')[0]
+            if show_date and show_time:
+                show_datetime = datetime.strptime(f"{show_date} {show_time}", "%Y-%m-%d %H:%M:%S")
+                is_expired = show_datetime < current_time
+        except ValueError:
+            pass 
+            
+        if status == 'Pending':
+            if not is_expired:
+                pending_orders.append(order)
+        elif status in ['Confirmed', 'Cancelled']:
+            history_orders.append(order)
 
     # Create the visual tabs
     tab_pending, tab_history = st.tabs(["Pending Orders", "Order History"])
 
     # --- TAB 1: PENDING ORDERS ---
     with tab_pending:
+        st.warning("Unpaid pending orders will automatically cancel 5 minutes after booking to free up seats.")
+
         if not pending_orders:
             st.success("You have no pending orders! All caught up.")
         else:
@@ -61,18 +85,17 @@ else:
                 with st.container(border=True):
                     col1, col2, col3 = st.columns([2.5, 1, 1])
                     
-                    # Account for potential variations in SQL column casing
                     booking_id = order.get('BookingID', order.get('booking_id'))
                     
                     with col1:
                         st.subheader(f"{order.get('Title', 'Unknown Movie')}")
+                        st.write(f"**Date:** {order.get('ShowDate', 'N/A')} | **Time:** {order.get('ShowTime', 'N/A')}")
                         st.write(f"**Booking ID:** {booking_id}")
                         st.write(f"**Cinema:** {order.get('CinemaName', 'N/A')}")
                         st.write(f"**Address:** {order.get('Address', 'N/A')}")
                         st.markdown(f"**Amount Due:** <span style='color: #4CAF50;'>Rs. {order.get('TotalAmount', 0.0)}</span>", unsafe_allow_html=True)
                         
                     with col2:
-                        # Pay Now Button
                         st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
                         if st.button("Pay Now", key=f"pay_{booking_id}", type="primary", use_container_width=True):
                             st.session_state['current_booking_id'] = booking_id
@@ -80,7 +103,6 @@ else:
                             st.switch_page(config.payment_page)
                     with col3:
                         st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
-                        # Cancel Button
                         if st.button("Cancel", key=f"cancel_{booking_id}", use_container_width=True):
                             with st.spinner("Canceling..."):
                                 logger.info("Cancelling Ticket!!")
@@ -89,8 +111,7 @@ else:
                                     headers=headers
                                 )
                                 if cancel_resp.status_code == 200:
-                                    st.toast(f"Booking {booking_id} cancelled successfully.")
-                                    # Refresh the UI immediately to move it to history
+                                    st.toast(cancel_resp.json().get("message", f"Booking {booking_id} cancelled successfully."))
                                     st.rerun()
                                 else:
                                     try:
@@ -107,14 +128,45 @@ else:
                 with st.container(border=True):
                     
                     status = order.get('BookingStatus', order.get('status'))
+                    booking_id = order.get('BookingID', order.get('booking_id'))
                     
-                    # Dynamically set the text color based on the transaction status
                     status_color = "#4CAF50" if status == "Confirmed" else "#FF5252"
+                    payment_method = order.get('PaymentMethod') or 'None'
                     
-                    st.subheader(f"{order.get('Title', 'Unknown Movie')}")
-                    st.write(f"**Booking ID:** {order.get('BookingID', order.get('booking_id'))}")
-                    st.write(f"**Cinema:** {order.get('CinemaName', 'N/A')}")
-                    st.write(f"**Address:** {order.get('Address', 'N/A')}")
-                    st.write(f"**Total Amount:** Rs. {order.get('TotalAmount', 0.0)}")
-                    st.write(f"**Payment Method:** {order.get('PaymentMethod')}")
-                    st.markdown(f"**Status:** <span style='color: {status_color}; font-weight: bold;'>{status}</span>", unsafe_allow_html=True)
+                    # Split into columns to place the Refund button on the right
+                    col_info, col_action = st.columns([3.5, 1])
+                    
+                    with col_info:
+                        st.subheader(f"{order.get('Title', 'Unknown Movie')}")
+                        st.write(f"**Date:** {order.get('ShowDate', 'N/A')} | **Time:** {order.get('ShowTime', 'N/A')}")
+                        st.write(f"**Booking ID:** {booking_id}")
+                        st.write(f"**Cinema:** {order.get('CinemaName', 'N/A')}")
+                        st.write(f"**Address:** {order.get('Address', 'N/A')}")
+                        st.write(f"**Total Amount:** Rs. {order.get('TotalAmount', 0.0)}")
+                        st.write(f"**Payment Method:** {payment_method}")
+                        st.markdown(f"**Status:** <span style='color: {status_color}; font-weight: bold;'>{status}</span>", unsafe_allow_html=True)
+
+                    with col_action:
+                        # Only show the refund button if the order is confirmed
+                        if status == "Confirmed":
+                            st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
+                            
+                            if st.button("Refund", key=f"refund_{booking_id}", use_container_width=True):
+                                with st.spinner("Processing refund... Please wait."):
+                                    
+                                    # Wait exactly 5 seconds before processing
+                                    time.sleep(5)
+                                    
+                                    refund_resp = requests.put(
+                                        f"{api_url.rstrip('/')}/cancelBooking/{booking_id}", 
+                                        headers=headers
+                                    )
+                                    
+                                    if refund_resp.status_code == 200:
+                                        st.toast(refund_resp.json().get("message", "Refund processed successfully."))
+                                        st.rerun()
+                                    else:
+                                        try:
+                                            st.error(refund_resp.json().get("detail", "Failed to process refund."))
+                                        except ValueError:
+                                            st.error("Server error during refund processing.")

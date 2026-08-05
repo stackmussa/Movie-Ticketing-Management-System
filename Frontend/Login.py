@@ -20,7 +20,7 @@ with st.form("Login User"):
             
             response = requests.post(
                 login_endpoint, 
-                data={"email": log_email, "password": log_pass}
+                data={"username": log_email, "password": log_pass}
             )
 
             if response.status_code == 200:

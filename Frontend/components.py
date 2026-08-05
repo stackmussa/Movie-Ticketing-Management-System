@@ -43,3 +43,28 @@ def get_legend_html() -> str:
         <div><span style="color: #808080;">■</span> Standard (Row E)</div>
     </div>
     """
+
+#helper function for the 5 minutes timer functionality 
+def get_timer_html(remaining_seconds: int) -> str:
+    """Generates the HTML and JS for the live countdown timer."""
+    return f"""
+    <div style="font-family: sans-serif; text-align: center; padding: 12px; background-color: #2b2b2b; border-radius: 8px; border: 1px solid #FF5252;">
+        <span style="color: #ffffff; font-size: 16px;">⏳ Time Remaining to Pay: </span>
+        <strong style="color: #FF5252; font-size: 20px;" id="time">{remaining_seconds // 60}:{(remaining_seconds % 60):02d}</strong>
+    </div>
+    <script>
+        var timeleft = {remaining_seconds};
+        var timer = setInterval(function(){{
+            timeleft -= 1;
+            if(timeleft <= 0){{
+                clearInterval(timer);
+                document.getElementById("time").innerHTML = "Expired!";
+                document.getElementById("time").style.color = "#FF5252";
+            }} else {{
+                var minutes = Math.floor(timeleft / 60);
+                var seconds = timeleft % 60;
+                document.getElementById("time").innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+            }}
+        }}, 1000);
+    </script>
+    """
