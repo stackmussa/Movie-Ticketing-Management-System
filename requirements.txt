@@ -8,3 +8,10 @@ python-dotenv>=1.0.0
 
 # --- Frontend ---
 streamlit>=1.35.0
+
+# --- Database ---
+pyodbc>=4.0.39
+
+# --- Security & Authentication ---
+PyJWT>=2.8.0
+argon2-cffi>=23.1.0
