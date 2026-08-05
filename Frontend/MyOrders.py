@@ -72,6 +72,7 @@ else:
                         st.markdown(f"**Amount Due:** <span style='color: #4CAF50;'>Rs. {order.get('TotalAmount', 0.0)}</span>", unsafe_allow_html=True)
                         
                     with col2:
+                        # Pay Now Button
                         st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
                         if st.button("Pay Now", key=f"pay_{booking_id}", type="primary", use_container_width=True):
                             st.session_state['current_booking_id'] = booking_id
@@ -79,9 +80,10 @@ else:
                             st.switch_page(config.payment_page)
                     with col3:
                         st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
-                        # The Cancel Button
+                        # Cancel Button
                         if st.button("Cancel", key=f"cancel_{booking_id}", use_container_width=True):
                             with st.spinner("Canceling..."):
+                                logger.info("Cancelling Ticket!!")
                                 cancel_resp = requests.put(
                                     f"{api_url.rstrip('/')}/cancelBooking/{booking_id}", 
                                     headers=headers

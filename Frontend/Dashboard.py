@@ -62,6 +62,12 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
 #Dashboard
 st.title("Movie Ticket Purchase System")
 st.write(f"Welcome to your dashboard, **{st.session_state['user_email']}**!")
+
+if st.button("Logout", type="primary"):
+    st.session_state['logged_in'] = False
+    st.session_state['user_email'] = ''
+    st.rerun() # Triggers main.py to boot the user back to the login page
+
 st.divider()
 
 #City Selection
@@ -79,6 +85,10 @@ with col1:
 with col2:
     search_button = st.button("Search", use_container_width=True)
 
+if not search_title.strip():
+    st.session_state.pop('search_results', None)
+    st.session_state.pop('search_title', None)
+
 if search_button:
     if search_title.strip():
         with st.spinner(f"Searching for {search_title}!!"):
@@ -91,15 +101,26 @@ if search_button:
                 city_shows = [show for show in shows_data if show.get("City") == selected_city]
                 
                 if city_shows:
-                    st.success(f"Searched Results for {search_title}")
-                    display_movie_tiles(city_shows, filter_city=None, key_prefix="search")
+                    # Save results to memory so they survive the next button click
+                    st.session_state['search_results'] = city_shows
+                    st.session_state['search_title'] = search_title
                 else:
                     st.warning(f"No movies currently scheduled in {selected_city}.")
+                    st.session_state.pop('search_results', None)
             else:
                 error_details = response.json().get("detail", "No such record found!")
                 st.error(error_details)
+                st.session_state.pop('search_results', None)
     else:
         st.warning("Please enter a movie title to search from!")
+
+# 2. Render the results independently of the Search button click
+if 'search_results' in st.session_state:
+    st.success(f"Searched Results for {st.session_state.get('search_title', '')}")
+    
+    # Pass 'selected_city' instead of 'None' so the Booking page knows where the user is!
+    display_movie_tiles(st.session_state['search_results'], filter_city=selected_city, key_prefix="search")
+    
 st.divider()
 
 st.subheader(f"All Upcoming Shows in {selected_city}")
@@ -118,7 +139,3 @@ except requests.exceptions.ConnectionError:
 
 st.divider()
 
-if st.button("Logout", type="primary"):
-    st.session_state['logged_in'] = False
-    st.session_state['user_email'] = ''
-    st.rerun() # Triggers main.py to boot the user back to the login page

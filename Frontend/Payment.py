@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 import requests
 import app.config as config
 from app.logger import logger
@@ -119,6 +120,7 @@ if 'current_order' in st.session_state:
                     if pay_resp.status_code == 200:
                         try:
                             data = pay_resp.json()
+                            time.sleep(5)
                             st.success(data.get("message", "Payment successful!"))
                             st.info(f"**Transaction Reference:** {data.get('transaction_reference')}")
 

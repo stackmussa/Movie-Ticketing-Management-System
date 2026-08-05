@@ -512,3 +512,34 @@
 [18:32:30] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
 [18:35:15] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
 [18:36:53] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[10:51:27] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[10:51:27] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[10:51:40] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[10:56:24] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[10:56:24] [INFO] [api.py:128] - User mussa@gmail.com has logged in & recieved a token!
+[11:03:20] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:03:20] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:03:24] [INFO] [MyOrders.py:86] - Cancelling Ticket!!
+[11:03:24] [INFO] [api.py:496] - Booking 64 successfully cancelled by User 2.
+[11:03:29] [INFO] [MyOrders.py:86] - Cancelling Ticket!!
+[11:03:29] [INFO] [api.py:496] - Booking 4 successfully cancelled by User 2.
+[11:03:43] [INFO] [MyOrders.py:86] - Cancelling Ticket!!
+[11:03:43] [INFO] [api.py:496] - Booking 5 successfully cancelled by User 2.
+[11:07:21] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:07:21] [INFO] [api.py:128] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:07:35] [INFO] [api.py:311] - Booking 71 created successfully for i243022@isb.nu.edu.pk.
+[11:08:27] [INFO] [api.py:452] - Payment 6 processed successfully for Booking 71.
+[11:08:27] [INFO] [Payment.py:117] - Tansaction Details Sent!
+[11:37:00] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:37:00] [INFO] [api.py:130] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:38:26] [INFO] [api.py:313] - Booking 72 created successfully for i243022@isb.nu.edu.pk.
+[11:48:59] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:48:59] [INFO] [api.py:130] - User mussa@gmail.com has logged in & recieved a token!
+[12:03:46] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:03:46] [INFO] [api.py:129] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:04:37] [ERROR] [api.py:160] - No Upcoming Shows!
+[12:04:37] [ERROR] [api.py:167] - No such record!
+[12:27:34] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:27:34] [INFO] [api.py:129] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:27:56] [ERROR] [api.py:160] - No Upcoming Shows!
+[12:27:56] [ERROR] [api.py:167] - No such record!

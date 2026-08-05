@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException, status, Form, Depends, Response, Bac
 from pydantic import BaseModel, field_validator
 from contextlib import asynccontextmanager
 from typing import Annotated, List
+from fastapi.security import OAuth2PasswordRequestForm
 from app.logger import logger
 import re
 import os
@@ -129,7 +130,7 @@ def Login_User(email : Annotated[str, Form()], password : Annotated[str, Form()]
         return {"access_token": access_token, "token_type": "bearer"}
     except HTTPException :
         raise HTTPException(status_code=400, detail="Invalid Email / Password")
-    
+       
 # Get the all the Upcoming Shows
 @app.get("/shows")
 def Get_Shows(conn: pyodbc.Connection = Depends(config.get_DB)):
@@ -373,11 +374,12 @@ def get_Pending_bookings(current_user : dict = Depends(jwt_Security.get_current_
     
     cursor = conn.cursor()
     try:
-        cursor.execute(queries.get_user_order, (current_user["user_id"]))
+        cursor.execute(queries.get_user_order, (current_user["user_id"],))
         results = cursor.fetchall()
+        
         if not results:
             logger.error(f"No Pending Orders!")
-            raise HTTPException(status_code=400, detail="No Pending Orders")
+            return []
         column_names = [column[0] for column in cursor.description]
         formatted_results = [dict(zip(column_names, row)) for row in results]
         return formatted_results
@@ -464,7 +466,7 @@ def process_payment(
         logger.error(f"Database error during payment processing: {e}")
         raise HTTPException(status_code=500, detail="An internal error occurred while processing the payment.")
 
-@app.put("/cancelBooking/{Booking_ID}")
+@app.put("/cancelBooking/{booking_ID}")
 def cancel_Booking(booking_ID : int, current_user : dict = Depends(jwt_Security.get_current_user),
                    conn : pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
