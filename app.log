@@ -543,3 +543,7 @@
 [12:27:34] [INFO] [api.py:129] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
 [12:27:56] [ERROR] [api.py:160] - No Upcoming Shows!
 [12:27:56] [ERROR] [api.py:167] - No such record!
+[16:08:34] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:08:34] [INFO] [api.py:129] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[16:12:42] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:12:42] [INFO] [api.py:129] - User mussa@gmail.com has logged in & recieved a token!
