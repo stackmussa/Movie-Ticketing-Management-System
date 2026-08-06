@@ -8,7 +8,7 @@ api_url = config.API_URL
 
 
 if 'flash_message' in st.session_state:
-    st.toast(st.session_state['flash_message'], icon="🎉")
+    st.toast(st.session_state['flash_message'])
     del st.session_state['flash_message']
 
 def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
@@ -64,7 +64,10 @@ st.title("Movie Ticket Purchase System")
 st.write(f"Welcome to your dashboard, **{st.session_state['user_email']}**!")
 
 if st.button("Logout", type="primary"):
-    st.session_state['logged_in'] = False
+    # wipes the entire browser tab's memory
+    st.session_state.clear()
+
+    st.session_state['logged_in'] = False()
     st.session_state['user_email'] = ''
     st.rerun() # Triggers main.py to boot the user back to the login page
 
@@ -114,7 +117,7 @@ if search_button:
     else:
         st.warning("Please enter a movie title to search from!")
 
-# 2. Render the results independently of the Search button click
+# Render the results independently of the Search button click
 if 'search_results' in st.session_state:
     st.success(f"Searched Results for {st.session_state.get('search_title', '')}")
     

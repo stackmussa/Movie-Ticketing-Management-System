@@ -53,7 +53,7 @@ Select_City_Title_Query='''SELECT S.ShowID, S.TicketPrice, S.HallID, C.CinemaNam
             WHERE M.Title = ? AND Ct.CityName = ? AND S.ShowDate >= CAST(GETDATE() AS DATE)
             ORDER BY S.ShowDate ASC, S.ShowTime ASC
         '''
-# Check Seat Availability for requested Category in this Hall
+# Check Seat Availability for requested Category in this Hallexp
         # Find unbooked seats for this specific ShowID
 seat_query = '''
             SELECT St.SeatID, St.SeatRow, St.SeatNumber

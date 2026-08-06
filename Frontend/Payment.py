@@ -69,8 +69,10 @@ if 'current_order' in st.session_state:
 
     if order.get('status') == 'Pending':
 
-        # 5 minuts time counter 
-        timer_key = f"timer_{booking_id}"
+        # 1. Bind the timer key to the specific user's email to prevent cross-account leakage
+        user_email = st.session_state.get('user_email', 'unknown')
+        timer_key = f"timer_{user_email}_{booking_id}"
+        
         if timer_key not in st.session_state:
             st.session_state[timer_key] = time.time()
 
@@ -81,9 +83,18 @@ if 'current_order' in st.session_state:
         timer_html = components.get_timer_html(remaining_seconds)
         st_components.html(timer_html, height=70)
 
-        if remaining_seconds <=0:
+        # 2. Add an interactive reset mechanism when the booking expires
+        if remaining_seconds <= 0:
             logger.error("The Booking time has passed, Please return to the dashboard to book again.")
             st.error("The Booking has expired. Please return to the dashboard to book again.")
+            
+            # This button clears the stuck state so the next logged-in user isn't impacted
+            if st.button("Clear Expired Order", type="primary"):
+                st.session_state.pop('current_order', None)
+                st.session_state.pop('current_booking_id', None)
+                st.session_state.pop(timer_key, None)
+                st.rerun()
+                
             st.stop()
 
         #load payment Methods
@@ -144,9 +155,10 @@ if 'current_order' in st.session_state:
                             st.success(data.get("message", "Payment successful!"))
                             st.info(f"**Transaction Reference:** {data.get('transaction_reference')}")
 
-                            # Wipe the order from memory to prevent double-charging
-                            del st.session_state['current_order']
-                            st.session_state.pop(f"timer_{booking_id}", None)
+                            # Wipe the order from memory to prevent double-charging using the new timer key
+                            st.session_state.pop('current_order', None)
+                            st.session_state.pop('current_booking_id', None)
+                            st.session_state.pop(timer_key, None)
                         except ValueError:
                             st.error(f"Server Error ({pay_resp.status_code}): {pay_resp.text}")
                     else:
@@ -155,4 +167,3 @@ if 'current_order' in st.session_state:
                         except ValueError:
                             error_detail = f"Server Error ({pay_resp.status_code}): {pay_resp.text}"
                         st.error(error_detail)
-            

@@ -15,6 +15,15 @@ CONNECTION_STRING = (
     r"Database=TicketSystem;" 
     r"Trusted_Connection=yes;"
 )
+
+SYSTEM_CONFIG = {
+    "max_tickets_per_order": 10,
+    "convenience_fee": 15,
+    "currency": "PKR",
+    "supported_payments": ["debit-card", "credit-card", "easypaisa", "jazzcash"]
+}
+
+
 # DB conncection helper function
 def get_DB():
     conn = pyodbc.connect(CONNECTION_STRING)
@@ -24,6 +33,7 @@ def get_DB():
         conn.close()
 def get_DB_connection():
     return CONNECTION_STRING
+
 # Helper Class for Dropdown
 class SeatCategoryEnum(str, Enum):
     standard = "Standard"

@@ -189,7 +189,7 @@ def get_cities_for_dropdown():
         return {row[0]: row[0] for row in results}
         
     except pyodbc.Error as e:
-        print(f"Failed to load categories for dropdown: {e}")
+        print(f"Failed to load categories for dropdown.")
         return {"Error": "Error"}
  
 Cities = get_cities_for_dropdown()
@@ -211,7 +211,7 @@ def get_categories_for_dropdown():
         return {row[0]: row[0] for row in results}
         
     except pyodbc.Error as e:
-        print(f"Failed to load categories for dropdown: {e}")
+        print(f"Failed to load categories for dropdown.")
         return {"Error": "Error"}
     
 Seat_Categories = get_categories_for_dropdown()
@@ -230,7 +230,7 @@ def get_booking_seats(SeatID : int, conn : pyodbc.Connection = Depends(config.ge
         results = cursor.fetchone()
         return int(results[0]) if results and results[0] is not None else 0
     except pyodbc.Error as e:
-        print(f"Database error calculating booked seats: {e}")
+        print(f"Database error calculating booked seats")
         raise HTTPException(status_code=500, detail="Error validating seat availability.")
 
  
@@ -256,7 +256,7 @@ def Check_Availability(title: str, city: str, conn: pyodbc.Connection = Depends(
             
         return availability
     except pyodbc.Error as e:
-        logger.error(f"DB Error: {e}")
+        logger.error(f"DB Error")
         raise HTTPException(status_code=500, detail="Database Error")
 
 #5 minutes timer helper function
@@ -449,10 +449,13 @@ def process_payment(
         # Remove spaces from card number for validation
         clean_card = card_number.replace(" ", "") if card_number else ""
         if not clean_card or not re.match(r"^\d{16}$", clean_card):
+            logger.error("Invalid Card Number. Must be 16 digits.")
             raise HTTPException(status_code=400, detail="Invalid Card Number. Must be 16 digits.")
         if not expiry_date or not re.match(r"^(0[1-9]|1[0-2])\/?([0-9]{2})$", expiry_date):
+            logger.error("Invalid Expiry Date. Use MM/YY format.")
             raise HTTPException(status_code=400, detail="Invalid Expiry Date. Use MM/YY format.")
         if not cvv or not re.match(r"^\d{3,4}$", cvv):
+            logger.error("Invalid CVV")
             raise HTTPException(status_code=400, detail="Invalid CVV.")
 
     # --- 2. Database Processing ---

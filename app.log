@@ -591,3 +591,72 @@
 [18:21:44] [INFO] [api.py:347] - Booking 75 created successfully for mussa@gmail.com.
 [18:22:05] [INFO] [api.py:493] - Payment 9 processed successfully for Booking 75.
 [18:22:05] [INFO] [Payment.py:138] - Tansaction Details Sent!
+[18:27:59] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:27:59] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[18:28:16] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:28:26] [INFO] [api.py:545] - Booking 75 cancelled by User 1.
+[11:38:23] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:38:23] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[11:58:28] [ERROR] [Booking.py:56] - Oops no seats left for the Recliners
+[11:58:44] [INFO] [api.py:347] - Booking 76 created successfully for mussa@gmail.com.
+[11:59:03] [ERROR] [Booking.py:56] - Oops no seats left for the Standard
+[12:03:44] [INFO] [api.py:279] - Timeout: Booking 76 automatically cancelled after 5 minutes.
+[12:07:56] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:08:00] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:08:00] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:08:00] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:08:04] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:08:04] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:08:05] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:14:52] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:15:02] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:15:02] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:15:04] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:15:18] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:15:18] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:15:18] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:18:17] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:18:17] [INFO] [api.py:135] - User heim@gmail.com has logged in & recieved a token!
+[12:18:18] [ERROR] [Payment.py:85] - The Booking time has passed, Please return to the dashboard to book again.
+[12:21:16] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:21:16] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:21:35] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:21:35] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[12:22:34] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:22:34] [INFO] [api.py:135] - User heim@gmail.com has logged in & recieved a token!
+[12:23:02] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:23:02] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:23:14] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[12:23:19] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[12:23:27] [INFO] [api.py:347] - Booking 77 created successfully for i243022@isb.nu.edu.pk.
+[12:23:54] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:23:54] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[12:28:27] [INFO] [api.py:279] - Timeout: Booking 77 automatically cancelled after 5 minutes.
+[12:28:32] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:28:32] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:28:32] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:28:32] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:28:32] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:28:32] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[12:28:32] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:28:32] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:28:38] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:28:38] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:28:53] [INFO] [api.py:347] - Booking 78 created successfully for i243022@isb.nu.edu.pk.
+[12:29:19] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:29:19] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[12:29:47] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[12:29:49] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[12:30:00] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:30:00] [INFO] [api.py:135] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:33:19] [INFO] [MyOrders.py:108] - Cancelling Ticket!!
+[12:33:19] [INFO] [api.py:548] - Booking 72 cancelled by User 2.
+[12:33:36] [INFO] [api.py:548] - Booking 71 cancelled by User 2.
+[12:33:53] [INFO] [api.py:279] - Timeout: Booking 78 automatically cancelled after 5 minutes.
+[12:49:33] [ERROR] [Payment.py:88] - The Booking time has passed, Please return to the dashboard to book again.
+[13:34:41] [INFO] [api.py:98] - User with nisar@gmail.com has been registered sucessfully
+[13:39:56] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:39:56] [INFO] [api.py:135] - User mussa@gmail.com has logged in & recieved a token!
+[13:52:49] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[13:52:49] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
+[13:52:54] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!

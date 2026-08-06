@@ -24,7 +24,7 @@ city = st.session_state['Booking_target_city']
 user_email = st.session_state['user_email']
 movie_details = st.session_state.get('Booking_target_details', {})
 
-st.title(f"Booking: {movie_title}")
+st.title(f"{movie_title}")
 st.write(f"**Location:** {movie_details.get('CinemaName', 'Unknown')} ({city})")
 st.write(f"**Date:** {movie_details.get('ShowDate', 'TBD')}")
 st.write(f"**Time:** {movie_details.get('ShowTime', 'TBD')}")

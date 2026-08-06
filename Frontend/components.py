@@ -49,7 +49,7 @@ def get_timer_html(remaining_seconds: int) -> str:
     """Generates the HTML and JS for the live countdown timer."""
     return f"""
     <div style="font-family: sans-serif; text-align: center; padding: 12px; background-color: #2b2b2b; border-radius: 8px; border: 1px solid #FF5252;">
-        <span style="color: #ffffff; font-size: 16px;">⏳ Time Remaining to Pay: </span>
+        <span style="color: #ffffff; font-size: 16px;">Time Remaining to Pay: </span>
         <strong style="color: #FF5252; font-size: 20px;" id="time">{remaining_seconds // 60}:{(remaining_seconds % 60):02d}</strong>
     </div>
     <script>

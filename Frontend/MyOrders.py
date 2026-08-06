@@ -64,7 +64,10 @@ else:
                 is_expired = show_datetime < current_time
         except ValueError:
             pass 
-            
+
+        # Save the expiration status inside the order dictionary for later use
+        order['is_expired'] = is_expired    
+
         if status == 'Pending':
             if not is_expired:
                 pending_orders.append(order)
@@ -76,7 +79,7 @@ else:
 
     # --- TAB 1: PENDING ORDERS ---
     with tab_pending:
-        st.warning("Unpaid pending orders will automatically cancel 5 minutes after booking to free up seats.")
+        st.toast("Unpaid pending orders will automatically cancel 5 minutes after booking to free up seats.")
 
         if not pending_orders:
             st.success("You have no pending orders! All caught up.")
@@ -148,7 +151,7 @@ else:
 
                     with col_action:
                         # Only show the refund button if the order is confirmed
-                        if status == "Confirmed":
+                        if status == "Confirmed" and not order.get('is_expired', False):
                             st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
                             
                             if st.button("Refund", key=f"refund_{booking_id}", use_container_width=True):
