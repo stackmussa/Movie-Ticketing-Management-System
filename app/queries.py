@@ -86,14 +86,21 @@ get_user_order = '''
         C.Address, 
         P.PaymentMethod,
         S.ShowDate,
-        S.ShowTime
+        S.ShowTime,
+        B.BookingDate,
+        STRING_AGG(CONCAT(St.SeatRow, St.SeatNumber), ', ') AS AssignedSeats
     FROM Booking B
     INNER JOIN Show S ON B.ShowID = S.ShowID
     INNER JOIN Movie M ON S.MovieID = M.MovieID
     INNER JOIN Hall H ON S.HallID = H.HallID
     INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
     LEFT JOIN Payment P ON B.BookingID = P.BookingID
+    LEFT JOIN BookingSeat BS ON B.BookingID = BS.BookingID
+    LEFT JOIN Seat St ON BS.SeatID = St.SeatID
     WHERE B.UserID = ?
+    GROUP BY 
+        B.BookingID, B.TotalAmount, B.BookingStatus, M.Title, C.CinemaName, 
+        C.Address, P.PaymentMethod, S.ShowDate, S.ShowTime, B.BookingDate
     ORDER BY B.BookingDate DESC
 '''
 # Fetch all seats and their booking status for a specific Show and Hall
@@ -114,13 +121,19 @@ get_interactive_seats_query = '''
 '''
 # Fetch detailed booking info for the payment checkout page
 get_booking_details_query = '''
-    SELECT B.TotalAmount, B.BookingStatus, M.Title, S.ShowDate, S.ShowTime, C.CinemaName
+    SELECT 
+        B.TotalAmount, B.BookingStatus, M.Title, S.ShowDate, S.ShowTime, C.CinemaName, B.BookingDate,
+        STRING_AGG(CONCAT(St.SeatRow, St.SeatNumber), ', ') AS AssignedSeats
     FROM Booking B
     INNER JOIN Show S ON B.ShowID = S.ShowID
     INNER JOIN Movie M ON S.MovieID = M.MovieID
     INNER JOIN Hall H ON S.HallID = H.HallID
     INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
+    LEFT JOIN BookingSeat BS ON B.BookingID = BS.BookingID
+    LEFT JOIN Seat St ON BS.SeatID = St.SeatID
     WHERE B.BookingID = ?
+    GROUP BY 
+        B.TotalAmount, B.BookingStatus, M.Title, S.ShowDate, S.ShowTime, C.CinemaName, B.BookingDate
 '''
 
 # get the total amount for user's booking
@@ -155,3 +168,11 @@ get_booking_status = '''
     FROM Booking 
     WHERE BookingID = ?
 '''
+
+get_confirmed_pending_seats = """
+    SELECT s.SeatRow, s.SeatNumber
+    FROM Seat s
+    INNER JOIN BookingSeat bs ON s.SeatID = bs.SeatID
+    INNER JOIN Booking b ON bs.BookingID = b.BookingID
+    WHERE b.ShowID = ? AND b.BookingStatus IN ('Pending', 'Confirmed')
+"""

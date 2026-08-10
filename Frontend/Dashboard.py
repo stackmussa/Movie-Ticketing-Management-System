@@ -67,7 +67,7 @@ if st.button("Logout", type="primary"):
     # wipes the entire browser tab's memory
     st.session_state.clear()
 
-    st.session_state['logged_in'] = False()
+    st.session_state['logged_in'] = False
     st.session_state['user_email'] = ''
     st.rerun() # Triggers main.py to boot the user back to the login page
 
@@ -117,7 +117,7 @@ if search_button:
     else:
         st.warning("Please enter a movie title to search from!")
 
-# Render the results independently of the Search button click
+# Render the results of the Search button click
 if 'search_results' in st.session_state:
     st.success(f"Searched Results for {st.session_state.get('search_title', '')}")
     

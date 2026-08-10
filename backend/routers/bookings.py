@@ -12,12 +12,14 @@ import app.jwt_Security as jwt_Security
 router = APIRouter(tags=["Bookings & Payments"])
 
 async def auto_cancel_booking(booking_id: int):
+    #starts the 5 minuts counter 
     await asyncio.sleep(config.booking_hold_timer)
     try:
         conn = pyodbc.connect(config.CONNECTION_STRING, autocommit=True)
         cursor = conn.cursor()
         cursor.execute(queries.get_booking_status, (booking_id,))
         record = cursor.fetchone()
+        
         if record and record[0] == 'Pending':
             cursor.execute("UPDATE Booking SET BookingStatus = 'Cancelled' WHERE BookingID = ?", (booking_id,))
             logger.info(f"Timeout: Booking {booking_id} automatically cancelled after 5 minutes.")
@@ -25,14 +27,42 @@ async def auto_cancel_booking(booking_id: int):
     except pyodbc.Error as e:
         logger.error(f"Background task DB error for Booking {booking_id}")
 
+# Fetch seats that are currently unavailable 
+@router.get("/booked_seats")
+def Get_Booked_Seats(title: str, city: str, conn: pyodbc.Connection = Depends(config.get_DB)):
+    cursor = conn.cursor()
+    try:
+        cursor.execute(queries.Select_City_Title_Query, (title, city))
+        show_record = cursor.fetchone()
+        
+        if not show_record:
+            raise HTTPException(status_code=400, detail="Show not found")
+        
+        show_id = show_record[0]
+        
+        # Pull seats those that are Pending or Confirmed bookings
+        cursor.execute(queries.get_confirmed_pending_seats , (show_id,))
+        
+        # Format rows into "A1", "C4", etc.
+        booked_seats = [f"{str(row[0]).strip()}{str(row[1]).strip()}" for row in cursor.fetchall()]        
+
+        return {"booked_seats": booked_seats}
+    except pyodbc.Error as e:
+        logger.error(f"DB Error fetching booked seats")
+        raise HTTPException(status_code=500, detail="Database Error")
+
 @router.post("/booking")
 def Book_Show(
     title: Annotated[str, Form()], City: Annotated[config.CityEnum, Form()],
-    TicketsNeeded: Annotated[int, Form()], seatCategory: Annotated[config.SeatCategoryEnum, Form()],
+    selectedSeats: Annotated[str, Form()], seatCategory: Annotated[config.SeatCategoryEnum, Form()],
     background_tasks: BackgroundTasks, 
     current_user: dict = Depends(jwt_Security.get_current_user), 
     conn: pyodbc.Connection = Depends(config.get_DB)
 ):
+        # Parse the string into a list and calculate quantity automatically
+        requested_seats = [seat.strip() for seat in selectedSeats.split(',') if seat.strip()]
+        TicketsNeeded = len(requested_seats)
+
         if TicketsNeeded<=0:
             logger.error(f"Invalid User Input, Tickets Quantity can never be -ve or 0")
             raise HTTPException(status_code=400, detail="Negative Tickets Quantity or 0 Entered")
@@ -59,32 +89,34 @@ def Book_Show(
                 raise HTTPException(status_code=400, detail=f"The Movie with Title: {title} is not available in {selected_city}")
             
             show_id, base_price, hall_id, cinema_name = show_record
+
+            # fetches available seats
             cursor.execute(queries.seat_query, (hall_id, selected_category, show_id))
             all_available_seats = cursor.fetchall()
-    
-            #validation for Total Seats
-            if len(all_available_seats) < TicketsNeeded:
-                logger.error(f"Not enough {selected_category} seats available for Show {show_id}.")
-                raise HTTPException(status_code=400, detail=f"Only {len(all_available_seats)} {selected_category} seats left.")
-    
-            available_seats = all_available_seats[:TicketsNeeded]
-            
+
+            # Map them as "A1" -> SeatID
+            available_seat_map = {f"{str(s[1]).strip()}{str(s[2]).strip()}": s[0] for s in all_available_seats}
+
+            # Validate that every requested seat is actually in the available pool
+            validated_seat_ids = []
+            for req_seat in requested_seats:
+                if req_seat not in available_seat_map:
+                    raise HTTPException(status_code=400, detail=f"Seat {req_seat} is currently unavailable.")
+                validated_seat_ids.append(available_seat_map[req_seat])
+
             final_ticket_price = float(base_price) * (config.get_Category_Multiplier(selected_category))
             total_ammount = final_ticket_price * TicketsNeeded
     
             cursor.execute(queries.insert_booking_query, (user_id, show_id, total_ammount, TicketsNeeded))
             booking_id = cursor.fetchone()[0]
-    
-            #seat validations & equipment
-            for seat in available_seats:
-                seat_id = seat[0]
+
+            # Map the specific seats to this booking
+            for seat_id in validated_seat_ids:
                 cursor.execute(queries.insert_seat_query, (booking_id, seat_id))
-    
+
             conn.commit()
-            assigned_seats = [f"Row {s[1]} Seat {s[2]}" for s in available_seats]
+            
             logger.info(f"Booking {booking_id} created successfully for {user_email}.")
-    
-            #Starting timer of 5 Minutes for the seat to be booked 
             background_tasks.add_task(auto_cancel_booking, booking_id)
     
             return {
@@ -95,9 +127,9 @@ def Book_Show(
                     "city": selected_city,
                     "category": selected_category,
                     "tickets_booked": TicketsNeeded,
-                    "assigned_seats": assigned_seats,
+                    "assigned_seats": requested_seats,
                     "total_amount": round(total_ammount, 2),
-                    "currency": config_data.get("currency")
+                    "currency": "PKR"
                 }
             }
         
@@ -140,7 +172,9 @@ def Get_User_Booking_Details(
                 "title": record.Title,
                 "date": record.ShowDate,
                 "time": str(record.ShowTime),
-                "cinema": record.CinemaName
+                "cinema": record.CinemaName,
+                "booking_date": str(record.BookingDate),
+                "assigned_seats": record.AssignedSeats
             }
     except pyodbc.Error as e:
         logger.error(f"DB Error: {e}")

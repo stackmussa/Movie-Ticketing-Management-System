@@ -95,6 +95,7 @@ else:
                         st.write(f"**Date:** {order.get('ShowDate', 'N/A')} | **Time:** {order.get('ShowTime', 'N/A')}")
                         st.write(f"**Booking ID:** {booking_id}")
                         st.write(f"**Cinema:** {order.get('CinemaName', 'N/A')}")
+                        st.write(f"**Seats:** {order.get('AssignedSeats', 'N/A')}")
                         st.write(f"**Address:** {order.get('Address', 'N/A')}")
                         st.markdown(f"**Amount Due:** <span style='color: #4CAF50;'>Rs. {order.get('TotalAmount', 0.0)}</span>", unsafe_allow_html=True)
                         
@@ -115,6 +116,15 @@ else:
                                 )
                                 if cancel_resp.status_code == 200:
                                     st.toast(cancel_resp.json().get("message", f"Booking {booking_id} cancelled successfully."))
+                                    # If the cancelled order is currently trapped in the payment cache, delete it
+                                    if st.session_state.get('current_booking_id') == booking_id:
+                                        st.session_state.pop('current_order', None)
+                                        st.session_state.pop('current_booking_id', None)
+                                        # Also clear the timer key to be safe
+                                        user_email = st.session_state.get('user_email', 'unknown')
+                                        st.session_state.pop(f"timer_{user_email}_{booking_id}", None)
+
+                                    st.switch_page("Frontend/Dashboard.py")
                                     st.rerun()
                                 else:
                                     try:
@@ -144,6 +154,7 @@ else:
                         st.write(f"**Date:** {order.get('ShowDate', 'N/A')} | **Time:** {order.get('ShowTime', 'N/A')}")
                         st.write(f"**Booking ID:** {booking_id}")
                         st.write(f"**Cinema:** {order.get('CinemaName', 'N/A')}")
+                        st.write(f"**Seats:** {order.get('AssignedSeats', 'N/A')}")
                         st.write(f"**Address:** {order.get('Address', 'N/A')}")
                         st.write(f"**Total Amount:** Rs. {order.get('TotalAmount', 0.0)}")
                         st.write(f"**Payment Method:** {payment_method}")

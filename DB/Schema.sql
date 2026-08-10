@@ -59,7 +59,7 @@ CREATE TABLE Seat (
     HallID INT NOT NULL,
     SeatRow CHAR(1) NOT NULL,
     SeatNumber INT NOT NULL,
-    SeatCategory VARCHAR(20) NOT NULL DEFAULT 'Standard',   -- Standard, Gold, Platinum, Recliner
+    SeatCategory VARCHAR(20) NOT NULL DEFAULT 'Standard',   -- Standard, Gold, Platinum
     CONSTRAINT FK_Seat_Hall FOREIGN KEY (HallID) REFERENCES Hall(HallID),
     CONSTRAINT UQ_Seat UNIQUE (HallID, SeatRow, SeatNumber)
 );
@@ -378,6 +378,14 @@ FROM (VALUES
 ) AS S(MovieTitle, HallID, ShowDate, ShowTime, TicketPrice);
 
 
+UPDATE Show
+SET ShowDate = DATEADD(DAY, 7, ShowDate)
+WHERE ShowDate < CAST(GETDATE() AS DATE);
+
+SELECT ShowID, MovieID, HallID, ShowDate, ShowTime
+FROM Show
+WHERE ShowDate < CAST(GETDATE() AS DATE);
+
 SELECT *
 FROM [User]
 
@@ -388,6 +396,27 @@ SELECT *
 FROM Booking
 WHERE BookingStatus = 'Confirmed'
 
-SELECT * FROM Booking WHERE BookingID = 75
+SELECT
+    B.BookingID,
+    B.UserID,
+    U.firstName,
+    U.lastName,
+    U.Email,
+    B.ShowID,
+    M.Title AS MovieTitle,
+    S.ShowDate,
+    S.ShowTime,
+    B.BookingDate,
+    B.TotalAmount,
+    B.TicketsNeeded,
+    B.BookingStatus
+FROM Booking B
+INNER JOIN [User] U ON U.UserID = B.UserID
+INNER JOIN Show S ON S.ShowID = B.ShowID
+INNER JOIN Movie M ON M.MovieID = S.MovieID
+WHERE B.BookingID = 105;
+
+SELECT *
+FROM Booking
 
 SELECT * FROM Show Where ShowID = 54

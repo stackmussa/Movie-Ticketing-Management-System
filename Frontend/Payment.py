@@ -1,10 +1,10 @@
 import streamlit as st
 import time
 import requests
-import streamlit.components.v1 as st_components
 import app.config as config
 from app.logger import logger
 from Frontend import components
+from datetime import datetime
 
 
 api_url = config.API_URL
@@ -18,7 +18,10 @@ st.title("Payment Checkout")
 st.write("Seamlessly Make Payments against your Order")
 st.divider()
 
-# --- Auto-Fetch Trigger ---
+if 'expired_booking' not in st.session_state:
+    st.session_state ['expired_booking'] = []
+
+# --- Auto-Fetch Trigger (If passed from another page) ---
 if 'current_booking_id' in st.session_state and 'current_order' not in st.session_state:
     auto_id = st.session_state['current_booking_id']
     headers = {"Authorization": f"Bearer {st.session_state.get('token')}"}
@@ -28,74 +31,95 @@ if 'current_booking_id' in st.session_state and 'current_order' not in st.sessio
         if resp.status_code == 200:
             st.session_state['current_order'] = resp.json()
 
-# fetching Order Details
-col1, col2 = st.columns([3,1])
-with col1:
-    input_booking_id = st.text_input("Booking ID", placeholder="for example 123")
-with col2:
-    st.markdown("<div style='margin-top: 28px;'></div>", unsafe_allow_html=True)
-    fetch_button = st.button("Fetch Order", use_container_width=True)
+# --- Fully Automatic Fresh Landing: Fetch Ongoing Pending Order ---
+if 'current_order' not in st.session_state:
+    headers = {"Authorization": f"Bearer {st.session_state.get('token')}"}
+    try:
+        pending_resp = requests.get(f"{api_url.rstrip('/')}/pendingorders", headers=headers)
+        if pending_resp.status_code == 200:
+            pending_list = pending_resp.json()
 
-if fetch_button:
-    if input_booking_id.isdigit():
-        with st.spinner("Fetching Order Details...."):
-            headers = {"Authorization" : f"Bearer {st.session_state.get('token')}"}
-            resp = requests.get(f"{api_url}/booking/{input_booking_id}", headers=headers)
-
-            if resp.status_code == 200:
-                st.session_state['current_order'] = resp.json()
-                st.session_state['current_booking_id'] = int(input_booking_id)
-                logger.info(f"Fetched Order Details against Booking ID: {input_booking_id}")
+            # Filter for Pending orders AND exclude any that just expired in this session
+            active_pending = [
+                o for o in pending_list 
+                if (o.get('BookingStatus', o.get('status')) == 'Pending') and 
+                   (o.get('BookingID', o.get('booking_id')) not in st.session_state['expired_bookings'])
+            ]
+            
+            if active_pending:
+                # Automatically grab the latest ongoing pending booking ID
+                ongoing_id = active_pending[0].get('BookingID', active_pending[0].get('booking_id'))
+                st.session_state['current_booking_id'] = ongoing_id
+                
+                # Fetch its details immediately without user interaction
+                resp = requests.get(f"{api_url.rstrip('/')}/booking/{ongoing_id}", headers=headers)
+                if resp.status_code == 200:
+                    st.session_state['current_order'] = resp.json()
+                    st.rerun()
             else:
-                logger.error(f"Unable to Fetch Details against Booking ID: {input_booking_id}")
-                st.error(f"Unable to Fetch Details againts Booking ID: {input_booking_id}")
-    else:
-        st.warning("Please enter a valid numeric Booking ID")
+                st.info("You have no ongoing payment checkouts right now.")
+    except Exception as e:
+        logger.error(f"Failed to auto-fetch pending orders: {e}")
+        st.info("You have no ongoing payment checkouts right now.")
 
 st.divider()
 
+# --- 3. Order Summary & Payment Processing ---
 if 'current_order' in st.session_state:
     order = st.session_state['current_order']
     booking_id = st.session_state['current_booking_id']
 
+    user_email = st.session_state.get('user_email', 'unknown')
+    timer_key = f"timer_{user_email}_{booking_id}"  
+    
     st.subheader("Order Summary")
 
     with st.container(border=True):
         st.write(f"**Movie:** {order.get('title')}")
         st.write(f"**Cinema:** {order.get('cinema')}")
         st.write(f"**Showtime:** {order.get('date')} at {order.get('time')}")
+        st.write(f"**Seats:** {order.get('assigned_seats', 'N/A')}")
         st.write(f"**Status:** {order.get('status')}")
         st.markdown(f"<h3 style='color: #4CAF50;'>Total Due: Rs. {order.get('total_amount')}</h3>", unsafe_allow_html=True)
 
     if order.get('status') == 'Pending':
 
-        # 1. Bind the timer key to the specific user's email to prevent cross-account leakage
-        user_email = st.session_state.get('user_email', 'unknown')
-        timer_key = f"timer_{user_email}_{booking_id}"
+        # 1. Parse the official creation time from the database
+        booking_date_str = order.get('booking_date', '')
         
-        if timer_key not in st.session_state:
-            st.session_state[timer_key] = time.time()
-
-        # Calculate exactly how many seconds are left (300 seconds = 5 minutes)
-        elapsed_time = time.time() - st.session_state[timer_key]
-        remaining_seconds = max(0, 300 - int(elapsed_time))
+        # 2. Convert SQL string to Python datetime (stripping fractional seconds)
+        db_creation_time = datetime.strptime(booking_date_str.split('.')[0], "%Y-%m-%d %H:%M:%S")
+        
+        # 3. Calculate true elapsed time based on the database clock
+        current_time = datetime.now()
+        elapsed_time = (current_time - db_creation_time).total_seconds()
+        
+        # 4. Calculate remaining seconds
+        remaining_seconds = max(0, config.booking_hold_timer - int(elapsed_time))
 
         timer_html = components.get_timer_html(remaining_seconds)
-        st_components.html(timer_html, height=70)
+        st.html(timer_html, unsafe_allow_javascript=True)
 
-        # 2. Add an interactive reset mechanism when the booking expires
+        # 5. Interactive reset mechanism 
         if remaining_seconds <= 0:
-            logger.error("The Booking time has passed, Please return to the dashboard to book again.")
-            st.error("The Booking has expired. Please return to the dashboard to book again.")
+            logger.error(f"Booking {booking_id} expired. Auto-clearing.")
             
-            # This button clears the stuck state so the next logged-in user isn't impacted
-            if st.button("Clear Expired Order", type="primary"):
-                st.session_state.pop('current_order', None)
-                st.session_state.pop('current_booking_id', None)
-                st.session_state.pop(timer_key, None)
-                st.rerun()
-                
-            st.stop()
+            # 1. FORCE CANCELLATION: Instantly tell the backend to free the seats
+            requests.put(
+                f"{api_url.rstrip('/')}/cancelBooking/{booking_id}", 
+                headers={"Authorization": f"Bearer {st.session_state.get('token')}"}
+            )
+            
+            # 2. Silently wipe the Streamlit memory without a button
+            st.session_state.pop('current_order', None)
+            st.session_state.pop('current_booking_id', None)
+            st.session_state.pop(timer_key, None)
+            
+            # 3. Show a brief warning, pause so they can read it, and reload the app
+            st.error("Time is up! Your booking has expired and seats have been released.")
+            time.sleep(2.5)
+            st.switch_page(config.dashboard_page)
+            st.rerun()
 
         #load payment Methods
         payment_methods = [method.value for method in config.PaymentMethodEnum]
@@ -159,6 +183,7 @@ if 'current_order' in st.session_state:
                             st.session_state.pop('current_order', None)
                             st.session_state.pop('current_booking_id', None)
                             st.session_state.pop(timer_key, None)
+
                         except ValueError:
                             st.error(f"Server Error ({pay_resp.status_code}): {pay_resp.text}")
                     else:

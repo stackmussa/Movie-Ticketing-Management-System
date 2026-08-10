@@ -1,38 +1,71 @@
 import streamlit as st
 
 
-def get_seat_map_html(selected_category: str) -> str:
-    """Generates the HTML for the 5x10 visual seat map."""
+def render_interactive_seat_map(selected_category: str, booked_seats: list, max_limit: int):
+    """Renders an interactive seat map using native Streamlit columns and checkboxes."""
     
-    seat_map_html = """
-    <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; text-align: center; font-family: monospace;">
-        <div style="background-color: red; color: white; padding: 5px; margin-bottom: 20px; font-weight: bold; letter-spacing: 5px;">SCREEN</div>
-        <div style="display: grid; gap: 5px; justify-content: center;">
-    """
+    st.markdown("<div style='text-align: center; background-color: red; color: white; padding: 5px; font-weight: bold; letter-spacing: 5px; margin-bottom: 20px;'>SCREEN</div>", unsafe_allow_html=True)
+    
+    if 'selected_seats' not in st.session_state:
+        st.session_state['selected_seats'] = []
 
     rows = ['A', 'B', 'C', 'D', 'E']
+    
     for row in rows:
-        seat_map_html += f'<div style="display: flex; gap: 5px; align-items: center; justify-content: center;">'
-        seat_map_html += f'<span style="color: white; width: 20px; text-align: left;">{row}</span>'
-
+        cols = st.columns([0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.2])
+        cols[0].write(f"**{row}**")
+        
         for seat_num in range(1, 11):
+            seat_id = f"{row}{seat_num}"
+            
             if row in ['A', 'B']:
-                color, cat = "#8A2BE2", "Platinum"
+                cat = "Platinum"
             elif row in ['C', 'D']:
-                color, cat = "#FFD700", "Gold"
+                cat = "Gold"
             else:
-                color, cat = "#808080", "Standard"
+                cat = "Standard"
 
-            opacity = "1.0" if selected_category == cat else "0.3"
+            is_booked = seat_id in booked_seats
+            wrong_category = selected_category != cat
             
-            # HTML kept on one line to prevent Streamlit Markdown interference
-            seat_map_html += f'<div style="width: 30px; height: 30px; background-color: {color}; opacity: {opacity}; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: black; font-size: 12px; font-weight: bold;">{seat_num}</div>'
-            
-        seat_map_html += f'<span style="color: white; width: 20px; text-align: right;">{row}</span></div>'
+            with cols[seat_num]:
+                if is_booked:
+                    # Renders a checked, disabled box with NO hover text
+                    st.checkbox(
+                        f"{seat_num}", 
+                        key=f"booked_{seat_id}", 
+                        disabled=True, 
+                        value=True 
+                    )
+                elif wrong_category:
+                    # Renders an unchecked, disabled box with NO hover text
+                    st.checkbox(
+                        f"{seat_num}", 
+                        key=f"wrong_cat_{seat_id}", 
+                        disabled=True, 
+                        value=False 
+                    )
+                else:
+                    # Renders an interactive, clickable seat WITH hover text
+                    is_selected = seat_id in st.session_state['selected_seats']
+                    
+                    def toggle_seat(s_id=seat_id):
+                        if s_id in st.session_state['selected_seats']:
+                            st.session_state['selected_seats'].remove(s_id)
+                        else:
+                            if len(st.session_state['selected_seats']) < max_limit:
+                                st.session_state['selected_seats'].append(s_id)
+                            else:
+                                st.session_state[f"chk_{s_id}"] = False 
+                                st.toast(f"You can only select a maximum of {max_limit} tickets.", icon="⚠️")
 
-    seat_map_html += "</div></div>"
-    return seat_map_html
-
+                    st.checkbox(
+                        f"{seat_num}", 
+                        key=f"chk_{seat_id}", 
+                        value=is_selected, 
+                        on_change=toggle_seat,
+                        help="Click to select this seat."
+                    )
 
 def get_legend_html() -> str:
     """Returns the HTML for the seat map color legend."""
@@ -43,21 +76,23 @@ def get_legend_html() -> str:
         <div><span style="color: #808080;">■</span> Standard (Row E)</div>
     </div>
     """
-
 #helper function for the 5 minutes timer functionality 
+# components.py
 def get_timer_html(remaining_seconds: int) -> str:
-    """Generates the HTML and JS for the live countdown timer."""
     return f"""
     <div style="font-family: sans-serif; text-align: center; padding: 12px; background-color: #2b2b2b; border-radius: 8px; border: 1px solid #FF5252;">
         <span style="color: #ffffff; font-size: 16px;">Time Remaining to Pay: </span>
         <strong style="color: #FF5252; font-size: 20px;" id="time">{remaining_seconds // 60}:{(remaining_seconds % 60):02d}</strong>
     </div>
     <script>
+        if (window.paymentTimer) {{
+            clearInterval(window.paymentTimer);
+        }}
         var timeleft = {remaining_seconds};
-        var timer = setInterval(function(){{
+        window.paymentTimer = setInterval(function(){{
             timeleft -= 1;
             if(timeleft <= 0){{
-                clearInterval(timer);
+                clearInterval(window.paymentTimer);
                 document.getElementById("time").innerHTML = "Expired!";
                 document.getElementById("time").style.color = "#FF5252";
             }} else {{

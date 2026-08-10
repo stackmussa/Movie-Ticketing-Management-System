@@ -32,7 +32,6 @@ with st.form("Login User"):
                 st.session_state['flash_message'] = f"User with {log_email} has Logged In Successfully!"
                 st.rerun()
             else:
-                # Safely attempt to parse JSON, fallback to raw text if it crashes
                 try:
                     error_detail = response.json().get("detail", "Login Failed")
                 except ValueError:

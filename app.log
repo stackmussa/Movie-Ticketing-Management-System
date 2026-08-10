@@ -660,3 +660,412 @@
 [13:52:49] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
 [13:52:49] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
 [13:52:54] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[13:53:16] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:28:41] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:28:41] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
+[18:28:44] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:28:45] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:28:48] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:28:55] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:28:56] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:28:57] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:28:58] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:28:59] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:05] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:05] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:07] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:07] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:09] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:09] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:14] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:19] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:22] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:23] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[18:29:23] [INFO] [bookings.py:119] - Booking 79 created successfully for mussa@gmail.com.
+[18:29:48] [INFO] [bookings.py:262] - Payment 10 processed successfully for Booking 79.
+[18:29:48] [INFO] [Payment.py:149] - Tansaction Details Sent!
+[14:29:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[14:29:47] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[14:29:57] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[14:30:01] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[14:30:02] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[14:30:02] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[14:30:03] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[14:30:05] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[14:30:06] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[14:30:06] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[14:30:07] [ERROR] [bookings.py:51] - DB Error fetching booked seats: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'BookingID'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Row'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'Number'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+[15:19:49] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:49] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:52] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:52] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:54] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:54] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:55] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:55] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:59] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:19:59] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:20:00] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:20:00] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:20:02] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:20:02] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:20:03] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:20:03] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:21:45] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:21:45] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
+[15:22:10] [INFO] [bookings.py:119] - Booking 80 created successfully for mussa@gmail.com.
+[15:22:44] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:22:44] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:22:46] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:22:48] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:22:48] [INFO] [bookings.py:119] - Booking 81 created successfully for i243022@isb.nu.edu.pk.
+[15:22:57] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:22:58] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:23:03] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:23:28] [INFO] [bookings.py:119] - Booking 82 created successfully for mussa@gmail.com.
+[15:27:10] [INFO] [bookings.py:25] - Timeout: Booking 80 automatically cancelled after 5 minutes.
+[15:27:48] [INFO] [bookings.py:25] - Timeout: Booking 81 automatically cancelled after 5 minutes.
+[15:28:28] [INFO] [bookings.py:25] - Timeout: Booking 82 automatically cancelled after 5 minutes.
+[15:30:25] [ERROR] [Payment.py:88] - The Booking time has passed, Please return to the dashboard to book again.
+[15:30:28] [ERROR] [Payment.py:88] - The Booking time has passed, Please return to the dashboard to book again.
+[15:30:29] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:30:36] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:30:36] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:30:37] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:30:37] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:34:25] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:34:25] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:34:29] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:34:31] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:34:38] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:34:39] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:34:44] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:34:51] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:35:00] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:35:02] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:35:11] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:35:13] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:14] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:16] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:17] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:18] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:19] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:20] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:20] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:21] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:21] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:22] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:23] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:24] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:25] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:33] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:39] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:40] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:42] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:43] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:44] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:45] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:42:54] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:42:54] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:42:57] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[15:43:02] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:03] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:05] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:05] [INFO] [bookings.py:119] - Booking 83 created successfully for i243022@isb.nu.edu.pk.
+[15:43:07] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:10] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:12] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:12] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:16] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:18] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:18] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:19] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:20] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:20] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:21] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:21] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:22] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:22] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:22] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:23] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:25] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:26] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:35] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:37] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:38] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:43:38] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:44:02] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:44:02] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
+[15:44:06] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:44:08] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:44:09] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:44:11] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:47:29] [ERROR] [Booking.py:52] - Failed to fetch availability: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[15:47:29] [ERROR] [Booking.py:52] - Failed to fetch availability: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[15:47:29] [ERROR] [Booking.py:52] - Failed to fetch availability: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[15:47:50] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:47:50] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:47:54] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:00] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:01] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:02] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:02] [INFO] [bookings.py:119] - Booking 84 created successfully for i243022@isb.nu.edu.pk.
+[15:48:04] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:19] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:48:19] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
+[15:48:22] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:24] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:25] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:25] [INFO] [bookings.py:119] - Booking 85 created successfully for mussa@gmail.com.
+[15:48:32] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:34] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:34] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:35] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:35] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:36] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:36] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:38] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:48:38] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:50:36] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:50:36] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:50:40] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:50:40] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:50:42] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:50:45] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:50:46] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:50:47] [INFO] [bookings.py:119] - Booking 86 created successfully for i243022@isb.nu.edu.pk.
+[15:51:46] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:51:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:51:47] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:51:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:51:47] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:51:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:51:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:51:47] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:51:47] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:51:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[15:51:47] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[15:51:56] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[15:52:03] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[15:52:06] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:52:08] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:52:09] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:52:13] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[15:55:16] [INFO] [MyOrders.py:111] - Cancelling Ticket!!
+[15:55:16] [INFO] [bookings.py:316] - Booking 84 cancelled by User 2.
+[15:55:17] [INFO] [MyOrders.py:111] - Cancelling Ticket!!
+[15:55:17] [INFO] [bookings.py:316] - Booking 83 cancelled by User 2.
+[16:53:12] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:53:15] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:53:20] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:58:19] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:58:19] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[16:58:25] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:58:28] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:58:29] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:58:30] [INFO] [bookings.py:119] - Booking 87 created successfully for i243022@isb.nu.edu.pk.
+[16:58:47] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[16:58:47] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
+[16:58:49] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:58:50] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:58:51] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:58:53] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:58:54] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:59:07] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:59:10] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:59:10] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[16:59:34] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:00:55] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:01:02] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:01:04] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:01:07] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:01:14] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:01:16] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:01:16] [INFO] [bookings.py:119] - Booking 88 created successfully for mussa@gmail.com.
+[17:01:18] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:03:30] [INFO] [bookings.py:25] - Timeout: Booking 87 automatically cancelled after 5 minutes.
+[17:06:16] [INFO] [bookings.py:25] - Timeout: Booking 88 automatically cancelled after 5 minutes.
+[17:06:37] [ERROR] [Payment.py:88] - The Booking time has passed, Please return to the dashboard to book again.
+[17:06:39] [ERROR] [Payment.py:88] - The Booking time has passed, Please return to the dashboard to book again.
+[17:06:52] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:06:55] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:06:57] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:06:59] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:07:00] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:07:00] [INFO] [bookings.py:119] - Booking 89 created successfully for mussa@gmail.com.
+[17:12:00] [INFO] [bookings.py:25] - Timeout: Booking 89 automatically cancelled after 5 minutes.
+[17:17:14] [ERROR] [Payment.py:88] - The Booking time has passed, Please return to the dashboard to book again.
+[17:17:17] [ERROR] [Payment.py:88] - The Booking time has passed, Please return to the dashboard to book again.
+[17:17:18] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:41:45] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:41:59] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[17:41:59] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[17:42:04] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[17:42:06] [ERROR] [Payment.py:91] - The Booking time has passed, Please return to the dashboard to book again.
+[17:42:06] [INFO] [bookings.py:317] - Booking 86 cancelled by User 2.
+[17:42:08] [ERROR] [Payment.py:91] - The Booking time has passed, Please return to the dashboard to book again.
+[17:42:10] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[17:42:13] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:42:14] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:42:15] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:06] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:08] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:08] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:09] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:09] [INFO] [bookings.py:119] - Booking 90 created successfully for i243022@isb.nu.edu.pk.
+[17:43:14] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:16] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:18] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:19] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:22] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:45] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[17:43:45] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[17:43:48] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[17:43:52] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[17:43:58] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:43:59] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:44:00] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:44:15] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:44:16] [ERROR] [bookings.py:51] - DB Error fetching booked seats
+[17:47:15] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[17:47:15] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[17:47:15] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[17:47:15] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[17:47:19] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[17:48:21] [ERROR] [Payment.py:91] - The Booking time has passed, Please return to the dashboard to book again.
+[17:48:21] [INFO] [bookings.py:317] - Booking 90 cancelled by User 2.
+[17:48:21] [ERROR] [Payment.py:91] - The Booking time has passed, Please return to the dashboard to book again.
+[17:48:23] [ERROR] [Payment.py:91] - The Booking time has passed, Please return to the dashboard to book again.
+[17:48:51] [INFO] [bookings.py:119] - Booking 91 created successfully for i243022@isb.nu.edu.pk.
+[17:49:03] [INFO] [bookings.py:263] - Payment 11 processed successfully for Booking 91.
+[17:49:03] [INFO] [Payment.py:156] - Tansaction Details Sent!
+[17:58:23] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[17:58:23] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[17:58:34] [INFO] [bookings.py:119] - Booking 92 created successfully for i243022@isb.nu.edu.pk.
+[18:03:34] [INFO] [bookings.py:25] - Timeout: Booking 92 automatically cancelled after 5 minutes.
+[18:05:25] [ERROR] [Payment.py:95] - Booking 92 expired. Auto-clearing.
+[18:05:33] [INFO] [bookings.py:119] - Booking 93 created successfully for i243022@isb.nu.edu.pk.
+[18:06:03] [INFO] [Payment.py:49] - Fetched Order Details against Booking ID: 93
+[18:10:33] [INFO] [bookings.py:25] - Timeout: Booking 93 automatically cancelled after 5 minutes.
+[18:10:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:10:39] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:10:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:10:39] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:10:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:10:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:10:39] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:10:39] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:10:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:10:39] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:10:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:10:39] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:10:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:10:39] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:10:39] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:10:39] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:13:10] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:13:10] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:13:25] [INFO] [bookings.py:119] - Booking 94 created successfully for i243022@isb.nu.edu.pk.
+[18:14:28] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:14:28] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
+[18:14:35] [INFO] [bookings.py:119] - Booking 95 created successfully for mussa@gmail.com.
+[18:18:15] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:18:15] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:18:15] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:18:15] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:18:15] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:18:15] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:18:15] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:18:15] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:18:15] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:18:15] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:18:23] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:18:24] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:18:26] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:20:39] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:20:42] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:20:49] [INFO] [bookings.py:119] - Booking 96 created successfully for i243022@isb.nu.edu.pk.
+[18:20:59] [ERROR] [Payment.py:98] - Booking 94 expired. Auto-clearing.
+[18:20:59] [INFO] [bookings.py:318] - Booking 94 cancelled by User 2.
+[18:21:12] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:21:12] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:21:25] [INFO] [Payment.py:50] - Fetched Order Details against Booking ID: 96
+[18:21:30] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:21:32] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:23:18] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[18:23:18] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[18:23:24] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[18:23:33] [INFO] [bookings.py:119] - Booking 97 created successfully for i243022@isb.nu.edu.pk.
+[18:23:45] [INFO] [MyOrders.py:112] - Cancelling Ticket!!
+[18:23:45] [INFO] [bookings.py:318] - Booking 96 cancelled by User 2.
+[10:49:40] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[10:49:40] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[10:51:16] [ERROR] [Booking.py:17] - Please Select a Movie, return to Dashboard!
+[10:58:26] [INFO] [bookings.py:119] - Booking 98 created successfully for i243022@isb.nu.edu.pk.
+[10:58:39] [INFO] [MyOrders.py:112] - Cancelling Ticket!!
+[10:58:39] [INFO] [bookings.py:318] - Booking 98 cancelled by User 2.
+[11:11:03] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:11:03] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:11:11] [INFO] [bookings.py:119] - Booking 99 created successfully for i243022@isb.nu.edu.pk.
+[11:11:17] [INFO] [MyOrders.py:112] - Cancelling Ticket!!
+[11:11:17] [INFO] [bookings.py:318] - Booking 99 cancelled by User 2.
+[11:11:19] [ERROR] [Payment.py:62] - Failed to auto-fetch pending orders: 'st.session_state has no key "expired_bookings". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+[11:11:30] [INFO] [bookings.py:119] - Booking 100 created successfully for i243022@isb.nu.edu.pk.
+[11:15:11] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:15:11] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:15:13] [ERROR] [Payment.py:62] - Failed to auto-fetch pending orders: 'st.session_state has no key "expired_bookings". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+[11:15:14] [ERROR] [Payment.py:62] - Failed to auto-fetch pending orders: 'st.session_state has no key "expired_bookings". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+[11:15:14] [ERROR] [Payment.py:62] - Failed to auto-fetch pending orders: 'st.session_state has no key "expired_bookings". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+[11:16:30] [INFO] [bookings.py:25] - Timeout: Booking 100 automatically cancelled after 5 minutes.
+[11:18:30] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:18:30] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:18:35] [INFO] [bookings.py:119] - Booking 101 created successfully for i243022@isb.nu.edu.pk.
+[11:20:28] [INFO] [MyOrders.py:112] - Cancelling Ticket!!
+[11:20:28] [INFO] [bookings.py:318] - Booking 101 cancelled by User 2.
+[11:22:49] [INFO] [bookings.py:119] - Booking 102 created successfully for i243022@isb.nu.edu.pk.
+[11:27:23] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:27:23] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:27:34] [ERROR] [Payment.py:62] - Failed to auto-fetch pending orders: 'st.session_state has no key "expired_bookings". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+[11:27:38] [INFO] [bookings.py:119] - Booking 103 created successfully for i243022@isb.nu.edu.pk.
+[11:28:38] [INFO] [bookings.py:25] - Timeout: Booking 103 automatically cancelled after 5 minutes.
+[11:36:57] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:36:57] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:37:22] [INFO] [bookings.py:119] - Booking 104 created successfully for i243022@isb.nu.edu.pk.
+[11:38:22] [INFO] [bookings.py:25] - Timeout: Booking 104 automatically cancelled after 5 minutes.
+[11:41:41] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:41:41] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:41:47] [INFO] [bookings.py:119] - Booking 105 created successfully for i243022@isb.nu.edu.pk.
+[11:42:47] [INFO] [bookings.py:25] - Timeout: Booking 105 automatically cancelled after 5 minutes.
+[11:46:58] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:46:58] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:47:04] [INFO] [bookings.py:119] - Booking 106 created successfully for i243022@isb.nu.edu.pk.
+[11:48:04] [INFO] [bookings.py:25] - Timeout: Booking 106 automatically cancelled after 5 minutes.
+[11:49:38] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[11:49:38] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[11:50:14] [INFO] [bookings.py:119] - Booking 107 created successfully for i243022@isb.nu.edu.pk.
+[11:50:25] [INFO] [bookings.py:25] - Timeout: Booking 107 automatically cancelled after 5 minutes.
+[12:18:55] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:18:55] [INFO] [auth.py:72] - User i243022@isb.nu.edu.pk has logged in & recieved a token!
+[12:19:06] [INFO] [bookings.py:119] - Booking 108 created successfully for i243022@isb.nu.edu.pk.
+[12:19:17] [INFO] [bookings.py:25] - Timeout: Booking 108 automatically cancelled after 5 minutes.
+[12:19:44] [ERROR] [Payment.py:105] - Booking 108 expired. Auto-clearing.
+[12:19:55] [ERROR] [Payment.py:105] - Booking 102 expired. Auto-clearing.
+[12:19:55] [INFO] [bookings.py:318] - Booking 102 cancelled by User 2.
+[12:19:59] [ERROR] [Payment.py:62] - Failed to auto-fetch pending orders: 'st.session_state has no key "expired_bookings". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+[12:20:25] [INFO] [jwt_Security.py:21] - Successfully Generated Token!
+[12:20:25] [INFO] [auth.py:72] - User mussa@gmail.com has logged in & recieved a token!
+[12:20:36] [INFO] [bookings.py:119] - Booking 109 created successfully for mussa@gmail.com.
+[12:20:46] [INFO] [bookings.py:25] - Timeout: Booking 109 automatically cancelled after 5 minutes.
+[12:21:00] [ERROR] [Payment.py:105] - Booking 109 expired. Auto-clearing.
+[12:34:52] [INFO] [bookings.py:119] - Booking 110 created successfully for mussa@gmail.com.
+[12:34:58] [ERROR] [Payment.py:62] - Failed to auto-fetch pending orders: 'st.session_state has no key "expired_bookings". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+[12:35:02] [INFO] [bookings.py:25] - Timeout: Booking 110 automatically cancelled after 5 minutes.
+[12:35:04] [ERROR] [Payment.py:105] - Booking 85 expired. Auto-clearing.
+[12:35:04] [INFO] [bookings.py:318] - Booking 85 cancelled by User 1.
+[12:35:08] [ERROR] [Payment.py:105] - Booking 95 expired. Auto-clearing.
+[12:35:08] [INFO] [bookings.py:318] - Booking 95 cancelled by User 1.
+[12:35:20] [INFO] [bookings.py:119] - Booking 111 created successfully for mussa@gmail.com.
+[12:35:23] [ERROR] [Payment.py:62] - Failed to auto-fetch pending orders: 'st.session_state has no key "expired_bookings". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+[12:35:30] [INFO] [bookings.py:25] - Timeout: Booking 111 automatically cancelled after 5 minutes.
+[12:35:47] [INFO] [bookings.py:119] - Booking 112 created successfully for mussa@gmail.com.
+[12:35:58] [INFO] [bookings.py:25] - Timeout: Booking 112 automatically cancelled after 5 minutes.

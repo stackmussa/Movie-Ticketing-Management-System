@@ -18,6 +18,10 @@ if 'Booking_target_movie' not in st.session_state:
     st.warning("Please Select a Movie, return to Dashboard")
     st.stop()
 
+# Track which specific seats the user clicks
+if 'selected_seats' not in st.session_state:
+    st.session_state['selected_seats'] = []
+
 # --- Load Target Data ---
 movie_title = st.session_state['Booking_target_movie']
 city = st.session_state['Booking_target_city']
@@ -32,68 +36,75 @@ st.divider()
 
 # --- Fetch Availability ---
 availability = {"Platinum": 0, "Gold": 0, "Standard": 0, "Recliner": 0}
+booked_seats_list = []
 try:
+    # fetch total count of seats category vise
     avail_resp = requests.get(f"{api_url}/availability", params={"title": movie_title, "city": city})
     if avail_resp.status_code == 200:
         availability = avail_resp.json()
+
+    # fetch the exact seats that are taken
+    booked_resp = requests.get(f"{api_url}/booked_seats", params={"title": movie_title, "city": city})
+    if booked_resp.status_code == 200:
+        booked_seats_list = booked_resp.json().get("booked_seats", [])
+
 except Exception as e:
     logger.error(f"Failed to fetch availability: {e}")
 
 st.subheader("Select Category & Tickets")
 
-# Display Tickets Left
-st.info(f"**Tickets Remaining:** Platinum: {availability.get('Platinum', 0)} | Gold: {availability.get('Gold', 0)} | Standard: {availability.get('Standard', 0)}")
+# Display general category capacities
+st.info(f"**Total Available in Hall:** Platinum: {availability.get('Platinum', 0)} | Gold: {availability.get('Gold', 0)} | Standard: {availability.get('Standard', 0)}")
 
-col1, col2 = st.columns(2)
+selected_category = st.selectbox("Seat Category", ["Platinum", "Gold", "Standard", "Recliners"])
 
-with col1:
-    selected_category = st.selectbox("Seat Category",  ["Platinum", "Gold", "Standard", "Recliners"])
+# If the user switches categories, wipe their previously selected seats so they dont book the wrong tier
+if 'prev_category' not in st.session_state:
+    st.session_state['prev_category'] = selected_category
+elif st.session_state['prev_category'] != selected_category:
+    st.session_state['selected_seats'] = []
+    st.session_state['prev_category'] = selected_category
+    st.rerun()
 
-with col2:
-    max_available = availability.get(selected_category, 0)
-    if max_available == 0:
-        st.error(f"Oops no seats left for the {selected_category}")
-        logger.error(f"Oops no seats left for the {selected_category}")
-        tickets_needed = 0
-    else:
-        # Cap the maximum tickets to either 10 or the actual remaining seats
-        max_limit = min(10, max_available)
-        
-        # Create a list of numbers from 1 up to the max_limit (e.g., [1, 2, 3, 4, 5])
-        ticket_options = list(range(1, max_limit + 1))
-        
-        # Render a simple, foolproof dropdown menu
-        tickets_needed = st.selectbox("Number of Tickets", options=ticket_options)
-
+st.divider()
 st.subheader("Hall Layout!")
-st.write("Seats are automatically assigned best-available within your chosen category.")
+st.write("Click on the available seats to select them. Hover over grayed-out seats to see why they are unavailable.")
 
-# Creating a visual 5x10 grid using HTML/CSS
-seat_map = components.get_seat_map_html(selected_category)
-st.markdown(seat_map, unsafe_allow_html=True)
+max_available = availability.get(selected_category, 0)
+max_limit = min(10, max_available)
 
-legend = components.get_legend_html()
-st.markdown(legend, unsafe_allow_html=True)
+# Render the interactive map based on real-time data
+if max_available > 0:
+    components.render_interactive_seat_map(selected_category, booked_seats_list, max_limit)
+else:
+    st.error(f"No seats left for {selected_category}.")
+
+st.markdown(components.get_legend_html(), unsafe_allow_html=True)
+st.divider()
 
 st.divider()
 
 # --- 3. Checkout ---
 st.subheader("Checkout!")
 
-if tickets_needed >0 and tickets_needed <= 10:
+# Infer quantity directly from the clicks
+tickets_needed = len(st.session_state['selected_seats'])
+st.write(f"**Selected Seats:** {', '.join(st.session_state['selected_seats']) if tickets_needed > 0 else 'None'}")
+st.write(f"**Total Tickets:** {tickets_needed}")
+
+if tickets_needed > 0 and tickets_needed <= 10:
     if st.button("Check Out", type="primary", use_container_width=True):
         with st.spinner("Processing your booking..."):
 
-            # Prepare the Authorization header
             headers = {
                 "Authorization": f"Bearer {st.session_state.get('token')}"
             }
 
-            # Match the Form() data expected by api.py
+            # Send the comma-separated string to the backend
             payload = {
                 "title": movie_title,
                 "City": city,
-                "TicketsNeeded": tickets_needed,
+                "selectedSeats": ",".join(st.session_state['selected_seats']),
                 "seatCategory": selected_category
             }
             
@@ -103,26 +114,25 @@ if tickets_needed >0 and tickets_needed <= 10:
                 booking_info = response.json().get("booking_details", {})
                 st.success("Booking confirmed! Seats have been successfully allocated.")
                 
-                # Display the auto-assigned seats returned from the API
                 assigned_seats_str = ", ".join(booking_info.get("assigned_seats", []))
                 
                 st.info(f"""
                 **Booking ID:** {booking_info.get("booking_id")}  
                 **Assigned Seats:** {assigned_seats_str}  
-                **Total Amount:** {booking_info.get("currency")} {booking_info.get("total_amount")}
+                **Total Amount:** {booking_info.get("currency", "PKR")} {booking_info.get("total_amount")}
                 """)
 
-                time.sleep(5)
-                # WIPE the cache and push the new booking ID
+                time.sleep(3)
+                
+                # Push booking ID for payment page and wipe selected seats memory
                 st.session_state['current_booking_id'] = booking_info.get("booking_id")
+                st.session_state['selected_seats'] = []
                 st.session_state.pop('current_order', None)
                 
-                # Navigate the user towards checkout
                 st.switch_page(config.payment_page)
                 
             else:
                 error_detail = response.json().get("detail", "Booking failed.")
                 st.error(error_detail)
 else:
-    st.error("Unable to CheckOUT")
-    st.button("Check Out", type="primary", use_container_width=True, disabled=True)    
+    st.button("Check Out", type="primary", use_container_width=True, disabled=True)
