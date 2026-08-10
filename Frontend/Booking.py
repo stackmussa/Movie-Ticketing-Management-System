@@ -22,6 +22,14 @@ if 'Booking_target_movie' not in st.session_state:
 if 'selected_seats' not in st.session_state:
     st.session_state['selected_seats'] = []
 
+if st.session_state.get('clear_pending'):
+    for seat in st.session_state.get('selected_seats', []):
+        chk_key = f"chk_{seat}"
+        st.session_state[chk_key] = False 
+            
+    st.session_state['selected_seats'] = []
+    st.session_state['clear_pending'] = False   
+
 # --- Load Target Data ---
 movie_title = st.session_state['Booking_target_movie']
 city = st.session_state['Booking_target_city']
@@ -87,16 +95,10 @@ st.divider()
 st.subheader("Checkout!")
 
 col_clear, col_checkout = st.columns([1, 2])
-with col_clear:
-    if st.button("Clear Selection", use_container_width=True):
-        # Explicitly uncheck the Streamlit visual boxes
-        for seat in st.session_state.get('selected_seats', []):
-            chk_key = f"chk_{seat}"
-            if chk_key in st.session_state:
-                del st.session_state[chk_key]
-                
-        st.session_state['selected_seats'] = []
-        st.rerun()
+#with col_clear:
+if st.button("Clear Selection", use_container_width=True):
+    st.session_state['clear_pending'] = True
+    st.rerun()
 
 # Infer quantity directly from the clicks
 tickets_needed = len(st.session_state['selected_seats'])
@@ -148,11 +150,7 @@ if tickets_needed > 0 and tickets_needed <= 10:
                 # Allow them to read the error for 2.5 seconds
                 time.sleep(2.5) 
                 
-                # Wipe all checkbox states and reload the page
-                for seat in st.session_state.get('selected_seats', []):
-                    if f"chk_{seat}" in st.session_state:
-                        del st.session_state[f"chk_{seat}"]
-                st.session_state['selected_seats'] = []
+                st.session_state['clear_pending'] = True
                 st.rerun()
 else:
     st.button("Check Out", type="primary", use_container_width=True, disabled=True)

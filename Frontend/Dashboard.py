@@ -61,7 +61,7 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
 
 #Dashboard
 st.title("Movie Ticket Purchase System")
-st.write(f"Welcome to your dashboard, **{st.session_state['user_email']}**!")
+st.write(f"Welcome to your dashboard, **{st.session_state['user_email'.lower()]}**!")
 
 if st.button("Logout", type="primary"):
     # wipes the entire browser tab's memory

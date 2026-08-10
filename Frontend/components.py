@@ -56,9 +56,11 @@ def render_interactive_seat_map(selected_category: str, booked_seats: list, max_
                             if len(st.session_state['selected_seats']) < max_limit:
                                 st.session_state['selected_seats'].append(s_id)
                             else:
-                                st.session_state[f"chk_{s_id}"] = False 
+                                chk_key = f"chk_{s_id}"
+                                # Force the visual checkbox to uncheck if they hit the limit
+                                st.session_state[chk_key] = False
                                 st.toast(f"You can only select a maximum of {max_limit} tickets.", icon="⚠️")
-
+                                
                     st.checkbox(
                         f"{seat_num}", 
                         key=f"chk_{seat_id}", 

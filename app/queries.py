@@ -13,29 +13,44 @@ authorize_owner = '''
         FROM Booking 
         WHERE BookingID = ?
 '''
-get_shows_query = '''SELECT DISTINCT M.Title, M.Genre, M.Language, M.DurationMinutes, M.Description,
-                M.CensorRating, S.ShowTime, S.ShowDate, S.TicketPrice, H.HallName, H.ScreenType, H.TotalSeats,
-                C.CinemaName, C.BranchName, C.Address, C.ContactNumber, Ct.CityName AS City
-            FROM Show AS S
-            INNER JOIN Movie AS M ON S.MovieID = M.MovieID
-            INNER JOIN HALL AS H ON S.HallID = H.HallID
-            INNER JOIN Cinema AS C ON H.CinemaID = C.CinemaID
-            INNER JOIN City AS Ct ON C.CityID = Ct.CityID
-            WHERE S.ShowDate >= CAST(GETDATE() AS DATE)
-                OR (S.ShowDate = CAST(GETDATE() AS DATE) AND S.ShowTime > CAST(GETDATE() AS TIME))
-            ORDER BY S.ShowDate ASC, S.ShowTime ASC'''
+get_shows_query = """
+SELECT 
+    M.Title, 
+    S.ShowDate, 
+    S.ShowTime, 
+    C.CinemaName, 
+    C.Address, 
+    S.TicketPrice,
+    CT.CityName AS City
+FROM Show S
+INNER JOIN Movie M ON S.MovieID = M.MovieID
+INNER JOIN Hall H ON S.HallID = H.HallID
+INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
+INNER JOIN City CT ON C.CityID = CT.CityID
+WHERE S.ShowDate > CAST(GETDATE() AS DATE) 
+   OR (S.ShowDate = CAST(GETDATE() AS DATE) AND S.ShowTime > CAST(GETDATE() AS TIME))
+ORDER BY S.ShowDate, S.ShowTime
+"""
 
-get_specific_show = '''SELECT DISTINCT M.Title, M.Genre, M.Language, M.DurationMinutes, M.Description, 
-                M.CensorRating, S.ShowTime, S.ShowDate, S.TicketPrice, H.HallName, H.ScreenType, H.TotalSeats, 
-                C.CinemaName, C.BranchName, C.Address, C.ContactNumber, Ct.CityName AS City
-            FROM Show AS S
-            INNER JOIN Movie AS M ON S.MovieID = M.MovieID
-            INNER JOIN HALL AS H ON S.HallID = H.HallID
-            INNER JOIN Cinema AS C ON H.CinemaID = C.CinemaID
-            INNER JOIN City AS Ct ON C.CityID = Ct.CityID
-            WHERE M.Title = ? AND S.ShowDate >= CAST(GETDATE() AS DATE)
-                    OR (S.ShowDate = CAST(GETDATE() AS DATE) AND S.ShowTime > CAST(GETDATE() AS TIME))
-            ORDER BY S.ShowDate ASC, S.ShowTime ASC'''
+get_specific_show = """
+SELECT 
+    M.Title, 
+    S.ShowDate, 
+    S.ShowTime, 
+    C.CinemaName, 
+    C.Address, 
+    S.TicketPrice,
+    CT.CityName AS City
+FROM Show S
+INNER JOIN Movie M ON S.MovieID = M.MovieID
+INNER JOIN Hall H ON S.HallID = H.HallID
+INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
+INNER JOIN City CT ON C.CityID = CT.CityID
+WHERE M.Title LIKE '%' + ? + '%'
+  AND (S.ShowDate > CAST(GETDATE() AS DATE) 
+       OR (S.ShowDate = CAST(GETDATE() AS DATE) AND S.ShowTime > CAST(GETDATE() AS TIME)))
+ORDER BY S.ShowDate, S.ShowTime
+"""
 
 Cities_query = '''SELECT DISTINCT CityName
                         FROM City
