@@ -381,6 +381,96 @@ FROM (VALUES
 ) AS S(MovieTitle, HallID, ShowDate, ShowTime, TicketPrice);
 
 
+ALTER TABLE Movie
+ADD PosterURL VARCHAR(300) NULL,
+    TrailerURL VARCHAR(300) NULL;
+GO
+ 
+-- ============================================================
+-- Populate poster & trailer links per movie (matched by Title,
+-- so this is safe regardless of MovieID insert order/drift)
+-- ============================================================
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt39773435/',
+    TrailerURL = 'https://www.youtube.com/watch?v=Y5Q8z66aV9U'
+WHERE Title = 'Aag Lagay Basti Mein';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt40478587/',
+    TrailerURL = 'https://www.youtube.com/watch?v=Z0SpyQ588NQ'
+WHERE Title = 'Bullah';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt32868853/',
+    TrailerURL = 'https://www.youtube.com/watch?v=_8Pn6d-a-fw'
+WHERE Title = 'Delhi Gate';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt39214750/',
+    TrailerURL = 'https://www.youtube.com/watch?v=ouzEuRvdVC0'
+WHERE Title = 'Mera Lyari';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://en.wikipedia.org/wiki/Luv_Di_Saun',
+    TrailerURL = 'https://www.youtube.com/watch?v=pNPFlT--b94'
+WHERE Title = 'Luv Di Saun';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://en.wikipedia.org/wiki/Zombeid',
+    TrailerURL = 'https://www.youtube.com/watch?v=Q6G4WhB4OZY'
+WHERE Title = 'Zombeid';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.rottentomatoes.com/m/psycho_2026',
+    TrailerURL = 'https://www.youtube.com/watch?v=b0zvfQhlDKw'
+WHERE Title = 'Psycho';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt28650488/',
+    TrailerURL = 'https://www.youtube.com/watch?v=GuCejewteF8'
+WHERE Title = 'The Super Mario Galaxy Movie';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt19847976/',
+    TrailerURL = 'https://www.youtube.com/watch?v=vt98AlBDI9Y'
+WHERE Title = 'Wicked: For Good';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt27543632/',
+    TrailerURL = 'https://www.youtube.com/watch?v=48CtX6OgU3s'
+WHERE Title = 'The Housemaid';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt22084616/',
+    TrailerURL = 'https://www.youtube.com/watch?v=8TZMtslA3UY'
+WHERE Title = 'Spider-Man: Brand New Day';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt21357150/',
+    TrailerURL = 'https://www.youtube.com/watch?v=S5ehYTyjvrs'
+WHERE Title = 'Avengers: Doomsday';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt29355505/',
+    TrailerURL = 'https://www.youtube.com/watch?v=c51ND9Hdbw0'
+WHERE Title = 'Toy Story 5';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt33764258/',
+    TrailerURL = 'https://www.youtube.com/watch?v=Mzw2ttJD2qQ'
+WHERE Title = 'The Odyssey';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt32890033/',
+    TrailerURL = 'https://www.youtube.com/watch?v=UoZqKMZyf3U'
+WHERE Title = 'Minions 3';
+ 
+UPDATE Movie SET
+    PosterURL  = 'https://www.imdb.com/title/tt8814476/',
+    TrailerURL = 'https://www.youtube.com/watch?v=s1-pfiVMKAs'
+WHERE Title = 'Supergirl';
+
 UPDATE Show
 SET ShowDate = DATEADD(DAY, 7, ShowDate)
 WHERE ShowDate < CAST(GETDATE() AS DATE);
@@ -417,7 +507,7 @@ FROM Booking B
 INNER JOIN [User] U ON U.UserID = B.UserID
 INNER JOIN Show S ON S.ShowID = B.ShowID
 INNER JOIN Movie M ON M.MovieID = S.MovieID
-WHERE B.BookingID = 150;
+WHERE U.UserID = 2 and (B.BookingStatus = 'Pending' or B.BookingStatus = 'Confirmed');
 
 SELECT *
 FROM BookingSeat
