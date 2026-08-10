@@ -556,3 +556,118 @@ def cancel_Booking(booking_ID: int, current_user: dict = Depends(jwt_Security.ge
         conn.rollback()
         logger.error(f"Database error during cancellation")
         raise HTTPException(status_code=500, detail="An internal database error occurred.")
+
+# ============================================================
+# REVIEW ENDPOINTS
+# ============================================================
+
+@app.get("/reviews/{movie_title}")
+def get_reviews(movie_title: str, conn: pyodbc.Connection = Depends(config.get_DB)):
+    """Fetch all reviews + average rating for a movie by its title."""
+    cursor = conn.cursor()
+    try:
+        cursor.execute(queries.get_movie_id_by_title, (movie_title,))
+        movie_record = cursor.fetchone()
+        if not movie_record:
+            raise HTTPException(status_code=404, detail="Movie not found.")
+        movie_id = movie_record[0]
+
+        cursor.execute(queries.get_movie_avg_rating, (movie_id,))
+        avg_record = cursor.fetchone()
+        avg_rating = round(float(avg_record[0]), 1) if avg_record and avg_record[0] else 0.0
+        total_reviews = int(avg_record[1]) if avg_record and avg_record[1] else 0
+
+        cursor.execute(queries.get_movie_reviews, (movie_id,))
+        results = cursor.fetchall()
+        column_names = [column[0] for column in cursor.description]
+        reviews = [dict(zip(column_names, row)) for row in results]
+
+        for review in reviews:
+            if review.get("CreatedAt"):
+                review["CreatedAt"] = str(review["CreatedAt"])
+
+        return {
+            "movie_title": movie_title,
+            "average_rating": avg_rating,
+            "total_reviews": total_reviews,
+            "reviews": reviews
+        }
+    except HTTPException:
+        raise
+    except pyodbc.Error as e:
+        logger.error(f"DB Error fetching reviews: {e}")
+        raise HTTPException(status_code=500, detail="Database Error fetching reviews.")
+
+
+@app.post("/reviews")
+def post_review(
+    movie_title: Annotated[str, Form()],
+    rating: Annotated[int, Form()],
+    review_text: Annotated[str, Form()],
+    current_user: dict = Depends(jwt_Security.get_current_user),
+    conn: pyodbc.Connection = Depends(config.get_DB)
+):
+    """Submit a new top-level review with a star rating (1-5)."""
+    if rating < 1 or rating > 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5.")
+    if not review_text.strip():
+        raise HTTPException(status_code=400, detail="Review text cannot be empty.")
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute(queries.get_movie_id_by_title, (movie_title,))
+        movie_record = cursor.fetchone()
+        if not movie_record:
+            raise HTTPException(status_code=404, detail="Movie not found.")
+        movie_id = movie_record[0]
+
+        cursor.execute(queries.insert_review, (movie_id, current_user["user_id"], rating, review_text.strip()))
+        review_id = cursor.fetchone()[0]
+        conn.commit()
+
+        logger.info(f"Review {review_id} posted by User {current_user['user_id']} for Movie '{movie_title}'.")
+        return {"message": "Review posted successfully!", "review_id": review_id}
+
+    except HTTPException:
+        conn.rollback()
+        raise
+    except pyodbc.Error as e:
+        conn.rollback()
+        logger.error(f"DB Error posting review: {e}")
+        raise HTTPException(status_code=500, detail="Database Error posting review.")
+
+
+@app.post("/reviews/reply")
+def post_reply(
+    movie_title: Annotated[str, Form()],
+    parent_review_id: Annotated[int, Form()],
+    review_text: Annotated[str, Form()],
+    current_user: dict = Depends(jwt_Security.get_current_user),
+    conn: pyodbc.Connection = Depends(config.get_DB)
+):
+    """Post a reply to an existing review."""
+    if not review_text.strip():
+        raise HTTPException(status_code=400, detail="Reply text cannot be empty.")
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute(queries.get_movie_id_by_title, (movie_title,))
+        movie_record = cursor.fetchone()
+        if not movie_record:
+            raise HTTPException(status_code=404, detail="Movie not found.")
+        movie_id = movie_record[0]
+
+        cursor.execute(queries.insert_reply, (movie_id, current_user["user_id"], review_text.strip(), parent_review_id))
+        reply_id = cursor.fetchone()[0]
+        conn.commit()
+
+        logger.info(f"Reply {reply_id} posted by User {current_user['user_id']} on Review {parent_review_id}.")
+        return {"message": "Reply posted successfully!", "review_id": reply_id}
+
+    except HTTPException:
+        conn.rollback()
+        raise
+    except pyodbc.Error as e:
+        conn.rollback()
+        logger.error(f"DB Error posting reply: {e}")
+        raise HTTPException(status_code=500, detail="Database Error posting reply.")

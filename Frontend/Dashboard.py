@@ -13,6 +13,72 @@ if 'flash_message' in st.session_state:
     st.toast(st.session_state['flash_message'])
     del st.session_state['flash_message']
 
+
+def check_booking_conflict(target_show: dict, api_url: str, auth_token: str) -> bool:
+    """
+    Checks if a target show overlaps with any of the CURRENT user's 
+    Pending or Confirmed bookings. Returns True if a conflict is found.
+    
+    This function is stateless — it takes the auth token explicitly,
+    ensuring it always validates against the correct user's orders.
+    """
+    if not auth_token:
+        return False  # No token = no user = no conflict possible
+    
+    try:
+        headers = {"Authorization": f"Bearer {auth_token}"}
+        resp = requests.get(f"{api_url.rstrip('/')}/pendingorders", headers=headers)
+        
+        if resp.status_code != 200:
+            return False  # API error (e.g. 401 expired token) — fail open, let the user proceed
+        
+        user_orders = resp.json()
+        
+        if not isinstance(user_orders, list) or len(user_orders) == 0:
+            return False  # No existing bookings — no possible conflict
+        
+        # Parse the TARGET show's start/end window
+        target_date = target_show.get("ShowDate", "")
+        target_time = str(target_show.get("ShowTime", "")).split('.')[0]
+        target_duration = target_show.get("DurationMinutes", 150)
+        
+        if len(target_time.split(':')) == 2:
+            target_time += ":00"
+        
+        target_start = datetime.strptime(f"{target_date} {target_time}", "%Y-%m-%d %H:%M:%S")
+        target_end = target_start + timedelta(minutes=target_duration)
+        
+        # Compare against ONLY this user's active (Pending/Confirmed) bookings
+        for order in user_orders:
+            status = order.get('BookingStatus', '')
+            
+            if status not in ['Pending', 'Confirmed']:
+                continue  # Skip cancelled/expired orders
+            
+            try:
+                o_date = order.get('ShowDate', '')
+                o_time = str(order.get('ShowTime', '')).split('.')[0]
+                o_duration = order.get("DurationMinutes", 150)
+                
+                if len(o_time.split(':')) == 2:
+                    o_time += ":00"
+                
+                order_start = datetime.strptime(f"{o_date} {o_time}", "%Y-%m-%d %H:%M:%S")
+                order_end = order_start + timedelta(minutes=o_duration)
+                
+                # Overlap Formula: (StartA < EndB) AND (EndA > StartB)
+                if target_start < order_end and target_end > order_start:
+                    return True
+                    
+            except (ValueError, TypeError):
+                continue  # Skip orders with unparseable dates — don't block the user
+        
+        return False
+        
+    except Exception:
+        return False  # Network error — fail open, let the user proceed
+
+
 def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
     if not show_List:
         logger.info("No Available Shows")
@@ -57,54 +123,13 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                     st.session_state['Booking_target_city'] = filter_city
                     st.session_state['Booking_target_details'] = show
 
-                    # --- NEW: STRICT CONFLICT / OVERLAP CHECK ---
-                    conflict_found = False
-                    
-                    try:
-                        headers = {"Authorization": f"Bearer {st.session_state.get('token')}"}
-                        # Fetch the user's entire order history
-                        resp = requests.get(f"{api_url.rstrip('/')}/pendingorders", headers=headers)
-                        
-                        if resp.status_code == 200:
-                            user_orders = resp.json()
-                            
-                            # STRICT CHECK: Ensure they actually have an order history to check against
-                            if isinstance(user_orders, list) and len(user_orders) > 0:
-                                target_duration = show.get("DurationMinutes", 150)
-                                
-                                t_time_str = str(show_time).split('.')[0]
-                                if len(t_time_str.split(':')) == 2: t_time_str += ":00"
-                                
-                                target_start = datetime.strptime(f"{date} {t_time_str}", "%Y-%m-%d %H:%M:%S")
-                                target_end = target_start + timedelta(minutes=target_duration)
-                                
-                                for order in user_orders:
-                                    status = order.get('BookingStatus', order.get('status', ''))
-                                    
-                                    # STRICT CHECK: Only compare against actively Pending or Confirmed bookings
-                                    if status in ['Pending', 'Confirmed']:
-                                        o_date = order.get('ShowDate')
-                                        o_time_str = str(order.get('ShowTime')).split('.')[0]
-                                        if len(o_time_str.split(':')) == 2: o_time_str += ":00"
-                                        
-                                        order_duration = order.get("DurationMinutes", 150)
-                                        order_start = datetime.strptime(f"{o_date} {o_time_str}", "%Y-%m-%d %H:%M:%S")
-                                        order_end = order_start + timedelta(minutes=order_duration)
-                                        
-                                        # Overlap Formula: (Start A < End B) AND (End A > Start B)
-                                        if target_start < order_end and target_end > order_start:
-                                            conflict_found = True
-                                            break # Stop checking, we found a conflict
-                    except Exception as e:
-                        # Fail silently if the API is unreachable, allowing the user to proceed normally
-                        pass 
+                    # Overlap check: pass the CURRENT user's token explicitly
+                    current_token = st.session_state.get('token', '')
+                    conflict_found = check_booking_conflict(show, api_url, current_token)
 
-                    # 1. Pop the conflict toast ONLY if an overlap with an existing active booking was found
                     if conflict_found:
-                        st.toast("⚠️ Heads up! This movie overlaps with another Pending or Confirmed booking in your account.", icon="⏳")
-                        # Pause for 3.5 seconds so the user has time to read the toast before navigating
+                        st.toast("Heads up! This movie overlaps with another Pending or Confirmed booking in your account.", icon="⏳")
                         time.sleep(3.5)
-                    # 2. Otherwise, display the normal navigation toast
                     else:
                         st.toast(f"Navigating to Booking Page for {title}")
 

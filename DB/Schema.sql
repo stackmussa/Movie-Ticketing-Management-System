@@ -138,6 +138,22 @@ CREATE TABLE Payment (
     CONSTRAINT FK_Payment_Booking FOREIGN KEY (BookingID) REFERENCES Booking(BookingID)
 );
 
+-- ============================================================
+-- 10. REVIEW (user reviews & ratings for movies, with reply threading)
+-- ============================================================
+CREATE TABLE Review (
+    ReviewID INT IDENTITY(1,1) PRIMARY KEY,
+    MovieID INT NOT NULL,
+    UserID INT NOT NULL,
+    Rating INT NULL CHECK (Rating BETWEEN 1 AND 5),      -- NULL for replies (only top-level reviews have ratings)
+    ReviewText VARCHAR(1000) NOT NULL,
+    ParentReviewID INT NULL,                              -- NULL = top-level review, set = reply to another review
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Review_Movie FOREIGN KEY (MovieID) REFERENCES Movie(MovieID),
+    CONSTRAINT FK_Review_User FOREIGN KEY (UserID) REFERENCES [User](UserID),
+    CONSTRAINT FK_Review_Parent FOREIGN KEY (ParentReviewID) REFERENCES Review(ReviewID)
+);
+
 /* ============================================================
    DATA - CITY
    ============================================================ */

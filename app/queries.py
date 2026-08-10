@@ -127,6 +127,7 @@ get_user_order = '''
         B.TotalAmount, 
         B.BookingStatus, 
         M.Title, 
+        M.DurationMinutes,
         C.CinemaName, 
         C.Address, 
         P.PaymentMethod,
@@ -144,10 +145,11 @@ get_user_order = '''
     LEFT JOIN Seat St ON BS.SeatID = St.SeatID
     WHERE B.UserID = ?
     GROUP BY 
-        B.BookingID, B.TotalAmount, B.BookingStatus, M.Title, C.CinemaName, 
+        B.BookingID, B.TotalAmount, B.BookingStatus, M.Title, M.DurationMinutes, C.CinemaName, 
         C.Address, P.PaymentMethod, S.ShowDate, S.ShowTime, B.BookingDate
     ORDER BY B.BookingDate DESC
 '''
+
 # Fetch all seats and their booking status for a specific Show and Hall
 get_interactive_seats_query = '''
     SELECT 
@@ -221,3 +223,55 @@ get_confirmed_pending_seats = """
     INNER JOIN Booking b ON bs.BookingID = b.BookingID
     WHERE b.ShowID = ? AND b.BookingStatus IN ('Pending', 'Confirmed')
 """
+
+# ============================================================
+# REVIEW QUERIES
+# ============================================================
+
+# Fetch all reviews (top-level + replies) for a specific movie
+get_movie_reviews = '''
+    SELECT 
+        R.ReviewID,
+        R.MovieID,
+        R.UserID,
+        U.firstName + ' ' + U.lastName AS UserName,
+        R.Rating,
+        R.ReviewText,
+        R.ParentReviewID,
+        R.CreatedAt
+    FROM Review R
+    INNER JOIN [User] U ON R.UserID = U.UserID
+    WHERE R.MovieID = ?
+    ORDER BY 
+        COALESCE(R.ParentReviewID, R.ReviewID) ASC,
+        R.ParentReviewID ASC,
+        R.CreatedAt ASC
+'''
+
+# Get the MovieID from a title (helper)
+get_movie_id_by_title = '''
+    SELECT MovieID FROM Movie WHERE Title = ?
+'''
+
+# Insert a new top-level review (with rating)
+insert_review = '''
+    INSERT INTO Review (MovieID, UserID, Rating, ReviewText)
+    OUTPUT INSERTED.ReviewID
+    VALUES (?, ?, ?, ?)
+'''
+
+# Insert a reply to an existing review (no rating)
+insert_reply = '''
+    INSERT INTO Review (MovieID, UserID, Rating, ReviewText, ParentReviewID)
+    OUTPUT INSERTED.ReviewID
+    VALUES (?, ?, NULL, ?, ?)
+'''
+
+# Get the average rating for a movie
+get_movie_avg_rating = '''
+    SELECT 
+        AVG(CAST(Rating AS FLOAT)) AS AvgRating,
+        COUNT(*) AS TotalReviews
+    FROM Review
+    WHERE MovieID = ? AND ParentReviewID IS NULL
+'''
