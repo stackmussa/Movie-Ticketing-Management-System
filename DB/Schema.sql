@@ -109,16 +109,19 @@ CREATE TABLE Booking (
     CONSTRAINT FK_Booking_Show FOREIGN KEY (ShowID) REFERENCES Show(ShowID)
 );
 
+DROP TABLE IF EXISTS BookingSeat 
 -- ============================================================
 -- 8. BOOKING_SEAT (junction table: which seats belong to a booking)
 -- ============================================================
 CREATE TABLE BookingSeat (
     BookingSeatID INT IDENTITY(1,1) PRIMARY KEY,
     BookingID INT NOT NULL,
+    ShowID INT NOT NULL, -- NEW COLUMN
     SeatID INT NOT NULL,
     CONSTRAINT FK_BookingSeat_Booking FOREIGN KEY (BookingID) REFERENCES Booking(BookingID),
+    CONSTRAINT FK_BookingSeat_Show FOREIGN KEY (ShowID) REFERENCES Show(ShowID),
     CONSTRAINT FK_BookingSeat_Seat FOREIGN KEY (SeatID) REFERENCES Seat(SeatID),
-    CONSTRAINT UQ_BookingSeat UNIQUE (BookingID, SeatID)
+    CONSTRAINT UQ_ShowSeat UNIQUE (ShowID, SeatID) -- THE MAGIC FIX
 );
 
 -- ============================================================
@@ -414,9 +417,9 @@ FROM Booking B
 INNER JOIN [User] U ON U.UserID = B.UserID
 INNER JOIN Show S ON S.ShowID = B.ShowID
 INNER JOIN Movie M ON M.MovieID = S.MovieID
-WHERE B.BookingID = 105;
+WHERE B.BookingID = 117;
 
 SELECT *
-FROM Booking
+FROM BookingSeat
 
 SELECT * FROM Show Where ShowID = 54

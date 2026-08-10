@@ -6,7 +6,7 @@ import time
 import pyodbc 
 
 
-booking_hold_timer= 10
+booking_hold_timer= 300
 
 #DB connection String
 CONNECTION_STRING = (

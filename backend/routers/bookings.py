@@ -106,33 +106,46 @@ def Book_Show(
 
             final_ticket_price = float(base_price) * (config.get_Category_Multiplier(selected_category))
             total_ammount = final_ticket_price * TicketsNeeded
-    
+
             cursor.execute(queries.insert_booking_query, (user_id, show_id, total_ammount, TicketsNeeded))
             booking_id = cursor.fetchone()[0]
-
-            # Map the specific seats to this booking
-            for seat_id in validated_seat_ids:
-                cursor.execute(queries.insert_seat_query, (booking_id, seat_id))
-
-            conn.commit()
             
-            logger.info(f"Booking {booking_id} created successfully for {user_email}.")
-            background_tasks.add_task(auto_cancel_booking, booking_id)
+            # Map the specific seats to this booking & check for preventing the race condition
+            try:
+                for seat_id in validated_seat_ids:
+                    # Assuming insert_seat_query is updated to take show_id
+                    cursor.execute(queries.insert_seat_query, (booking_id, show_id, seat_id))
+                conn.commit()
+                
+                logger.info(f"Booking {booking_id} created successfully for {user_email}.")
+                background_tasks.add_task(auto_cancel_booking, booking_id)
+                
+                return {
+                                "message": "Booking successful! Proceed to payment.",
+                                "booking_details": {
+                                    "booking_id": booking_id,
+                                    "cinema": cinema_name,
+                                    "city": selected_city,
+                                    "category": selected_category,
+                                    "tickets_booked": TicketsNeeded,
+                                    "assigned_seats": requested_seats,
+                                    "total_amount": round(total_ammount, 2),
+                                    "currency": "PKR"
+                                }
+                            }
+                
+            except pyodbc.IntegrityError:
+                # The constraint caught someone else taking the seat!
+                # Manually wipe the orphaned Booking record just in case autocommit is on
+                cursor.execute("DELETE FROM Booking WHERE BookingID = ?", (booking_id,))
+                conn.commit()
+                
+                logger.warning(f"Race condition caught. Orphaned booking {booking_id} wiped.")
+                raise HTTPException(
+                    status_code=400, 
+                    detail="We're sorry, but one or more of your selected seats were just booked by someone else! Refreshing map..."
+                )
     
-            return {
-                "message": "Booking successful! Proceed to payment.",
-                "booking_details": {
-                    "booking_id": booking_id,
-                    "cinema": cinema_name,
-                    "city": selected_city,
-                    "category": selected_category,
-                    "tickets_booked": TicketsNeeded,
-                    "assigned_seats": requested_seats,
-                    "total_amount": round(total_ammount, 2),
-                    "currency": "PKR"
-                }
-            }
-        
         except HTTPException as e:
             conn.rollback()
             raise

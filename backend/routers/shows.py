@@ -25,7 +25,7 @@ def Get_Shows(conn: pyodbc.Connection = Depends(config.get_DB)):
         raise HTTPException(status_code=500, detail="Failed to fetch shows from database.") 
 
 @router.get("/show/{title}")
-def Get_Specific_Show(title: str, conn: pyodbc.Connection = Depends(config.get_DB)):
+def Get_Specific_Show(title: str, conn : pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
     try:
         cursor.execute(queries.get_specific_show, (title,))

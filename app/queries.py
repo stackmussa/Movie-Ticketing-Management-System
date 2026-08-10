@@ -22,6 +22,7 @@ get_shows_query = '''SELECT DISTINCT M.Title, M.Genre, M.Language, M.DurationMin
             INNER JOIN Cinema AS C ON H.CinemaID = C.CinemaID
             INNER JOIN City AS Ct ON C.CityID = Ct.CityID
             WHERE S.ShowDate >= CAST(GETDATE() AS DATE)
+                OR (S.ShowDate = CAST(GETDATE() AS DATE) AND S.ShowTime > CAST(GETDATE() AS TIME))
             ORDER BY S.ShowDate ASC, S.ShowTime ASC'''
 
 get_specific_show = '''SELECT DISTINCT M.Title, M.Genre, M.Language, M.DurationMinutes, M.Description, 
@@ -33,6 +34,7 @@ get_specific_show = '''SELECT DISTINCT M.Title, M.Genre, M.Language, M.DurationM
             INNER JOIN Cinema AS C ON H.CinemaID = C.CinemaID
             INNER JOIN City AS Ct ON C.CityID = Ct.CityID
             WHERE M.Title = ? AND S.ShowDate >= CAST(GETDATE() AS DATE)
+                    OR (S.ShowDate = CAST(GETDATE() AS DATE) AND S.ShowTime > CAST(GETDATE() AS TIME))
             ORDER BY S.ShowDate ASC, S.ShowTime ASC'''
 
 Cities_query = '''SELECT DISTINCT CityName
@@ -74,7 +76,7 @@ insert_booking_query = '''
             VALUES (?, ?, ?, ?, 'Pending')
         '''
 
-insert_seat_query = "INSERT INTO BookingSeat (BookingID, SeatID) VALUES (?, ?)"
+insert_seat_query = "INSERT INTO BookingSeat (BookingID, ShowID, SeatID) VALUES (?, ?, ?)"
 
 get_user_order = '''
     SELECT 

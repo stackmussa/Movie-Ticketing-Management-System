@@ -68,8 +68,7 @@ else:
         # Save the expiration status inside the order dictionary for later use
         order['is_expired'] = is_expired    
 
-        if status == 'Pending':
-            if not is_expired:
+        if status == 'Pending': 
                 pending_orders.append(order)
         elif status in ['Confirmed', 'Cancelled']:
             history_orders.append(order)

@@ -38,7 +38,7 @@ st.divider()
 availability = {"Platinum": 0, "Gold": 0, "Standard": 0, "Recliner": 0}
 booked_seats_list = []
 try:
-    # fetch total count of seats category vise
+    # fetch total count of seats availaible category vise
     avail_resp = requests.get(f"{api_url}/availability", params={"title": movie_title, "city": city})
     if avail_resp.status_code == 200:
         availability = avail_resp.json()
@@ -82,10 +82,21 @@ else:
 st.markdown(components.get_legend_html(), unsafe_allow_html=True)
 st.divider()
 
-st.divider()
 
 # --- 3. Checkout ---
 st.subheader("Checkout!")
+
+col_clear, col_checkout = st.columns([1, 2])
+with col_clear:
+    if st.button("Clear Selection", use_container_width=True):
+        # Explicitly uncheck the Streamlit visual boxes
+        for seat in st.session_state.get('selected_seats', []):
+            chk_key = f"chk_{seat}"
+            if chk_key in st.session_state:
+                del st.session_state[chk_key]
+                
+        st.session_state['selected_seats'] = []
+        st.rerun()
 
 # Infer quantity directly from the clicks
 tickets_needed = len(st.session_state['selected_seats'])
@@ -134,5 +145,14 @@ if tickets_needed > 0 and tickets_needed <= 10:
             else:
                 error_detail = response.json().get("detail", "Booking failed.")
                 st.error(error_detail)
+                # Allow them to read the error for 2.5 seconds
+                time.sleep(2.5) 
+                
+                # Wipe all checkbox states and reload the page
+                for seat in st.session_state.get('selected_seats', []):
+                    if f"chk_{seat}" in st.session_state:
+                        del st.session_state[f"chk_{seat}"]
+                st.session_state['selected_seats'] = []
+                st.rerun()
 else:
     st.button("Check Out", type="primary", use_container_width=True, disabled=True)

@@ -18,8 +18,8 @@ st.title("Payment Checkout")
 st.write("Seamlessly Make Payments against your Order")
 st.divider()
 
-if 'expired_booking' not in st.session_state:
-    st.session_state ['expired_booking'] = []
+if 'expired_bookings' not in st.session_state:
+    st.session_state ['expired_bookings'] = []
 
 # --- Auto-Fetch Trigger (If passed from another page) ---
 if 'current_booking_id' in st.session_state and 'current_order' not in st.session_state:
@@ -59,7 +59,7 @@ if 'current_order' not in st.session_state:
             else:
                 st.info("You have no ongoing payment checkouts right now.")
     except Exception as e:
-        logger.error(f"Failed to auto-fetch pending orders: {e}")
+        logger.error(f"Failed to auto-fetch pending orders")
         st.info("You have no ongoing payment checkouts right now.")
 
 st.divider()
@@ -119,7 +119,6 @@ if 'current_order' in st.session_state:
             st.error("Time is up! Your booking has expired and seats have been released.")
             time.sleep(2.5)
             st.switch_page(config.dashboard_page)
-            st.rerun()
 
         #load payment Methods
         payment_methods = [method.value for method in config.PaymentMethodEnum]
