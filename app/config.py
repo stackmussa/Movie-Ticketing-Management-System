@@ -95,3 +95,15 @@ def get_Category_Multiplier(Category:str ):
         mulitplier = 1.100
     return mulitplier
 
+# Cancellation / Refund reason options
+CANCELLATION_REASONS = [
+    "Change of Plans",
+    "Booked Wrong Date/Time",
+    "Booked Wrong Movie",
+    "Found Better Seats",
+    "Show Timing Inconvenient",
+    "Financial Reasons",
+    "Emergency / Health Issue",
+    "Duplicate Booking",
+    "Other"
+]

@@ -509,7 +509,9 @@ def process_payment(
         raise HTTPException(status_code=500, detail="An internal error occurred while processing the payment.")
 
 @app.put("/cancelBooking/{booking_ID}")
-def cancel_Booking(booking_ID: int, current_user: dict = Depends(jwt_Security.get_current_user),
+def cancel_Booking(booking_ID: int, 
+    cancellation_reason: Annotated[str | None, Form()] = None,
+    current_user: dict = Depends(jwt_Security.get_current_user),
     conn: pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
     try:
@@ -530,8 +532,11 @@ def cancel_Booking(booking_ID: int, current_user: dict = Depends(jwt_Security.ge
         if status == 'Cancelled':
             raise HTTPException(status_code=400, detail="This booking is already cancelled.")
 
-        # 1. Free the seats by updating the status
-        cursor.execute("UPDATE Booking SET BookingStatus = 'Cancelled' WHERE BookingID = ?", (booking_ID,))
+        # 1. Free the seats and store the cancellation reason
+        cursor.execute(
+            "UPDATE Booking SET BookingStatus = 'Cancelled', CancellationReason = ? WHERE BookingID = ?", 
+            (cancellation_reason, booking_ID)
+        )
 
         # 2. Process Refund & Penalty Logic
         message = "Booking has been successfully cancelled."
@@ -545,7 +550,7 @@ def cancel_Booking(booking_ID: int, current_user: dict = Depends(jwt_Security.ge
             message = f"Booking cancelled. Rs. {refund_amount:.2f} refunded (10% cancellation fee applied)."
         
         conn.commit()
-        logger.info(f"Booking {booking_ID} cancelled by User {current_user['user_id']}.")
+        logger.info(f"Booking {booking_ID} cancelled by User {current_user['user_id']}. Reason: {cancellation_reason or 'N/A'}")
     
         return {"message": message}
 

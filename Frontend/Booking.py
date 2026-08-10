@@ -327,13 +327,13 @@ with st.container(border=True):
                 }
                 resp = requests.post(f"{api_url}/reviews", data=payload, headers=headers)
                 if resp.status_code == 200:
-                    st.success("🎉 Your review has been posted!")
+                    st.success("Your review has been posted!")
                     time.sleep(1.5)
                     st.rerun()
                 else:
                     st.error(resp.json().get("detail", "Failed to post review."))
             except Exception as e:
-                st.error(f"Error posting review: {e}")
+                st.error(f"Error posting review.")
         else:
             st.warning("Please write your review before posting.")
 

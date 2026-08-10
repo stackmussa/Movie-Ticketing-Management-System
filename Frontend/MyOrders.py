@@ -106,30 +106,70 @@ else:
                             st.switch_page(config.payment_page)
                     with col3:
                         st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
+                        cancel_key = f"cancel_toggle_{booking_id}"
+                        if cancel_key not in st.session_state:
+                            st.session_state[cancel_key] = False
+                        
                         if st.button("Cancel", key=f"cancel_{booking_id}", use_container_width=True):
-                            with st.spinner("Canceling..."):
-                                logger.info("Cancelling Ticket!!")
-                                cancel_resp = requests.put(
-                                    f"{api_url.rstrip('/')}/cancelBooking/{booking_id}", 
-                                    headers=headers
+                            st.session_state[cancel_key] = not st.session_state[cancel_key]
+                    
+                    # --- Cancellation Reason Form (toggles below the order card) ---
+                    if st.session_state.get(f"cancel_toggle_{booking_id}", False):
+                        with st.container(border=True):
+                            st.markdown("**Why are you cancelling this booking?**")
+                            
+                            selected_reason = st.selectbox(
+                                "Reason for cancellation",
+                                options=config.CANCELLATION_REASONS,
+                                key=f"cancel_reason_{booking_id}",
+                                label_visibility="collapsed"
+                            )
+                            
+                            # If "Other" is selected, show a custom text input
+                            custom_reason = ""
+                            if selected_reason == "Other":
+                                custom_reason = st.text_input(
+                                    "Please specify your reason:",
+                                    key=f"cancel_custom_{booking_id}",
+                                    placeholder="Enter your reason here..."
                                 )
-                                if cancel_resp.status_code == 200:
-                                    st.toast(cancel_resp.json().get("message", f"Booking {booking_id} cancelled successfully."))
-                                    # If the cancelled order is currently trapped in the payment cache, delete it
-                                    if st.session_state.get('current_booking_id') == booking_id:
-                                        st.session_state.pop('current_order', None)
-                                        st.session_state.pop('current_booking_id', None)
-                                        # Also clear the timer key to be safe
-                                        user_email = st.session_state.get('user_email', 'unknown')
-                                        st.session_state.pop(f"timer_{user_email}_{booking_id}", None)
-
-                                    st.switch_page("Frontend/Dashboard.py")
+                            
+                            col_confirm, col_back = st.columns(2)
+                            with col_confirm:
+                                if st.button("Confirm Cancellation", key=f"confirm_cancel_{booking_id}", type="primary", use_container_width=True):
+                                    # Determine the final reason string
+                                    final_reason = custom_reason.strip() if selected_reason == "Other" else selected_reason
+                                    
+                                    if selected_reason == "Other" and not final_reason:
+                                        st.warning("Please specify your reason for cancellation.")
+                                    else:
+                                        with st.spinner("Canceling..."):
+                                            logger.info("Cancelling Ticket!!")
+                                            cancel_resp = requests.put(
+                                                f"{api_url.rstrip('/')}/cancelBooking/{booking_id}", 
+                                                headers=headers,
+                                                data={"cancellation_reason": final_reason}
+                                            )
+                                            if cancel_resp.status_code == 200:
+                                                st.toast(cancel_resp.json().get("message", f"Booking {booking_id} cancelled successfully."))
+                                                # Clean up session state
+                                                if st.session_state.get('current_booking_id') == booking_id:
+                                                    st.session_state.pop('current_order', None)
+                                                    st.session_state.pop('current_booking_id', None)
+                                                    user_email = st.session_state.get('user_email', 'unknown')
+                                                    st.session_state.pop(f"timer_{user_email}_{booking_id}", None)
+                                                st.session_state[f"cancel_toggle_{booking_id}"] = False
+                                                st.switch_page("Frontend/Dashboard.py")
+                                                st.rerun()
+                                            else:
+                                                try:
+                                                    st.error(cancel_resp.json().get("detail", "Failed to cancel."))
+                                                except ValueError:
+                                                    st.error("Server error during cancellation.")
+                            with col_back:
+                                if st.button("Go Back", key=f"back_cancel_{booking_id}", use_container_width=True):
+                                    st.session_state[f"cancel_toggle_{booking_id}"] = False
                                     st.rerun()
-                                else:
-                                    try:
-                                        st.error(cancel_resp.json().get("detail", "Failed to cancel."))
-                                    except ValueError:
-                                        st.error("Server error during cancellation.")
 
     # --- TAB 2: ORDER HISTORY ---
     with tab_history:
@@ -164,22 +204,62 @@ else:
                         if status == "Confirmed" and not order.get('is_expired', False):
                             st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
                             
+                            refund_key = f"refund_toggle_{booking_id}"
+                            if refund_key not in st.session_state:
+                                st.session_state[refund_key] = False
+                            
                             if st.button("Refund", key=f"refund_{booking_id}", use_container_width=True):
-                                with st.spinner("Processing refund... Please wait."):
+                                st.session_state[refund_key] = not st.session_state[refund_key]
+                    
+                    # --- Refund Reason Form (toggles below the order card) ---
+                    if status == "Confirmed" and not order.get('is_expired', False) and st.session_state.get(f"refund_toggle_{booking_id}", False):
+                        with st.container(border=True):
+                            st.markdown("**Why are you requesting a refund?**")
+                            st.caption("A 10% cancellation fee will be applied to your refund.")
+                            
+                            selected_reason = st.selectbox(
+                                "Reason for refund",
+                                options=config.CANCELLATION_REASONS,
+                                key=f"refund_reason_{booking_id}",
+                                label_visibility="collapsed"
+                            )
+                            
+                            # If "Other" is selected, show a custom text input
+                            custom_reason = ""
+                            if selected_reason == "Other":
+                                custom_reason = st.text_input(
+                                    "Please specify your reason:",
+                                    key=f"refund_custom_{booking_id}",
+                                    placeholder="Enter your reason here..."
+                                )
+                            
+                            col_confirm, col_back = st.columns(2)
+                            with col_confirm:
+                                if st.button("Confirm Refund", key=f"confirm_refund_{booking_id}", type="primary", use_container_width=True):
+                                    final_reason = custom_reason.strip() if selected_reason == "Other" else selected_reason
                                     
-                                    # Wait exactly 5 seconds before processing
-                                    time.sleep(5)
-                                    
-                                    refund_resp = requests.put(
-                                        f"{api_url.rstrip('/')}/cancelBooking/{booking_id}", 
-                                        headers=headers
-                                    )
-                                    
-                                    if refund_resp.status_code == 200:
-                                        st.toast(refund_resp.json().get("message", "Refund processed successfully."))
-                                        st.rerun()
+                                    if selected_reason == "Other" and not final_reason:
+                                        st.warning("Please specify your reason for refund.")
                                     else:
-                                        try:
-                                            st.error(refund_resp.json().get("detail", "Failed to process refund."))
-                                        except ValueError:
-                                            st.error("Server error during refund processing.")
+                                        with st.spinner("Processing refund... Please wait."):
+                                            time.sleep(5)
+                                            
+                                            refund_resp = requests.put(
+                                                f"{api_url.rstrip('/')}/cancelBooking/{booking_id}", 
+                                                headers=headers,
+                                                data={"cancellation_reason": final_reason}
+                                            )
+                                            
+                                            if refund_resp.status_code == 200:
+                                                st.toast(refund_resp.json().get("message", "Refund processed successfully."))
+                                                st.session_state[f"refund_toggle_{booking_id}"] = False
+                                                st.rerun()
+                                            else:
+                                                try:
+                                                    st.error(refund_resp.json().get("detail", "Failed to process refund."))
+                                                except ValueError:
+                                                    st.error("Server error during refund processing.")
+                            with col_back:
+                                if st.button("Go Back", key=f"back_refund_{booking_id}", use_container_width=True):
+                                    st.session_state[f"refund_toggle_{booking_id}"] = False
+                                    st.rerun()

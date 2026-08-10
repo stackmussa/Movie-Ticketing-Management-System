@@ -105,6 +105,7 @@ CREATE TABLE Booking (
     TotalAmount DECIMAL(8,2) NOT NULL,
     BookingStatus VARCHAR(20) NOT NULL DEFAULT 'Pending',  -- Pending, Confirmed, Cancelled
     TicketsNeeded INT NOT NULL DEFAULT 1,
+    CancellationReason VARCHAR(255) NULL,                  -- User's stated reason for cancelling/refunding
     CONSTRAINT FK_Booking_User FOREIGN KEY (UserID) REFERENCES [User](UserID),
     CONSTRAINT FK_Booking_Show FOREIGN KEY (ShowID) REFERENCES Show(ShowID)
 );
