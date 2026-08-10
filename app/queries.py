@@ -16,6 +16,7 @@ authorize_owner = '''
 get_shows_query = """
 SELECT 
     M.Title, 
+    M.DurationMinutes,
     S.ShowDate, 
     S.ShowTime, 
     C.CinemaName, 
@@ -33,6 +34,33 @@ ORDER BY S.ShowDate, S.ShowTime
 """
 
 get_specific_show = """
+SELECT 
+    M.Title,
+    M.DurationMinutes, 
+    S.ShowDate, 
+    S.ShowTime, 
+    C.CinemaName, 
+    C.Address, 
+    S.TicketPrice,
+    CT.CityName AS City
+FROM Show S
+INNER JOIN Movie M ON S.MovieID = M.MovieID
+INNER JOIN Hall H ON S.HallID = H.HallID
+INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
+INNER JOIN City CT ON C.CityID = CT.CityID
+WHERE M.Title LIKE '%' + ? + '%'
+  AND (S.ShowDate > CAST(GETDATE() AS DATE) 
+       OR (S.ShowDate = CAST(GETDATE() AS DATE) AND S.ShowTime > CAST(GETDATE() AS TIME)))
+ORDER BY 
+    CASE 
+        WHEN M.Title = ? THEN 1          -- Rank 1: Exact match
+        WHEN M.Title LIKE ? + '%' THEN 2 -- Rank 2: Starts with the typed string
+        ELSE 3                           -- Rank 3: Contains the string anywhere
+    END,
+    S.ShowDate, S.ShowTime
+"""
+
+get_specific_show1 = """
 SELECT 
     M.Title, 
     S.ShowDate, 
@@ -139,7 +167,7 @@ get_interactive_seats_query = '''
 # Fetch detailed booking info for the payment checkout page
 get_booking_details_query = '''
     SELECT 
-        B.TotalAmount, B.BookingStatus, M.Title, S.ShowDate, S.ShowTime, C.CinemaName, B.BookingDate,
+        B.TotalAmount, B.BookingStatus, M.Title, M.DurationMinutes, S.ShowDate, S.ShowTime, C.CinemaName, B.BookingDate,
         STRING_AGG(CONCAT(St.SeatRow, St.SeatNumber), ', ') AS AssignedSeats
     FROM Booking B
     INNER JOIN Show S ON B.ShowID = S.ShowID

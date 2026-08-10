@@ -14,7 +14,7 @@ from app.logger import logger
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 def create_access_tokens(data : dict):
-    #Generates a secure token with an expiry time
+    # Generates a secure token with an expiry time
     to_encode = data.copy()
     expiry = datetime.now(timezone.utc) + timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expiry})

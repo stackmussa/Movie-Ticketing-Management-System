@@ -417,7 +417,7 @@ FROM Booking B
 INNER JOIN [User] U ON U.UserID = B.UserID
 INNER JOIN Show S ON S.ShowID = B.ShowID
 INNER JOIN Movie M ON M.MovieID = S.MovieID
-WHERE B.BookingID = 117;
+WHERE B.BookingID = 150;
 
 SELECT *
 FROM BookingSeat

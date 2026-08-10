@@ -28,7 +28,7 @@ def Get_Shows(conn: pyodbc.Connection = Depends(config.get_DB)):
 def Get_Specific_Show(title: str, conn : pyodbc.Connection = Depends(config.get_DB)):
     cursor = conn.cursor()
     try:
-        cursor.execute(queries.get_specific_show, (title,))
+        cursor.execute(queries.get_specific_show, (title, title, title))
         results = cursor.fetchall()
         if not results:
             logger.error("No Upcoming Shows!")
