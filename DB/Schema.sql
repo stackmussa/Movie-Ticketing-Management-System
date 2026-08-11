@@ -105,7 +105,6 @@ CREATE TABLE Booking (
     TotalAmount DECIMAL(8,2) NOT NULL,
     BookingStatus VARCHAR(20) NOT NULL DEFAULT 'Pending',  -- Pending, Confirmed, Cancelled
     TicketsNeeded INT NOT NULL DEFAULT 1,
-    CancellationReason VARCHAR(255) NULL,                  -- User's stated reason for cancelling/refunding
     CONSTRAINT FK_Booking_User FOREIGN KEY (UserID) REFERENCES [User](UserID),
     CONSTRAINT FK_Booking_Show FOREIGN KEY (ShowID) REFERENCES Show(ShowID)
 );
@@ -488,6 +487,8 @@ UPDATE Movie SET
     TrailerURL = 'https://www.youtube.com/watch?v=s1-pfiVMKAs'
 WHERE Title = 'Supergirl';
 
+ALTER TABLE Booking ADD CancellationReason VARCHAR(255) NULL;
+
 UPDATE Show
 SET ShowDate = DATEADD(DAY, 7, ShowDate)
 WHERE ShowDate < CAST(GETDATE() AS DATE);
@@ -524,7 +525,7 @@ FROM Booking B
 INNER JOIN [User] U ON U.UserID = B.UserID
 INNER JOIN Show S ON S.ShowID = B.ShowID
 INNER JOIN Movie M ON M.MovieID = S.MovieID
-WHERE U.UserID = 2 and (B.BookingStatus = 'Pending' or B.BookingStatus = 'Confirmed');
+WHERE (U.UserID = 2 or U.UserID = 1) and (B.BookingStatus = 'Pending' or B.BookingStatus = 'Confirmed');
 
 SELECT *
 FROM BookingSeat
