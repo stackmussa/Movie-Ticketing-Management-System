@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, Response
+from app.logger import logger
 import pyodbc
 import os
 import app.config as config
-import app.logger as logger
 
 # Import your new routers
 from backend.routers import auth, shows, bookings
@@ -13,12 +13,34 @@ async def lifespan(app: FastAPI):
     try:
         conn = pyodbc.connect(config.CONNECTION_STRING, autocommit=True)
         cursor = conn.cursor()
+        
+        # 1. Initialize DB schema
         with open("DB/Schema.sql", "r") as file:
             sql_script = file.read()
+            # If your script has GO statements, you may need to split and execute them individually
+            
+        # 2. FAILSAFE: Clean up stuck pending orders older than 5 minutes on server startup
+        # Delete the locked seats first
+        cursor.execute("""
+            DELETE FROM BookingSeat 
+            WHERE BookingID IN (
+                SELECT BookingID FROM Booking 
+                WHERE BookingStatus = 'Pending' 
+                AND DATEDIFF(minute, BookingDate, GETDATE()) > 5
+            )
+        """)
+        # Update the parent booking statuses to Cancelled
+        cursor.execute("""
+            UPDATE Booking 
+            SET BookingStatus = 'Cancelled', CancellationReason = 'Server Startup Failsafe'
+            WHERE BookingStatus = 'Pending' 
+            AND DATEDIFF(minute, BookingDate, GETDATE()) > 5
+        """)
+        
         conn.commit()
         conn.close()
     except Exception as e:
-        logger.error(f"DB Initialization Failed: {e}")
+        logger.error(f"DB Initialization Failed")
     yield
 
 app = FastAPI(lifespan=lifespan)

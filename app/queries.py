@@ -180,7 +180,7 @@ get_booking_details_query = '''
     LEFT JOIN Seat St ON BS.SeatID = St.SeatID
     WHERE B.BookingID = ?
     GROUP BY 
-        B.TotalAmount, B.BookingStatus, M.Title, S.ShowDate, S.ShowTime, C.CinemaName, B.BookingDate
+        B.TotalAmount, B.BookingStatus, M.Title, M.DurationMinutes, S.ShowDate, S.ShowTime, C.CinemaName, B.BookingDate
 '''
 
 # get the total amount for user's booking
@@ -207,6 +207,11 @@ update_booking_status_query = '''
 cancel_booking = '''
     UPDATE Booking
     SET BookingStatus = 'Cancelled'
+    WHERE BookingID = ?
+'''
+# Cancel the Booked Seat
+delete_booking_seat = '''
+    DELETE FROM BookingSeat
     WHERE BookingID = ?
 '''
 
@@ -274,4 +279,4 @@ get_movie_avg_rating = '''
         COUNT(*) AS TotalReviews
     FROM Review
     WHERE MovieID = ? AND ParentReviewID IS NULL
-'''
+'''

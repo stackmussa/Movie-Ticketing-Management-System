@@ -29,7 +29,7 @@ with st.form("Login User"):
                 
                 st.session_state['logged_in'] = True
                 st.session_state['user_email'] = log_email
-                st.session_state['flash_message'] = f"User with {log_email} has Logged In Successfully!"
+                st.session_state['flash_message'] = f"User with {log_email.lower()} has Logged In Successfully!"
                 st.rerun()
             else:
                 try:

@@ -21,7 +21,9 @@ async def auto_cancel_booking(booking_id: int):
         record = cursor.fetchone()
         
         if record and record[0] == 'Pending':
-            cursor.execute("UPDATE Booking SET BookingStatus = 'Cancelled' WHERE BookingID = ?", (booking_id,))
+            cursor.execute(queries.delete_booking_seat, (booking_id,))
+
+            cursor.execute(queries.cancel_booking, (booking_id,))
             logger.info(f"Timeout: Booking {booking_id} automatically cancelled after 5 minutes.")
         conn.close()
     except pyodbc.Error as e:
@@ -135,11 +137,17 @@ def Book_Show(
                             }
                 
             except pyodbc.IntegrityError:
-                # The constraint caught someone else taking the seat!
-                # Manually wipe the orphaned Booking record just in case autocommit is on
-                cursor.execute("DELETE FROM Booking WHERE BookingID = ?", (booking_id,))
-                conn.commit()
-                
+                conn.rollback()
+                try:
+                    # 1. Delete orphaned seats first to avoid Foreign Key violations
+                    cursor.execute(queries.delete_booking_seat, (booking_id,))
+                    
+                    # 2. Delete the parent Booking record
+                    cursor.execute("DELETE FROM Booking WHERE BookingID = ?", (booking_id,))
+                    conn.commit()
+                except:
+                    logger.errro(f"Failed to wipe orphaned Booking {booking_id}")
+                    
                 logger.warning(f"Race condition caught. Orphaned booking {booking_id} wiped.")
                 raise HTTPException(
                     status_code=400, 
@@ -313,8 +321,10 @@ def cancel_Booking(
             raise HTTPException(status_code=403, detail="Unauthorized cancellation attempt!")
 
         if status == 'Cancelled':
+
             raise HTTPException(status_code=400, detail="This booking is already cancelled.")
 
+        cursor.execute(queries.delete_booking_seat, (booking_ID,))
         # 1. Free the seats and store the cancellation reason
         cursor.execute(
             "UPDATE Booking SET BookingStatus = 'Cancelled', CancellationReason = ? WHERE BookingID = ?", 
@@ -387,7 +397,7 @@ def get_reviews(movie_title: str, conn: pyodbc.Connection = Depends(config.get_D
     except HTTPException:
         raise
     except pyodbc.Error as e:
-        logger.error(f"DB Error fetching reviews: {e}")
+        logger.error(f"DB Error fetching reviews")
         raise HTTPException(status_code=500, detail="Database Error fetching reviews.")
 
 
@@ -425,7 +435,7 @@ def post_review(
         raise
     except pyodbc.Error as e:
         conn.rollback()
-        logger.error(f"DB Error posting review: {e}")
+        logger.error(f"DB Error posting review.")
         raise HTTPException(status_code=500, detail="Database Error posting review.")
 
 
@@ -461,5 +471,4 @@ def post_reply(
         raise
     except pyodbc.Error as e:
         conn.rollback()
-        logger.error(f"DB Error posting reply: {e}")
-        raise HTTPException(status_code=500, detail="Database Error posting reply.")
+        raise HTTPException(status_code=500, detail="Database Error posting reply.")

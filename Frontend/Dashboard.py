@@ -128,8 +128,8 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                     conflict_found = check_booking_conflict(show, api_url, current_token)
 
                     if conflict_found:
-                        st.toast("Heads up! This movie overlaps with another Pending or Confirmed booking in your account.", icon="⏳")
-                        time.sleep(3.5)
+                        st.toast("Heads up! This movie overlaps with another Pending or Confirmed booking in your account")
+                        time.sleep(5)
                     else:
                         st.toast(f"Navigating to Booking Page for {title}")
 
@@ -138,7 +138,7 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
 
 #Dashboard
 st.title("Movie Ticket Purchase System")
-st.write(f"Welcome to your dashboard, **{st.session_state['user_email'.lower()]}**!")
+st.write(f"Welcome to your dashboard, **{st.session_state['user_email'].lower()}**!")
 
 if st.button("Logout", type="primary"):
     # wipes the entire browser tab's memory

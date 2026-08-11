@@ -353,52 +353,88 @@ tickets_needed = len(st.session_state['selected_seats'])
 st.write(f"**Selected Seats:** {', '.join(st.session_state['selected_seats']) if tickets_needed > 0 else 'None'}")
 st.write(f"**Total Tickets:** {tickets_needed}")
 
+# --- HELPER FUNCTION FOR CHECKOUT API CALL ---
+def process_booking_checkout():
+    with st.spinner("Processing your booking..."):
+        headers = {"Authorization": f"Bearer {st.session_state.get('token')}"}
+        payload = {
+            "title": movie_title,
+            "City": city,
+            "selectedSeats": ",".join(st.session_state['selected_seats']),
+            "seatCategory": selected_category
+        }
+        
+        response = requests.post(f"{api_url}/booking", data=payload, headers=headers)
+        
+        if response.status_code == 200:
+            booking_info = response.json().get("booking_details", {})
+            st.success("Booking confirmed! Seats have been successfully allocated.")
+            
+            assigned_seats_str = ", ".join(booking_info.get("assigned_seats", []))
+            
+            st.info(f"""
+            **Booking ID:** {booking_info.get("booking_id")}  
+            **Assigned Seats:** {assigned_seats_str}  
+            **Total Amount:** {booking_info.get("currency", "PKR")} {booking_info.get("total_amount")}
+            """)
+
+            time.sleep(5)
+            
+            # Push booking ID for payment page and wipe selected seats memory
+            st.session_state['current_booking_id'] = booking_info.get("booking_id")
+            st.session_state['selected_seats'] = []
+            st.session_state.pop('current_order', None)
+            st.session_state.pop('show_duplicate_warning', None) # Clear the warning flag
+            
+            st.switch_page(config.payment_page)
+            
+        else:
+            error_detail = response.json().get("detail", "Booking failed.")
+            st.error(error_detail)
+            time.sleep(5) 
+            st.session_state['clear_pending'] = True
+            st.session_state.pop('show_duplicate_warning', None)
+            st.rerun()
+
 if tickets_needed > 0 and tickets_needed <= 10:
-    if st.button("Check Out", type="primary", use_container_width=True):
-        with st.spinner("Processing your booking..."):
-
-            headers = {
-                "Authorization": f"Bearer {st.session_state.get('token')}"
-            }
-
-            # Send the comma-separated string to the backend
-            payload = {
-                "title": movie_title,
-                "City": city,
-                "selectedSeats": ",".join(st.session_state['selected_seats']),
-                "seatCategory": selected_category
-            }
+        # 1. If the warning flag is active, show the prompt instead of the Checkout button
+        if st.session_state.get('show_duplicate_warning'):
+            st.warning("You already have a booking for this movie. Are you sure you want to book more tickets?")
             
-            response = requests.post(f"{api_url}/booking", data=payload, headers=headers)
-            
-            if response.status_code == 200:
-                booking_info = response.json().get("booking_details", {})
-                st.success("Booking confirmed! Seats have been successfully allocated.")
+            btn_col1, btn_col2 = st.columns(2)
+            with btn_col1:
+                if st.button("Yes, Book More", type="primary", use_container_width=True):
+                    process_booking_checkout()
+            with btn_col2:
+                if st.button("No, Cancel", use_container_width=True):
+                    st.session_state.pop('show_duplicate_warning', None)
+                    st.session_state['clear_pending'] = True
+                    st.rerun()
+                    
+        # 2. Otherwise, show the standard Checkout button
+        else:
+            if st.button("Check Out", type="primary", use_container_width=True):
                 
-                assigned_seats_str = ", ".join(booking_info.get("assigned_seats", []))
+                # Check for existing bookings for this specific movie
+                has_duplicate = False
+                try:
+                    headers = {"Authorization": f"Bearer {st.session_state.get('token')}"}
+                    resp = requests.get(f"{api_url.rstrip('/')}/pendingorders", headers=headers)
+                    if resp.status_code == 200:
+                        for order in resp.json():
+                            if order.get("Title") == movie_title and order.get("BookingStatus") in ["Pending", "Confirmed"]:
+                                has_duplicate = True
+                                break
+                except Exception as e:
+                    pass # If API fails, just let them book normally
                 
-                st.info(f"""
-                **Booking ID:** {booking_info.get("booking_id")}  
-                **Assigned Seats:** {assigned_seats_str}  
-                **Total Amount:** {booking_info.get("currency", "PKR")} {booking_info.get("total_amount")}
-                """)
+                # If they have a duplicate, trigger the warning UI
+                if has_duplicate:
+                    st.session_state['show_duplicate_warning'] = True
+                    st.rerun()
+                # If they don't, proceed instantly
+                else:
+                    process_booking_checkout()
 
-                time.sleep(3)
-                
-                # Push booking ID for payment page and wipe selected seats memory
-                st.session_state['current_booking_id'] = booking_info.get("booking_id")
-                st.session_state['selected_seats'] = []
-                st.session_state.pop('current_order', None)
-                
-                st.switch_page(config.payment_page)
-                
-            else:
-                error_detail = response.json().get("detail", "Booking failed.")
-                st.error(error_detail)
-                # Allow them to read the error for 2.5 seconds
-                time.sleep(2.5) 
-                
-                st.session_state['clear_pending'] = True
-                st.rerun()
 else:
     st.button("Check Out", type="primary", use_container_width=True, disabled=True)
