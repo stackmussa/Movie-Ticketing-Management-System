@@ -269,7 +269,7 @@ def get_movie_card_css() -> str:
     .movie-card {
         position: relative;
         width: 100%;
-        height: 380px; /* Controls the height of the poster/details area */
+        height: 320px; /* Controls the height of the poster/details area */
         border-radius: 8px;
         overflow: hidden;
         background: linear-gradient(135deg, #1e1e2f 0%, #16213e 100%);

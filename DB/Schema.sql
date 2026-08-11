@@ -407,83 +407,85 @@ GO
 -- so this is safe regardless of MovieID insert order/drift)
 -- ============================================================
  
+
+
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt39773435/',
+    PosterURL  = 'https://tse4.mm.bing.net/th/id/OIP.DCucwD9EtlHcKmYJCnPgMgHaK9?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=Y5Q8z66aV9U'
 WHERE Title = 'Aag Lagay Basti Mein';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt40478587/',
+    PosterURL  = 'https://tse3.mm.bing.net/th/id/OIP.Ve1Wkh7asBHn8p1ohyuFhAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=Z0SpyQ588NQ'
 WHERE Title = 'Bullah';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt32868853/',
+    PosterURL  = 'https://th.bing.com/th/id/OIP.PTn1aq-vGwcKFfnsUewVxgHaJQ?w=128&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=_8Pn6d-a-fw'
 WHERE Title = 'Delhi Gate';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt39214750/',
+    PosterURL  = 'https://th.bing.com/th/id/OIP.67yDrurhXT7IBvsnFPZrCAHaLb?w=115&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=ouzEuRvdVC0'
 WHERE Title = 'Mera Lyari';
  
 UPDATE Movie SET
-    PosterURL  = 'https://en.wikipedia.org/wiki/Luv_Di_Saun',
+    PosterURL  = 'https://th.bing.com/th/id/OIP.AmW8XUycoYUrNE3tP-jFpgHaKX?w=123&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=pNPFlT--b94'
 WHERE Title = 'Luv Di Saun';
  
 UPDATE Movie SET
-    PosterURL  = 'https://en.wikipedia.org/wiki/Zombeid',
+    PosterURL  = 'https://th.bing.com/th/id/OIP.jsIsK8rH54UB4pduUj5MpQHaLC?w=204&h=305&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=Q6G4WhB4OZY'
 WHERE Title = 'Zombeid';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.rottentomatoes.com/m/psycho_2026',
+    PosterURL  = 'https://tse1.mm.bing.net/th/id/OIP.abj47tAAkDgzSE_ekJrbGAHaLH?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=b0zvfQhlDKw'
 WHERE Title = 'Psycho';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt28650488/',
+    PosterURL  = 'https://tse2.mm.bing.net/th/id/OIP.zUQAeCdRKwIjX3XjQ9KWWAHaLQ?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=GuCejewteF8'
 WHERE Title = 'The Super Mario Galaxy Movie';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt19847976/',
+    PosterURL  = 'https://th.bing.com/th/id/OIP.bYmudvvp6KlPJiGAIGbfxwHaLu?w=198&h=314&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=vt98AlBDI9Y'
 WHERE Title = 'Wicked: For Good';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt27543632/',
+    PosterURL  = 'https://th.bing.com/th/id/OIP.U9h8DDEp4LJnGmoDbyzEkgHaME?w=195&h=319&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=48CtX6OgU3s'
 WHERE Title = 'The Housemaid';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt22084616/',
+    PosterURL  = 'https://th.bing.com/th/id/R.6b53f069498c04f0a3927a4738685ae3?rik=jIjBqABcB0ewVw&riu=http%3a%2f%2fwww.impawards.com%2f2026%2fposters%2fspiderman_brand_new_day_ver2.jpg&ehk=ALi9WrWkpUiMYYwVCKryihyPSvDArhBwWg3ctStf%2b0s%3d&risl=&pid=ImgRaw&r=0',
     TrailerURL = 'https://www.youtube.com/watch?v=8TZMtslA3UY'
 WHERE Title = 'Spider-Man: Brand New Day';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt21357150/',
+    PosterURL  = 'https://tse1.mm.bing.net/th/id/OIP.7duC_G5d2iZJsCYigLsArQHaK-?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=S5ehYTyjvrs'
 WHERE Title = 'Avengers: Doomsday';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt29355505/',
+    PosterURL  = 'https://tse1.mm.bing.net/th/id/OIP.oTGBd_7ph3k2V_81jzDwuAHaLH?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=c51ND9Hdbw0'
 WHERE Title = 'Toy Story 5';
  
 UPDATE Movie SET
-    PosterURL  = 'https://upload.wikimedia.org/wikipedia/en/9/90/The_Odyssey_%282026_film%29_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled',
+    PosterURL  = 'https://tse1.mm.bing.net/th/id/OIP.s8I37Mq0QhIHOFO5TJCP-QHaLu?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=Mzw2ttJD2qQ'
 WHERE Title = 'The Odyssey';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt32890033/',
+    PosterURL  = 'https://tse4.mm.bing.net/th/id/OIP.45TMirLOFVKNL0uKgHdKiwHaLC?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=UoZqKMZyf3U'
 WHERE Title = 'Minions 3';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt8814476/',
+    PosterURL  = 'https://tse1.mm.bing.net/th/id/OIP.ivFcO9cpsox5bMaNj9yakQHaLH?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
     TrailerURL = 'https://www.youtube.com/watch?v=s1-pfiVMKAs'
 WHERE Title = 'Supergirl';
 

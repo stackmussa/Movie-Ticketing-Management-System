@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
-from Frontend import components
 import time
 import streamlit as st
 import requests 
 import app.config as config
-import app.logger as logger 
-import app.queries as queries
+from app.logger import logger 
+from Frontend import components
 
 api_url = config.API_URL
 
@@ -19,9 +18,6 @@ def check_booking_conflict(target_show: dict, api_url: str, auth_token: str) -> 
     """
     Checks if a target show overlaps with any of the CURRENT user's 
     Pending or Confirmed bookings. Returns True if a conflict is found.
-    
-    This function is stateless — it takes the auth token explicitly,
-    ensuring it always validates against the correct user's orders.
     """
     if not auth_token:
         return False  # No token = no user = no conflict possible
@@ -31,7 +27,7 @@ def check_booking_conflict(target_show: dict, api_url: str, auth_token: str) -> 
         resp = requests.get(f"{api_url.rstrip('/')}/pendingorders", headers=headers)
         
         if resp.status_code != 200:
-            return False  # API error (e.g. 401 expired token) — fail open, let the user proceed
+            return False  # API error — fail open, let the user proceed
         
         user_orders = resp.json()
         
@@ -85,10 +81,12 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
         logger.info("No Available Shows")
         st.info("No Available Shows")
         return
+    
     if filter_city:
         shows_to_display = [show for show in show_List if show.get("City") == filter_city]
     else:
         shows_to_display = show_List
+        
     if not shows_to_display:
         st.warning(f"No movies currently scheduled in {filter_city}.")
         return 
@@ -98,9 +96,9 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
 
     cols = st.columns(3)
     for index, show in enumerate(shows_to_display):
-        col = cols[index %3]
+        col = cols[index % 3]
         with col: 
-            with st.container(border=True, height=500):
+            with st.container(border=False):
 
                 # Fetching Movie Tiles Content
                 date = show.get("ShowDate", "TBD")
@@ -109,28 +107,31 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                 cinema = show.get("CinemaName", "Unknown Show")
                 address = show.get("Address", "Unknown Show")
                 price = show.get("TicketPrice", "TBD")
-
+                
+                # Use a reliable placeholder image if the database link is missing or invalid
                 pURL = show.get("PosterURL")
                 if not pURL or pURL == "No Preview" or "imdb.com" in pURL:
-                    pURL = "https://via.placeholder.com/400x600.png?text=Hover+to+View+Details"
+                    pURL = "https://placehold.co/400x600/1e1e2f/FFD700.png?text=Hover+to+View+Details"
                 
-                tURL = show.get("TrailerURL", "No Trailer Found")
+                tURL = show.get("TrailerURL", "")
 
-                #Movie Tiles Content
-                st.subheader(f"{title}")
-                st.write(f"**Date: {date}**")
-                st.write(f"**Time:  {show_time}**")
-                st.write(f"**Cinema Name:  {cinema}**")
-                st.write(f"**Cinema Address:  {address}**")
-                st.write(f"**Standard Ticket Price:  Rs.{price}**")
+                # Render the custom HTML Card from components.py
+                card_html = components.render_movie_card_html(
+                    title=title, 
+                    date=date, 
+                    show_time=show_time, 
+                    cinema=cinema, 
+                    address=address, 
+                    price=price, 
+                    poster_url=pURL
+                )
+                st.markdown(card_html, unsafe_allow_html=True)
 
-                st.markdown("<br>", unsafe_allow_html=True)
-
-                # Action Buttons: Book Now + See Trailer
+                # Action Buttons: Book Now + See Trailer side-by-side
                 btn_col1, btn_col2 = st.columns(2)
 
                 with btn_col1:
-                    #Booking Button
+                    # Booking Button
                     if st.button("Book Now", key=f"{key_prefix}_book_{index}", use_container_width=True, type="primary"):
 
                         # storing Movie's Meta Data to keep track of the Movie 
@@ -143,8 +144,8 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                         conflict_found = check_booking_conflict(show, api_url, current_token)
 
                         if conflict_found:
-                            st.toast("Heads up! This movie overlaps with another Pending or Confirmed booking in your account")
-                            time.sleep(5)
+                            st.toast("⚠️ Heads up! This movie overlaps with another Pending or Confirmed booking in your account.", icon="⏳")
+                            time.sleep(3.5)
                         else:
                             st.toast(f"Navigating to Booking Page for {title}")
 
@@ -152,44 +153,43 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                         st.switch_page(config.booking_page)
 
                 with btn_col2:
-                    if tURL:
+                    # Trailer Link Button
+                    if tURL and tURL != "No Trailer Found":
                         st.link_button("Trailer", url=tURL, use_container_width=True)
                     else:
                         st.button("Trailer", key=f"{key_prefix}_notrail_{index}", disabled=True, use_container_width=True)
 
-                btn_col3 = st.columns(1)[0]
+                # Reviews Button full width underneath
+                if st.button("See Reviews", key=f"{key_prefix}_review_{index}", use_container_width=True):
+                    st.session_state['Review_target_movie'] = title
+                    st.session_state['Review_target_details'] = show
+                    st.switch_page(config.reviews_page)
 
-                with btn_col3:
-                    # Reviews Button
-                    if st.button("See Reviews", key=f"{key_prefix}_review_{index}", use_container_width=True):
-                        st.session_state['Review_target_movie'] = title
-                        st.session_state['Review_target_details'] = show
-                        st.switch_page(config.reviews_page)            
 
-#Dashboard
+# ==========================================
+# Dashboard Layout
+# ==========================================
 st.title("Movie Ticket Purchase System")
 st.write(f"Welcome to your dashboard, **{st.session_state['user_email'].lower()}**!")
 
 if st.button("Logout", type="primary"):
     # wipes the entire browser tab's memory
     st.session_state.clear()
-
     st.session_state['logged_in'] = False
     st.session_state['user_email'] = ''
     st.rerun() # Triggers main.py to boot the user back to the login page
 
 st.divider()
 
-#City Selection
+# City Selection
 st.subheader("Where are you watching?")
 selected_city = st.selectbox("Select your city to view available movies:", config.cities_list, label_visibility="collapsed")
 st.divider()
 
-
+# Predictive Search Implementation
 st.subheader("Search for Desired Movie")
 
-# 1. We need the list of all available movies to feed the auto-suggest.
-# We can grab this by doing a quick fetch of all shows first.
+# 1. Grab all shows to feed the auto-suggest.
 all_shows = []
 try:
     resp = requests.get(f"{api_url}/shows")
@@ -201,8 +201,7 @@ except:
 # Extract unique titles for the dropdown
 unique_titles = list(set([show.get("Title") for show in all_shows if show.get("Title")]))
 
-# 2. Use selectbox instead of text_input. 
-# As the user types in this box, Streamlit instantly filters the dropdown options!
+# 2. Use selectbox instead of text_input for instant type-ahead filtering
 selected_title = st.selectbox(
     "Movie Title", 
     options=[""] + unique_titles,
@@ -211,10 +210,9 @@ selected_title = st.selectbox(
     label_visibility="collapsed"
 )
 
-# 3. The moment the user clicks one of the suggested matches, this block executes instantly.
+# 3. Execute instantly upon selection
 if selected_title:
     with st.spinner(f"Loading shows for {selected_title}..."):
-        # Now we query the DB for the exact match
         response = requests.get(f"{api_url}/show/{selected_title}")
 
         if response.status_code == 200:
@@ -239,17 +237,17 @@ else:
     st.session_state.pop('search_title', None)
 
 
-# 4. Render the results
+# 4. Render the search results
 if 'search_results' in st.session_state:
     st.success(f"Searched Results for {st.session_state.get('search_title', '')}")
     display_movie_tiles(st.session_state['search_results'], filter_city=selected_city, key_prefix="search")
 
 st.divider()
 
+# 5. Render standard upcoming shows feed
 st.subheader(f"All Upcoming Shows in {selected_city}")
 
 try:
-    # Automatically fetch all shows when the dashboard loads
     response = requests.get(f"{api_url}/shows")
     if response.status_code == 200:
         shows_data = response.json()
@@ -261,4 +259,3 @@ except requests.exceptions.ConnectionError:
     st.error("Cannot connect to the backend server. Please ensure FastAPI is running.")
 
 st.divider()
-
