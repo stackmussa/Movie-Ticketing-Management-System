@@ -94,7 +94,7 @@ if top_level_reviews:
 
             # Delete button for the reply (only if the reply belongs to the current user)
             if reply_user_id == current_user_id:
-                if st.button("🗑️ Delete Reply", key=f"del_reply_{reply_id}", type="secondary"):
+                if st.button("Delete Reply", key=f"del_reply_{reply_id}", type="secondary"):
                     try:
                         headers = {"Authorization": f"Bearer {st.session_state.get('token')}"}
                         resp = requests.delete(f"{api_url}/reviews/{reply_id}", headers=headers)
@@ -116,13 +116,13 @@ if top_level_reviews:
             st.session_state[reply_key] = False
 
         with action_cols[0]:
-            if st.button("💬 Reply", key=f"reply_btn_{review_id}", use_container_width=True):
+            if st.button("Reply", key=f"reply_btn_{review_id}", use_container_width=True):
                 st.session_state[reply_key] = not st.session_state[reply_key]
 
         # Delete button for the review (only if the review belongs to the current user)
         with action_cols[1]:
             if review_user_id == current_user_id:
-                if st.button("🗑️ Delete", key=f"del_review_{review_id}", use_container_width=True, type="secondary"):
+                if st.button("Delete", key=f"del_review_{review_id}", use_container_width=True, type="secondary"):
                     try:
                         headers = {"Authorization": f"Bearer {st.session_state.get('token')}"}
                         resp = requests.delete(f"{api_url}/reviews/{review_id}", headers=headers)
@@ -166,7 +166,7 @@ else:
 
 # --- Post a New Review Form ---
 st.markdown("---")
-st.markdown("#### ✍️ Write a Review")
+st.markdown("#### Write a Review")
 
 with st.container(border=True):
     # Star rating selector

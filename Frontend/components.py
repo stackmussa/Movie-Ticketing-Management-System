@@ -195,7 +195,7 @@ def render_no_reviews_placeholder():
         border: 1px dashed #444;
         margin-bottom: 16px;
     ">
-        <div style="font-size: 40px; margin-bottom: 8px;">🎬</div>
+        <div style="font-size: 40px; margin-bottom: 8px;"></div>
         <div style="color: #888; font-size: 15px;">No reviews yet. Be the first to share your thoughts!</div>
     </div>
     """
@@ -219,15 +219,15 @@ def render_movie_info_banner(movie_details):
         flex-wrap: wrap;
     ">
         <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 18px;">🏛️</span>
+            <span style="font-size: 18px;">Venue: </span>
             <span style="color: #ccc; font-size: 14px;">{cinema} ({city})</span>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 18px;">📅</span>
+            <span style="font-size: 18px;">Date: </span>
             <span style="color: #ccc; font-size: 14px;">{date}</span>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 18px;">🕐</span>
+            <span style="font-size: 18px;">Time: </span>
             <span style="color: #ccc; font-size: 14px;">{show_time}</span>
         </div>
     </div>
@@ -260,4 +260,71 @@ def get_timer_html(remaining_seconds: int) -> str:
             }}
         }}, 1000);
     </script>
+    """
+
+def get_movie_card_css() -> str:
+    """Returns the CSS for the movie card hover animation."""
+    return """
+    <style>
+    .movie-card {
+        position: relative;
+        width: 100%;
+        height: 380px; /* Controls the height of the poster/details area */
+        border-radius: 8px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1e1e2f 0%, #16213e 100%);
+        border: 1px solid #3a3a5c;
+        margin-bottom: 15px;
+    }
+    .movie-card-content {
+        padding: 20px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #e0e0e0;
+    }
+    .movie-card-poster {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 2;
+        transition: opacity 0.5s ease-in-out; /* The smooth fade animation */
+        background-color: #0f0c29;
+    }
+    .movie-card:hover .movie-card-poster {
+        opacity: 0; /* Vanish on hover */
+    }
+    .movie-title {
+        color: #FFD700;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    </style>
+    """
+
+
+def render_movie_card_html(title: str, date: str, show_time: str, cinema: str, address: str, price, poster_url: str) -> str:
+    """Returns the HTML for the movie card with injected dynamic data."""
+    return f"""
+    <div class="movie-card">
+        <div class="movie-card-content">
+            <div class="movie-title">{title}</div>
+            <div style="margin-bottom: 6px;"><strong>Date:</strong> {date}</div>
+            <div style="margin-bottom: 6px;"><strong>Time:</strong> {show_time}</div>
+            <div style="margin-bottom: 6px;"><strong>Cinema:</strong> {cinema}</div>
+            <div style="margin-bottom: 6px; font-size: 13px; color: #aaa;">{address}</div>
+            <div style="margin-top: auto; color: #43e97b; font-weight: bold;">Price: Rs.{price}</div>
+        </div>
+        <img class="movie-card-poster" src="{poster_url}" alt="{title} Poster">
+    </div>
     """

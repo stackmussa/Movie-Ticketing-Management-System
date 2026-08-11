@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from Frontend import components
 import time
 import streamlit as st
 import requests 
@@ -91,6 +92,10 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
     if not shows_to_display:
         st.warning(f"No movies currently scheduled in {filter_city}.")
         return 
+
+    # --- INJECT CUSTOM CSS ONCE ---
+    st.markdown(components.get_movie_card_css(), unsafe_allow_html=True)
+
     cols = st.columns(3)
     for index, show in enumerate(shows_to_display):
         col = cols[index %3]
@@ -105,6 +110,12 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                 address = show.get("Address", "Unknown Show")
                 price = show.get("TicketPrice", "TBD")
 
+                pURL = show.get("PosterURL")
+                if not pURL or pURL == "No Preview" or "imdb.com" in pURL:
+                    pURL = "https://via.placeholder.com/400x600.png?text=Hover+to+View+Details"
+                
+                tURL = show.get("TrailerURL", "No Trailer Found")
+
                 #Movie Tiles Content
                 st.subheader(f"{title}")
                 st.write(f"**Date: {date}**")
@@ -115,12 +126,12 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
 
                 st.markdown("<br>", unsafe_allow_html=True)
 
-                # Action Buttons: Book Now + See Reviews
+                # Action Buttons: Book Now + See Trailer
                 btn_col1, btn_col2 = st.columns(2)
 
                 with btn_col1:
                     #Booking Button
-                    if st.button("🎟️ Book Now", key=f"{key_prefix}_book_{index}", use_container_width=True, type="primary"):
+                    if st.button("Book Now", key=f"{key_prefix}_book_{index}", use_container_width=True, type="primary"):
 
                         # storing Movie's Meta Data to keep track of the Movie 
                         st.session_state['Booking_target_movie'] = title
@@ -141,11 +152,19 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                         st.switch_page(config.booking_page)
 
                 with btn_col2:
+                    if tURL:
+                        st.link_button("Trailer", url=tURL, use_container_width=True)
+                    else:
+                        st.button("Trailer", key=f"{key_prefix}_notrail_{index}", disabled=True, use_container_width=True)
+
+                btn_col3 = st.columns(1)[0]
+
+                with btn_col3:
                     # Reviews Button
-                    if st.button("⭐ See Reviews", key=f"{key_prefix}_review_{index}", use_container_width=True):
+                    if st.button("See Reviews", key=f"{key_prefix}_review_{index}", use_container_width=True):
                         st.session_state['Review_target_movie'] = title
                         st.session_state['Review_target_details'] = show
-                        st.switch_page(config.reviews_page)
+                        st.switch_page(config.reviews_page)            
 
 #Dashboard
 st.title("Movie Ticket Purchase System")

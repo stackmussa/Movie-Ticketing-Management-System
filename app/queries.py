@@ -17,6 +17,8 @@ get_shows_query = """
 SELECT 
     M.Title, 
     M.DurationMinutes,
+    M.PosterURL,
+    M.TrailerURL,
     S.ShowDate, 
     S.ShowTime, 
     C.CinemaName, 
@@ -36,7 +38,9 @@ ORDER BY S.ShowDate, S.ShowTime
 get_specific_show = """
 SELECT 
     M.Title,
-    M.DurationMinutes, 
+    M.DurationMinutes,
+    M.PosterURL,
+    M.TrailerURL,
     S.ShowDate, 
     S.ShowTime, 
     C.CinemaName, 
@@ -60,25 +64,6 @@ ORDER BY
     S.ShowDate, S.ShowTime
 """
 
-get_specific_show1 = """
-SELECT 
-    M.Title, 
-    S.ShowDate, 
-    S.ShowTime, 
-    C.CinemaName, 
-    C.Address, 
-    S.TicketPrice,
-    CT.CityName AS City
-FROM Show S
-INNER JOIN Movie M ON S.MovieID = M.MovieID
-INNER JOIN Hall H ON S.HallID = H.HallID
-INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
-INNER JOIN City CT ON C.CityID = CT.CityID
-WHERE M.Title LIKE '%' + ? + '%'
-  AND (S.ShowDate > CAST(GETDATE() AS DATE) 
-       OR (S.ShowDate = CAST(GETDATE() AS DATE) AND S.ShowTime > CAST(GETDATE() AS TIME)))
-ORDER BY S.ShowDate, S.ShowTime
-"""
 
 Cities_query = '''SELECT DISTINCT CityName
                         FROM City
