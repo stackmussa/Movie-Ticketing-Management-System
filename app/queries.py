@@ -16,6 +16,7 @@ authorize_owner = '''
 get_shows_query = """
 SELECT 
     M.Title, 
+    M.Genre,
     M.DurationMinutes,
     M.PosterURL,
     M.TrailerURL,
@@ -38,6 +39,7 @@ ORDER BY S.ShowDate, S.ShowTime
 get_specific_show = """
 SELECT 
     M.Title,
+    M.Genre,
     M.DurationMinutes,
     M.PosterURL,
     M.TrailerURL,
@@ -63,6 +65,20 @@ ORDER BY
     END,
     S.ShowDate, S.ShowTime
 """
+
+# Fetch distinct genres from the Movie table for filter dropdown
+get_distinct_genres = '''
+    SELECT DISTINCT Genre FROM Movie ORDER BY Genre ASC
+'''
+
+# Fetch the date range of upcoming shows (min today, max last show)
+get_show_date_range = '''
+    SELECT 
+        MIN(S.ShowDate) AS MinDate,
+        MAX(S.ShowDate) AS MaxDate
+    FROM Show S
+    WHERE S.ShowDate >= CAST(GETDATE() AS DATE)
+'''
 
 
 Cities_query = '''SELECT DISTINCT CityName

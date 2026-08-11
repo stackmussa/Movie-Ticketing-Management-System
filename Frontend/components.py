@@ -59,7 +59,7 @@ def render_interactive_seat_map(selected_category: str, booked_seats: list, max_
                                 chk_key = f"chk_{s_id}"
                                 # Force the visual checkbox to uncheck if they hit the limit
                                 st.session_state[chk_key] = False
-                                st.toast(f"You can only select a maximum of {max_limit} tickets.", icon="⚠️")
+                                st.toast(f"You can only select a maximum of {max_limit} tickets.")
                                 
                     st.checkbox(
                         f"{seat_num}", 
@@ -73,11 +73,12 @@ def get_legend_html() -> str:
     """Returns the HTML for the seat map color legend."""
     return """
     <div style="display: flex; gap: 15px; justify-content: center; margin-top: 10px;">
-        <div><span style="color: #8A2BE2;">■</span> Platinum (Rows A-B)</div>
-        <div><span style="color: #FFD700;">■</span> Gold (Rows C-D)</div>
-        <div><span style="color: #808080;">■</span> Standard (Row E)</div>
+        <div><span style="color: #8A2BE2;">&#9632;</span> Platinum (Rows A-B)</div>
+        <div><span style="color: #FFD700;">&#9632;</span> Gold (Rows C-D)</div>
+        <div><span style="color: #808080;">&#9632;</span> Standard (Row E)</div>
     </div>
     """
+
 # ============================================================
 # REVIEW COMPONENTS
 # ============================================================
@@ -89,11 +90,11 @@ def render_star_html(rating_val, size=22):
     empty = 5 - full - half
     stars_html = ""
     for _ in range(full):
-        stars_html += f'<span style="color:#FFD700;font-size:{size}px;">★</span>'
+        stars_html += f'<span style="color:#FFD700;font-size:{size}px;">&#9733;</span>'
     if half:
-        stars_html += f'<span style="color:#FFD700;font-size:{size}px;">★</span>'
+        stars_html += f'<span style="color:#FFD700;font-size:{size}px;">&#9733;</span>'
     for _ in range(empty):
-        stars_html += f'<span style="color:#555;font-size:{size}px;">★</span>'
+        stars_html += f'<span style="color:#555;font-size:{size}px;">&#9733;</span>'
     return stars_html
 
 
@@ -179,7 +180,7 @@ def render_reply_card(reply_name, reply_time, reply_text):
                 <span style="font-size: 11px; color: #666; margin-left: 8px;">{reply_time}</span>
             </div>
         </div>
-        <div style="color: #b8b8d0; font-size: 13px; line-height: 1.5; padding-left: 36px;">↳ {reply_text}</div>
+        <div style="color: #b8b8d0; font-size: 13px; line-height: 1.5; padding-left: 36px;">{reply_text}</div>
     </div>
     """
 
@@ -195,8 +196,8 @@ def render_no_reviews_placeholder():
         border: 1px dashed #444;
         margin-bottom: 16px;
     ">
-        <div style="font-size: 40px; margin-bottom: 8px;"></div>
-        <div style="color: #888; font-size: 15px;">No reviews yet. Be the first to share your thoughts!</div>
+        <div style="font-size: 28px; font-weight: 600; color: #888; margin-bottom: 8px;">No Reviews Yet</div>
+        <div style="color: #666; font-size: 15px;">Be the first to share your thoughts!</div>
     </div>
     """
 
@@ -219,23 +220,26 @@ def render_movie_info_banner(movie_details):
         flex-wrap: wrap;
     ">
         <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 18px;">Venue: </span>
+            <span style="font-size: 14px; color: #888;">Venue:</span>
             <span style="color: #ccc; font-size: 14px;">{cinema} ({city})</span>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 18px;">Date: </span>
+            <span style="font-size: 14px; color: #888;">Date:</span>
             <span style="color: #ccc; font-size: 14px;">{date}</span>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 18px;">Time: </span>
+            <span style="font-size: 14px; color: #888;">Time:</span>
             <span style="color: #ccc; font-size: 14px;">{show_time}</span>
         </div>
     </div>
     """
 
 
+# ============================================================
+# TIMER COMPONENT
+# ============================================================
+
 #helper function for the 5 minutes timer functionality 
-# components.py
 def get_timer_html(remaining_seconds: int) -> str:
     return f"""
     <div style="font-family: sans-serif; text-align: center; padding: 12px; background-color: #2b2b2b; border-radius: 8px; border: 1px solid #FF5252;">
@@ -262,69 +266,164 @@ def get_timer_html(remaining_seconds: int) -> str:
     </script>
     """
 
+
+# ============================================================
+# MOVIE CARD COMPONENTS (Dashboard)
+# ============================================================
+
 def get_movie_card_css() -> str:
     """Returns the CSS for the movie card hover animation."""
     return """
-    <style>
-    .movie-card {
-        position: relative;
-        width: 100%;
-        height: 320px; /* Controls the height of the poster/details area */
-        border-radius: 8px;
-        overflow: hidden;
-        background: linear-gradient(135deg, #1e1e2f 0%, #16213e 100%);
-        border: 1px solid #3a3a5c;
-        margin-bottom: 15px;
-    }
-    .movie-card-content {
-        padding: 20px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        color: #e0e0e0;
-    }
-    .movie-card-poster {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 2;
-        transition: opacity 0.5s ease-in-out; /* The smooth fade animation */
-        background-color: #0f0c29;
-    }
-    .movie-card:hover .movie-card-poster {
-        opacity: 0; /* Vanish on hover */
-    }
-    .movie-title {
-        color: #FFD700;
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    </style>
-    """
+<style>
+.movie-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1e1e2f 0%, #16213e 100%);
+    border: 1px solid #3a3a5c;
+    margin-bottom: 10px;
+}
+.movie-card-content {
+    padding: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: #e0e0e0;
+    overflow-y: auto;
+}
+.movie-card-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    z-index: 2;
+    transition: opacity 0.5s ease-in-out;
+    background-color: #0f0c29;
+}
+.movie-card:hover .movie-card-poster {
+    opacity: 0;
+}
+.movie-title {
+    color: #FFD700;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+.movie-genre-tag {
+    display: inline-block;
+    background: rgba(102, 126, 234, 0.2);
+    color: #a0b0ff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-right: 4px;
+    margin-bottom: 8px;
+}
+.movie-detail-row {
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+.movie-detail-row strong {
+    color: #ccc;
+}
+.movie-price {
+    margin-top: auto;
+    color: #43e97b;
+    font-weight: bold;
+    font-size: 15px;
+}
+.omdb-ratings-bar {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #333;
+    flex-wrap: wrap;
+}
+.omdb-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.05);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.omdb-badge-label {
+    color: #888;
+    font-weight: 600;
+}
+.omdb-badge-value {
+    color: #FFD700;
+    font-weight: 700;
+}
+</style>
+"""
 
 
-def render_movie_card_html(title: str, date: str, show_time: str, cinema: str, address: str, price, poster_url: str) -> str:
-    """Returns the HTML for the movie card with injected dynamic data."""
+def render_omdb_ratings_html(omdb_data: dict) -> str:
+    """Returns an HTML snippet for IMDb and Rotten Tomatoes ratings.
+    Pass the dict returned by the /omdb/{title} endpoint."""
+    if not omdb_data or not omdb_data.get("found"):
+        return ""
+
+    imdb = omdb_data.get("imdb_rating", "N/A")
+    rt = omdb_data.get("rotten_tomatoes", "N/A")
+    meta = omdb_data.get("metascore", "N/A")
+
+    parts = []
+    if imdb and imdb != "N/A":
+        parts.append(f'<div class="omdb-badge"><span class="omdb-badge-label">IMDb</span><span class="omdb-badge-value">{imdb}/10</span></div>')
+    if rt and rt != "N/A":
+        parts.append(f'<div class="omdb-badge"><span class="omdb-badge-label">RT</span><span class="omdb-badge-value">{rt}</span></div>')
+    if meta and meta != "N/A":
+        parts.append(f'<div class="omdb-badge"><span class="omdb-badge-label">Meta</span><span class="omdb-badge-value">{meta}</span></div>')
+
+    if not parts:
+        return ""
+
+    return '<div class="omdb-ratings-bar">' + "".join(parts) + '</div>'
+
+
+def render_movie_card_html(title: str, date: str, show_time: str, cinema: str,
+                           address: str, price, poster_url: str,
+                           genre: str = "", omdb_data: dict = None) -> str:
+    """Returns the HTML for the movie card with injected dynamic data.
+    Includes genre tags and OMDb ratings when available."""
+    # Build genre tags
+    genre_html = ""
+    if genre:
+        for g in genre.replace("/", ",").split(","):
+            stripped = g.strip()
+            if stripped:
+                genre_html += f'<span class="movie-genre-tag">{stripped}</span>'
+
+    # Build OMDb ratings bar
+    ratings_html = render_omdb_ratings_html(omdb_data) if omdb_data else ""
+
     return f"""
-    <div class="movie-card">
-        <div class="movie-card-content">
-            <div class="movie-title">{title}</div>
-            <div style="margin-bottom: 6px;"><strong>Date:</strong> {date}</div>
-            <div style="margin-bottom: 6px;"><strong>Time:</strong> {show_time}</div>
-            <div style="margin-bottom: 6px;"><strong>Cinema:</strong> {cinema}</div>
-            <div style="margin-bottom: 6px; font-size: 13px; color: #aaa;">{address}</div>
-            <div style="margin-top: auto; color: #43e97b; font-weight: bold;">Price: Rs.{price}</div>
-        </div>
-        <img class="movie-card-poster" src="{poster_url}" alt="{title} Poster">
-    </div>
-    """
+<div class="movie-card">
+<div class="movie-card-content">
+<div class="movie-title">{title}</div>
+<div>{genre_html}</div>
+<div class="movie-detail-row"><strong>Date:</strong> {date}</div>
+<div class="movie-detail-row"><strong>Time:</strong> {show_time}</div>
+<div class="movie-detail-row"><strong>Cinema:</strong> {cinema}</div>
+<div class="movie-detail-row" style="color: #aaa;">{address}</div>
+{ratings_html}
+<div class="movie-price">Price: Rs.{price}</div>
+</div>
+<img class="movie-card-poster" src="{poster_url}" alt="{title} Poster">
+</div>
+"""

@@ -19,17 +19,13 @@ if 'Review_target_movie' not in st.session_state:
 
 # --- Load Target Data ---
 movie_title = st.session_state['Review_target_movie']
-movie_details = st.session_state.get('Review_target_details', {})
 user_email = st.session_state.get('user_email', '')
 current_user_id = st.session_state.get('user_id', None)
 
-st.title(f"Reviews — {movie_title}")
-
-# Show movie info summary
-st.markdown(components.render_movie_info_banner(movie_details), unsafe_allow_html=True)
+st.title(f"Reviews - {movie_title}")
 st.divider()
 
-# --- Fetch existing reviews ---
+# --- Fetch existing reviews (movie-wide, not venue-specific) ---
 review_data = {"average_rating": 0, "total_reviews": 0, "reviews": []}
 try:
     rev_resp = requests.get(f"{api_url}/reviews/{movie_title}")
@@ -174,7 +170,7 @@ with st.container(border=True):
         "Your Rating",
         options=[1, 2, 3, 4, 5],
         value=5,
-        format_func=lambda x: "⭐" * x,
+        format_func=lambda x: "* " * x,
         key="new_review_rating"
     )
     

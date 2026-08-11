@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import time
 import streamlit as st
 import requests 
@@ -27,12 +27,12 @@ def check_booking_conflict(target_show: dict, api_url: str, auth_token: str) -> 
         resp = requests.get(f"{api_url.rstrip('/')}/pendingorders", headers=headers)
         
         if resp.status_code != 200:
-            return False  # API error — fail open, let the user proceed
+            return False  # API error - fail open, let the user proceed
         
         user_orders = resp.json()
         
         if not isinstance(user_orders, list) or len(user_orders) == 0:
-            return False  # No existing bookings — no possible conflict
+            return False  # No existing bookings - no possible conflict
         
         # Parse the TARGET show's start/end window
         target_date = target_show.get("ShowDate", "")
@@ -68,12 +68,23 @@ def check_booking_conflict(target_show: dict, api_url: str, auth_token: str) -> 
                     return True
                     
             except (ValueError, TypeError):
-                continue  # Skip orders with unparseable dates — don't block the user
+                continue  # Skip orders with unparseable dates - don't block the user
         
         return False
         
     except Exception:
-        return False  # Network error — fail open, let the user proceed
+        return False  # Network error - fail open, let the user proceed
+
+
+def fetch_omdb_data(title: str) -> dict:
+    """Fetch OMDb ratings for a movie title via the backend proxy. Returns empty dict on failure."""
+    try:
+        resp = requests.get(f"{api_url}/omdb/{title}", timeout=6)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return {}
 
 
 def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
@@ -91,8 +102,15 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
         st.warning(f"No movies currently scheduled in {filter_city}.")
         return 
 
-    # --- INJECT CUSTOM CSS ONCE ---
+    # Inject custom CSS once
     st.markdown(components.get_movie_card_css(), unsafe_allow_html=True)
+
+    # Pre-fetch OMDb ratings for unique titles to avoid duplicate calls
+    unique_titles_in_view = list(set(s.get("Title", "") for s in shows_to_display))
+    omdb_cache = {}
+    for t in unique_titles_in_view:
+        if t and t not in omdb_cache:
+            omdb_cache[t] = fetch_omdb_data(t)
 
     cols = st.columns(3)
     for index, show in enumerate(shows_to_display):
@@ -101,12 +119,13 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
             with st.container(border=False):
 
                 # Fetching Movie Tiles Content
-                date = show.get("ShowDate", "TBD")
+                date_val = show.get("ShowDate", "TBD")
                 title = show.get("Title", "Unknown Title")
                 show_time = show.get("ShowTime", "TBD")
                 cinema = show.get("CinemaName", "Unknown Show")
                 address = show.get("Address", "Unknown Show")
                 price = show.get("TicketPrice", "TBD")
+                genre = show.get("Genre", "")
                 
                 # Use a reliable placeholder image if the database link is missing or invalid
                 pURL = show.get("PosterURL")
@@ -115,19 +134,24 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                 
                 tURL = show.get("TrailerURL", "")
 
+                # Get cached OMDb data for this title
+                omdb_data = omdb_cache.get(title, {})
+
                 # Render the custom HTML Card from components.py
                 card_html = components.render_movie_card_html(
                     title=title, 
-                    date=date, 
+                    date=date_val, 
                     show_time=show_time, 
                     cinema=cinema, 
                     address=address, 
                     price=price, 
-                    poster_url=pURL
+                    poster_url=pURL,
+                    genre=genre,
+                    omdb_data=omdb_data
                 )
                 st.markdown(card_html, unsafe_allow_html=True)
 
-                # Action Buttons: Book Now + See Trailer side-by-side
+                # Action Buttons: Book Now + Trailer side-by-side
                 btn_col1, btn_col2 = st.columns(2)
 
                 with btn_col1:
@@ -144,7 +168,7 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
                         conflict_found = check_booking_conflict(show, api_url, current_token)
 
                         if conflict_found:
-                            st.toast("⚠️ Heads up! This movie overlaps with another Pending or Confirmed booking in your account.", icon="⏳")
+                            st.toast("Heads up! This movie overlaps with another Pending or Confirmed booking in your account.")
                             time.sleep(3.5)
                         else:
                             st.toast(f"Navigating to Booking Page for {title}")
@@ -181,12 +205,100 @@ if st.button("Logout", type="primary"):
 
 st.divider()
 
+# ==========================================
+# Filters Section: City, Genre, Date
+# ==========================================
+st.subheader("Filters")
+
+filter_col1, filter_col2, filter_col3 = st.columns(3)
+
 # City Selection
-st.subheader("Where are you watching?")
-selected_city = st.selectbox("Select your city to view available movies:", config.cities_list, label_visibility="collapsed")
+with filter_col1:
+    selected_city = st.selectbox("City", config.cities_list)
+
+# Genre Filter (fetched from DB)
+available_genres = []
+try:
+    genre_resp = requests.get(f"{api_url}/genres")
+    if genre_resp.status_code == 200:
+        available_genres = genre_resp.json()
+except Exception:
+    pass
+
+with filter_col2:
+    selected_genre = st.selectbox("Genre", options=["All"] + available_genres)
+
+# Date Range Filter (calendar-based)
+min_date = date.today()
+max_date = date.today() + timedelta(days=365)
+try:
+    dr_resp = requests.get(f"{api_url}/show-date-range")
+    if dr_resp.status_code == 200:
+        dr_data = dr_resp.json()
+        if dr_data.get("min_date"):
+            min_date = date.fromisoformat(str(dr_data["min_date"]))
+        if dr_data.get("max_date"):
+            max_date = date.fromisoformat(str(dr_data["max_date"]))
+except Exception:
+    pass
+
+with filter_col3:
+    selected_date = st.date_input(
+        "Show Date (Clear to see all)",
+        value=None,
+        min_value=min_date,
+        max_value=max_date,
+    )
+
+# Normalize selected_date to single dates
+if isinstance(selected_date, tuple):
+    if len(selected_date) == 2:
+        date_start, date_end = selected_date
+    elif len(selected_date) == 1:
+        date_start = selected_date[0]
+        date_end = selected_date[0]
+    else:
+        date_start, date_end = None, None
+else:
+    date_start = selected_date
+    date_end = selected_date
+
 st.divider()
 
-# Predictive Search Implementation
+
+def apply_filters(shows_data: list, city: str, genre: str, d_start, d_end) -> list:
+    """Applies city, genre, and date filters to a list of show dicts."""
+    filtered = []
+    for show in shows_data:
+        # City filter
+        if city and show.get("City") != city:
+            continue
+
+        # Genre filter
+        if genre and genre != "All":
+            show_genre = show.get("Genre", "")
+            # Check if the selected genre appears in the show's compound genre string
+            genre_parts = [g.strip() for g in show_genre.replace("/", ",").split(",")]
+            if genre not in genre_parts:
+                continue
+
+        # Date filter
+        try:
+            if d_start and d_end:
+                show_date_str = str(show.get("ShowDate", ""))
+                show_date = date.fromisoformat(show_date_str)
+                if show_date < d_start or show_date > d_end:
+                    continue
+        except (ValueError, TypeError):
+            pass  # If date is unparseable, include the show
+
+        filtered.append(show)
+    return filtered
+
+
+# ==========================================
+# Predictive Search
+# ==========================================
 st.subheader("Search for Desired Movie")
 
 # 1. Grab all shows to feed the auto-suggest.
@@ -218,14 +330,14 @@ if selected_title:
         if response.status_code == 200:
             shows_data = response.json()
             
-            # Filter by city
-            city_shows = [show for show in shows_data if show.get("City") == selected_city]
+            # Apply all filters
+            filtered_shows = apply_filters(shows_data, selected_city, selected_genre, date_start, date_end)
             
-            if city_shows:
-                st.session_state['search_results'] = city_shows
+            if filtered_shows:
+                st.session_state['search_results'] = filtered_shows
                 st.session_state['search_title'] = selected_title
             else:
-                st.warning(f"No movies currently scheduled in {selected_city}.")
+                st.warning(f"No matching shows found for the selected filters.")
                 st.session_state.pop('search_results', None)
         else:
             error_details = response.json().get("detail", "No such record found!")
@@ -244,14 +356,16 @@ if 'search_results' in st.session_state:
 
 st.divider()
 
-# 5. Render standard upcoming shows feed
+# 5. Render standard upcoming shows feed (with filters applied)
 st.subheader(f"All Upcoming Shows in {selected_city}")
 
 try:
     response = requests.get(f"{api_url}/shows")
     if response.status_code == 200:
         shows_data = response.json()
-        display_movie_tiles(shows_data, filter_city=selected_city, key_prefix="all")
+        # Apply genre and date filters to the main feed
+        filtered_main = apply_filters(shows_data, selected_city, selected_genre, date_start, date_end)
+        display_movie_tiles(filtered_main, filter_city=selected_city, key_prefix="all")
     else:
         error_detail = response.json().get("detail", "Failed to fetch shows from database.")
         st.error(error_detail)
