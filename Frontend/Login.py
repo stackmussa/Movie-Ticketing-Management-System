@@ -26,6 +26,7 @@ with st.form("Login User"):
             if response.status_code == 200:
                 token_data = response.json()
                 st.session_state['token'] = token_data.get("access_token")
+                st.session_state['user_id'] = token_data.get("user_id")
                 
                 st.session_state['logged_in'] = True
                 st.session_state['user_email'] = log_email

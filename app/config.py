@@ -83,6 +83,7 @@ dashboard_page = st.Page("Frontend/Dashboard.py", title="System Dashboard")
 booking_page = st.Page("Frontend/Booking.py", title="Booking Ticket")
 My_Orders = st.Page("Frontend/MyOrders.py", title="My Orders")
 payment_page = st.Page("Frontend/Payment.py", title="Payment")
+reviews_page = st.Page("Frontend/Reviews.py", title="Reviews")
 
 # mulitplier for seating category wise.
 def get_Category_Multiplier(Category:str ):

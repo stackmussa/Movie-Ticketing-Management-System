@@ -280,3 +280,18 @@ get_movie_avg_rating = '''
     FROM Review
     WHERE MovieID = ? AND ParentReviewID IS NULL
 '''
+
+# Fetch the owner (UserID) of a specific review
+get_review_owner = '''
+    SELECT UserID FROM Review WHERE ReviewID = ?
+'''
+
+# Delete all child replies of a review (must run before deleting the parent)
+delete_review_replies = '''
+    DELETE FROM Review WHERE ParentReviewID = ?
+'''
+
+# Delete a specific review by its ID
+delete_review = '''
+    DELETE FROM Review WHERE ReviewID = ?
+'''

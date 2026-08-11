@@ -68,8 +68,13 @@ def Login_User(
         if not passHash.verify_Password(hashed_pass, password):
             raise HTTPException(status_code=400, detail="Invalid Email / Password")
 
+        # Fetch UserID to return alongside the token
+        cursor.execute(queries.verify_email, (email,))
+        user_record = cursor.fetchone()
+        user_id = user_record[0] if user_record else None
+
         access_token = jwt_Security.create_access_tokens(data={"sub": email})
         logger.info(f"User {email} has logged in & recieved a token!")
-        return {"access_token": access_token, "token_type": "bearer"}
+        return {"access_token": access_token, "token_type": "bearer", "user_id": user_id}
     except HTTPException:
         raise HTTPException(status_code=400, detail="Invalid Email / Password")

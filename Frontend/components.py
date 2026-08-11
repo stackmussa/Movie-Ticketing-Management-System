@@ -78,6 +78,162 @@ def get_legend_html() -> str:
         <div><span style="color: #808080;">■</span> Standard (Row E)</div>
     </div>
     """
+# ============================================================
+# REVIEW COMPONENTS
+# ============================================================
+
+def render_star_html(rating_val, size=22):
+    """Generate HTML for gold stars from a float rating."""
+    full = int(rating_val)
+    half = 1 if (rating_val - full) >= 0.3 else 0
+    empty = 5 - full - half
+    stars_html = ""
+    for _ in range(full):
+        stars_html += f'<span style="color:#FFD700;font-size:{size}px;">★</span>'
+    if half:
+        stars_html += f'<span style="color:#FFD700;font-size:{size}px;">★</span>'
+    for _ in range(empty):
+        stars_html += f'<span style="color:#555;font-size:{size}px;">★</span>'
+    return stars_html
+
+
+def render_rating_summary(avg_rating, total_reviews):
+    """Returns the HTML block for the average rating summary banner."""
+    rating_stars_html = render_star_html(avg_rating, size=28)
+    return f"""
+    <div style="
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 20px;
+        border: 1px solid #2a2a4a;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    ">
+        <div style="text-align: center;">
+            <div style="font-size: 42px; font-weight: 700; color: #FFD700;">{avg_rating}</div>
+            <div>{rating_stars_html}</div>
+        </div>
+        <div style="border-left: 1px solid #444; padding-left: 18px;">
+            <div style="font-size: 16px; color: #ccc;">Based on <strong style="color:#fff;">{total_reviews}</strong> review{'s' if total_reviews != 1 else ''}</div>
+            <div style="font-size: 13px; color: #888; margin-top: 4px;">Share your experience below!</div>
+        </div>
+    </div>
+    """
+
+
+def render_review_card(user_name, time_display, rating, text):
+    """Returns the HTML for a single top-level review card."""
+    stars = render_star_html(rating, size=16) if rating else ""
+    return f"""
+    <div style="
+        background: #1e1e2f;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 8px;
+        border-left: 3px solid #FFD700;
+    ">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="
+                    width: 36px; height: 36px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    display: flex; align-items: center; justify-content: center;
+                    font-weight: 700; font-size: 15px; color: white;
+                ">{user_name[0].upper()}</div>
+                <div>
+                    <div style="font-weight: 600; color: #e0e0e0; font-size: 14px;">{user_name}</div>
+                    <div style="font-size: 11px; color: #888;">{time_display}</div>
+                </div>
+            </div>
+            <div>{stars}</div>
+        </div>
+        <div style="color: #d0d0d0; font-size: 14px; line-height: 1.6; padding-left: 46px;">{text}</div>
+    </div>
+    """
+
+
+def render_reply_card(reply_name, reply_time, reply_text):
+    """Returns the HTML for a reply card nested under a review."""
+    return f"""
+    <div style="
+        background: #252540;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-left: 46px;
+        margin-bottom: 6px;
+        border-left: 2px solid #667eea;
+    ">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <div style="
+                width: 28px; height: 28px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #43e97b, #38f9d7);
+                display: flex; align-items: center; justify-content: center;
+                font-weight: 700; font-size: 12px; color: #1a1a2e;
+            ">{reply_name[0].upper()}</div>
+            <div>
+                <span style="font-weight: 600; color: #b0b0d0; font-size: 13px;">{reply_name}</span>
+                <span style="font-size: 11px; color: #666; margin-left: 8px;">{reply_time}</span>
+            </div>
+        </div>
+        <div style="color: #b8b8d0; font-size: 13px; line-height: 1.5; padding-left: 36px;">↳ {reply_text}</div>
+    </div>
+    """
+
+
+def render_no_reviews_placeholder():
+    """Returns the HTML for the 'no reviews yet' empty state."""
+    return """
+    <div style="
+        text-align: center;
+        padding: 30px;
+        background: #1e1e2f;
+        border-radius: 12px;
+        border: 1px dashed #444;
+        margin-bottom: 16px;
+    ">
+        <div style="font-size: 40px; margin-bottom: 8px;">🎬</div>
+        <div style="color: #888; font-size: 15px;">No reviews yet. Be the first to share your thoughts!</div>
+    </div>
+    """
+
+
+def render_movie_info_banner(movie_details):
+    """Returns the HTML banner with movie show details for the Reviews page."""
+    cinema = movie_details.get('CinemaName', 'Unknown')
+    city = movie_details.get('City', '')
+    date = movie_details.get('ShowDate', 'TBD')
+    show_time = movie_details.get('ShowTime', 'TBD')
+    return f"""
+    <div style="
+        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        border-radius: 12px;
+        padding: 16px 22px;
+        border: 1px solid #3a3a5c;
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        flex-wrap: wrap;
+    ">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 18px;">🏛️</span>
+            <span style="color: #ccc; font-size: 14px;">{cinema} ({city})</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 18px;">📅</span>
+            <span style="color: #ccc; font-size: 14px;">{date}</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 18px;">🕐</span>
+            <span style="color: #ccc; font-size: 14px;">{show_time}</span>
+        </div>
+    </div>
+    """
+
+
 #helper function for the 5 minutes timer functionality 
 # components.py
 def get_timer_html(remaining_seconds: int) -> str:

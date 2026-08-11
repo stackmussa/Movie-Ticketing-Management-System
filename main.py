@@ -10,7 +10,7 @@ if 'user_email' not in st.session_state:
 # Web App Pages
 
 if st.session_state['logged_in']:
-    pg = st.navigation([config.dashboard_page, config.booking_page, config.My_Orders, config.payment_page])
+    pg = st.navigation([config.dashboard_page, config.booking_page, config.My_Orders, config.payment_page, config.reviews_page])
 else:
     pg = st.navigation([config.login_page, config.register_page])
 

@@ -472,3 +472,45 @@ def post_reply(
     except pyodbc.Error as e:
         conn.rollback()
         raise HTTPException(status_code=500, detail="Database Error posting reply.")
+
+
+@router.delete("/reviews/{review_id}")
+def delete_review(
+    review_id: int,
+    current_user: dict = Depends(jwt_Security.get_current_user),
+    conn: pyodbc.Connection = Depends(config.get_DB)
+):
+    """Delete a review. Only the review's author can delete it.
+    If it's a top-level review, all child replies are also removed."""
+    cursor = conn.cursor()
+    try:
+        # 1. Verify the review exists and fetch its owner
+        cursor.execute(queries.get_review_owner, (review_id,))
+        record = cursor.fetchone()
+
+        if not record:
+            raise HTTPException(status_code=404, detail="Review not found.")
+
+        review_owner_id = record[0]
+
+        # 2. Authorization: only the author can delete their own review
+        if review_owner_id != current_user["user_id"]:
+            raise HTTPException(status_code=403, detail="You can only delete your own reviews.")
+
+        # 3. Delete child replies first (if this is a top-level review)
+        cursor.execute(queries.delete_review_replies, (review_id,))
+
+        # 4. Delete the review itself
+        cursor.execute(queries.delete_review, (review_id,))
+        conn.commit()
+
+        logger.info(f"Review {review_id} deleted by User {current_user['user_id']}.")
+        return {"message": "Review deleted successfully."}
+
+    except HTTPException:
+        conn.rollback()
+        raise
+    except pyodbc.Error as e:
+        conn.rollback()
+        logger.error(f"DB Error deleting review {review_id}.")
+        raise HTTPException(status_code=500, detail="Database Error deleting review.")

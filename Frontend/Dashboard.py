@@ -95,7 +95,7 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
     for index, show in enumerate(shows_to_display):
         col = cols[index %3]
         with col: 
-            with st.container(border=True, height=420):
+            with st.container(border=True, height=500):
 
                 # Fetching Movie Tiles Content
                 date = show.get("ShowDate", "TBD")
@@ -115,26 +115,37 @@ def display_movie_tiles(show_List, filter_city=None, key_prefix="main"):
 
                 st.markdown("<br>", unsafe_allow_html=True)
 
-                #Booking Button
-                if st.button("Book Now", key=f"{key_prefix}_book_{index}", use_container_width=True, type="primary"):
+                # Action Buttons: Book Now + See Reviews
+                btn_col1, btn_col2 = st.columns(2)
 
-                    # storing Movie's Meta Data to keep track of the Movie 
-                    st.session_state['Booking_target_movie'] = title
-                    st.session_state['Booking_target_city'] = filter_city
-                    st.session_state['Booking_target_details'] = show
+                with btn_col1:
+                    #Booking Button
+                    if st.button("🎟️ Book Now", key=f"{key_prefix}_book_{index}", use_container_width=True, type="primary"):
 
-                    # Overlap check: pass the CURRENT user's token explicitly
-                    current_token = st.session_state.get('token', '')
-                    conflict_found = check_booking_conflict(show, api_url, current_token)
+                        # storing Movie's Meta Data to keep track of the Movie 
+                        st.session_state['Booking_target_movie'] = title
+                        st.session_state['Booking_target_city'] = filter_city
+                        st.session_state['Booking_target_details'] = show
 
-                    if conflict_found:
-                        st.toast("Heads up! This movie overlaps with another Pending or Confirmed booking in your account")
-                        time.sleep(5)
-                    else:
-                        st.toast(f"Navigating to Booking Page for {title}")
+                        # Overlap check: pass the CURRENT user's token explicitly
+                        current_token = st.session_state.get('token', '')
+                        conflict_found = check_booking_conflict(show, api_url, current_token)
 
-                    # Navigate to the booking page
-                    st.switch_page(config.booking_page)
+                        if conflict_found:
+                            st.toast("Heads up! This movie overlaps with another Pending or Confirmed booking in your account")
+                            time.sleep(5)
+                        else:
+                            st.toast(f"Navigating to Booking Page for {title}")
+
+                        # Navigate to the booking page
+                        st.switch_page(config.booking_page)
+
+                with btn_col2:
+                    # Reviews Button
+                    if st.button("⭐ See Reviews", key=f"{key_prefix}_review_{index}", use_container_width=True):
+                        st.session_state['Review_target_movie'] = title
+                        st.session_state['Review_target_details'] = show
+                        st.switch_page(config.reviews_page)
 
 #Dashboard
 st.title("Movie Ticket Purchase System")
