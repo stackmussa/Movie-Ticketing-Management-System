@@ -473,7 +473,7 @@ UPDATE Movie SET
 WHERE Title = 'Toy Story 5';
  
 UPDATE Movie SET
-    PosterURL  = 'https://www.imdb.com/title/tt33764258/',
+    PosterURL  = 'https://upload.wikimedia.org/wikipedia/en/9/90/The_Odyssey_%282026_film%29_poster.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled',
     TrailerURL = 'https://www.youtube.com/watch?v=Mzw2ttJD2qQ'
 WHERE Title = 'The Odyssey';
  
@@ -502,6 +502,7 @@ FROM [User]
 
 SELECT *
 FROM Booking
+WHERE BookingID = 158
 
 SELECT *
 FROM Booking
@@ -528,6 +529,32 @@ INNER JOIN Movie M ON M.MovieID = S.MovieID
 WHERE (U.UserID = 2 or U.UserID = 1) and (B.BookingStatus = 'Pending' or B.BookingStatus = 'Confirmed');
 
 SELECT *
-FROM BookingSeat
+FROM Review
+
+SELECT *
+FROM Booking
 
 SELECT * FROM Show Where ShowID = 54
+
+
+SELECT 
+        B.TotalAmount, B.BookingStatus, M.Title, M.DurationMinutes, S.ShowDate, S.ShowTime, C.CinemaName, B.BookingDate,
+        STRING_AGG(CONCAT(St.SeatRow, St.SeatNumber), ', ') AS AssignedSeats
+    FROM Booking B
+    INNER JOIN Show S ON B.ShowID = S.ShowID
+    INNER JOIN Movie M ON S.MovieID = M.MovieID
+    INNER JOIN Hall H ON S.HallID = H.HallID
+    INNER JOIN Cinema C ON H.CinemaID = C.CinemaID
+    LEFT JOIN BookingSeat BS ON B.BookingID = BS.BookingID
+    LEFT JOIN Seat St ON BS.SeatID = St.SeatID
+    WHERE B.BookingID = 5
+    GROUP BY 
+        B.TotalAmount, B.BookingStatus, M.Title, S.ShowDate, S.ShowTime, C.CinemaName, B.BookingDate
+
+-- Physically free up any seats trapped by old Cancelled test bookings
+DELETE FROM BookingSeat
+WHERE BookingID IN (
+    SELECT BookingID 
+    FROM Booking 
+    WHERE BookingStatus = 'Cancelled'
+);
