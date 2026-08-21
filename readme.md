@@ -23,6 +23,43 @@ A dedicated review module aggregates user feedback across the entire platform. U
 ### Secure Order Management
 Authenticated users gain access to their complete booking history and the status of pending transactions. The system allows users to securely cancel active orders, optionally capturing a predefined or custom cancellation reason for analytical purposes.
 
+## Project Structure
+
+```text
+├── app/
+│   ├── config.py
+│   ├── jwt_Security.py
+│   ├── logger.py
+│   ├── passHash.py
+│   └── queries.py
+├── backend/
+│   ├── api.py
+│   ├── schema.py
+│   └── routers/
+│       ├── auth.py
+│       ├── bookings.py
+│       └── shows.py
+├── DB/
+│   └── Schema.sql
+├── Frontend/
+│   ├── Booking.py
+│   ├── components.py
+│   ├── Dashboard.py
+│   ├── Login.py
+│   ├── MyOrders.py
+│   ├── Payment.py
+│   ├── Register.py
+│   ├── Reviews.py
+│   └── UpcomingShows.py
+├── .env
+├── .gitignore
+├── app.log
+├── main.py
+├── readme.md
+├── requirements.txt
+└── secret.py
+```
+
 ## Installation and Setup
 
 ### 1. Database Initialization
