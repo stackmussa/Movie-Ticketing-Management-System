@@ -1,8 +1,6 @@
 
 CREATE DATABASE TicketSystem
-GO
 USE TicketSystem
-GO
 
 -- ============================================================
 -- 0. USER
@@ -400,7 +398,8 @@ FROM (VALUES
 ALTER TABLE Movie
 ADD PosterURL VARCHAR(300) NULL,
     TrailerURL VARCHAR(300) NULL;
-GO
+
+
  
 -- ============================================================
 -- Populate poster & trailer links per movie (matched by Title,
