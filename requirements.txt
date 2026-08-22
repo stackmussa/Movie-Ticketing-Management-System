@@ -8,9 +8,10 @@ python-dotenv>=1.0.0
 
 # --- Frontend ---
 streamlit>=1.35.0
+requests>=2.31.0
 
 # --- Database ---
-pyodbc>=4.0.39
+psycopg2-binary>=2.9.9
 
 # --- Security & Authentication ---
 PyJWT>=2.8.0
